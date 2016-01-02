@@ -1,0 +1,81 @@
+.modal-margin-bottom {
+	margin-bottom: 10px;
+}
+
+.app-header h2 {
+	float: left;
+}
+
+.app-header a {
+	float: right;
+	margin-top: 20px;
+}
+
+.app-header .clr {
+	clear: both;
+}
+
+input.has-error {
+    border-color: #CE0E0E;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+
+.listImage {
+	border-radius: 50%;
+	
+	width: 50px;
+	min-width: 50px;
+	max-width: 50px;
+	
+	height: 50px;
+	min-height: 50px;
+	max-height: 50px;
+}
+
+.table-responsive>.table>tbody>tr>td {
+    vertical-align: middle;
+}
+
+.thumbnail  {
+	height: 20vh;
+	background-color: rgba(0, 0, 0, 0.05);
+	border: none;
+	position: relative;
+}
+
+.thumbnail a>img, .thumbnail>img {
+    height: 8vh;
+}
+
+.thumbnail:hover {
+		background-color: rgba(0, 0, 0, 0.08);
+}
+
+.launcher-content {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.launcher-label {
+	text-align: center;
+	margin-top: 10px;
+	color: slategray;
+	font-size: 2rem;
+}
+
+#calendar {
+	padding-top: 40px;
+	max-width: 900px;
+	margin: 0 auto;
+}
+
+.well.comment div p {
+	margin: 0px;
+}
+
+.well.comment div p.author {
+	color: darkgray;
+}

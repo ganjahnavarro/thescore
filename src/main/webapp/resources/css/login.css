@@ -1,0 +1,52 @@
+html {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(../images/backdrop.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.login-panel.center {
+    height: 320px;
+    padding: 30px;
+
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    margin: auto;
+
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+}
+
+.login-panel h1 {
+  color: gainsboro;
+}
+
+.login-panel .form-control {
+  background: transparent;
+  color: gainsboro;
+}
+
+.login-panel .form-control:focus {
+    border-color: inherit;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+}
+
+.login-button {
+	background-color: rgba(51, 153, 255, 0.4);
+	color: gainsboro;
+	border-color: none;
+	width: 100%;
+}
+
+.login-button:hover {
+    color: white;
+    background-color: rgba(51, 153, 255, 0.4);
+    border-color: none;
+}

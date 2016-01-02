@@ -1,0 +1,111 @@
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+.header-team-logo {
+	width: 110px;
+	height: 75px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.header-score {
+	font-size: 4rem;
+	vertical-align: middle;
+	display: inline-block;
+	margin: 10px;
+	color: slategray;
+}
+
+.team-selection {
+	border: 1px solid grey;
+	height: 50px;
+}
+
+.substitution-item {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.substitution-item img {
+	width: 80px;
+	height: 100px;
+	border: 1px solid gainsboro;
+	border-radius: 3px;
+}
+
+.player-selection-item {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.player-selection-item img {
+	width: 120px;
+	height: 150px;
+	border: 1px solid gainsboro;
+	border-radius: 3px;
+}
+
+.current-player img {
+	max-height: 150px;
+}
+
+body {
+	margin-bottom: 80px;
+}
+
+.footer {
+	height: 80px;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	background-color: #f8f8f8;
+	border-top: 1px solid;
+	border-top-color: #e7e7e7;
+}
+
+.footer-score {
+	font-size: 1.8rem;
+	vertical-align: middle;
+	display: inline-block;
+	margin: 10px;
+	color: slategray;
+	margin-top: 25px;
+}
+
+.action-item-group {
+	width: 100%;
+}
+
+.action-item {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-weight: bolder;
+	font-size: 3rem;
+	margin-bottom: 15px;
+}
+
+.action-item.main {
+	width: 80%;
+}
+
+.action-item.sub {
+	width: 20%;
+}
+
+.quarter-selection-item {
+	margin-right: 10px;
+}
+
+.header-middle {
+	vertical-align: middle;
+	display: inline-block;
+	margin: 10px;
+}
+
+.time-out-item {
+	vertical-align: middle;
+	display: inline-block;
+	margin: 20px;
+}
