@@ -230,8 +230,16 @@ public class MatchController {
 	}
 	
 	@RequestMapping(value = "/result/download", method = RequestMethod.GET)
-	public ModelAndView downloadResult() throws ServletException, IOException {
-		return new ModelAndView("pdf-match-result");
+	public ModelAndView downloadResult(@RequestParam("matchId") Integer matchId) throws ServletException, IOException {
+		Match match = matchService.findById(matchId);
+		
+		Map<Integer, TeamPerformance> teamPerformances = Utility
+				.generateTeamPerformances(playerPerformanceService, match);
+		
+		ModelAndView modelAndView = new ModelAndView("pdf-match-result");
+		modelAndView.getModelMap().addAttribute("match", match);
+		modelAndView.getModelMap().addAttribute("teamPerformances", teamPerformances);
+		return modelAndView;
 	}
     
     @InitBinder

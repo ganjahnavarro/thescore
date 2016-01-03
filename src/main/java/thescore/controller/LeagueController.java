@@ -156,7 +156,7 @@ public class LeagueController {
 		return null;
 	}
     
-	@RequestMapping(value = { "/end-{id}-league" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/end-{id}-league" }, method = RequestMethod.POST)
 	public String end(@PathVariable Integer id, ModelMap model) {
 		League league = leagueService.findById(id);
 		
@@ -166,7 +166,7 @@ public class LeagueController {
 		List<League> leagues = leagueService.findAllLeagues();
 		model.addAttribute("leagues", leagues);
 		model.addAttribute("infoMessage", "League " + league.getDisplayString() + " has concluded.");
-		return "league/list";
+		return "redirect:/league/list";
 	}
 	
 	@RequestMapping(value = { "/generate-{id}-league" }, method = RequestMethod.GET)

@@ -79,6 +79,7 @@ public class PlayerCareerRecord {
 	
 	public String getAverageDisplay(){
 		double average = (double) total / (double) matches;
+		average = Double.isNaN(average) ? 0 : average;
 		return NumberFormat.getNumberInstance().format(average);
 	}
 

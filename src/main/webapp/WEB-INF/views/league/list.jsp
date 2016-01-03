@@ -94,7 +94,7 @@
 					<p id="modal-title" class="modal-title modal-margin-bottom">Are you sure you want to end this league?</p>
 					
 					<form action="/update-this" method="POST">
-						<div class="form-group col-md-4">
+						<div class="form-group col-sm-12">
 							<label for="championSelect" class="control-label">Champion</label>
 							<select id="championSelect" class="form-control" required="required">
 							</select>
@@ -105,6 +105,7 @@
 							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 						</div>
 					</form>
+					<div class="clearfix"></div>
 				</div>
 			</div>
 		</div>

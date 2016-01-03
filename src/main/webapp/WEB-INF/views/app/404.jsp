@@ -7,7 +7,7 @@
 <t:template>
 	<div style="position: relative; height: 80vh;">
 		<div class="launcher-content">
-			<h4 style="text-align: center;">Access Denied..</h4>
+			<h4 style="text-align: center;">404! See logs for details.</h4>
 		</div>
 	</div>
 </t:template>

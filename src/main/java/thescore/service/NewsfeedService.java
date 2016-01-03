@@ -85,7 +85,6 @@ public class NewsfeedService {
 	
 	public void createNewsfeeds(Match match){
 		createWinnerNewsfeed(match);
-//		TODO
 //		createHighestScorerNewsfeed(match);
 	}
 

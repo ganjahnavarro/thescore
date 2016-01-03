@@ -56,7 +56,7 @@
 			
 			<c:choose>
 				<c:when test="${league.champion == null}">
-					<p class="help-block">League not yet finished.</p>
+					<p class="help-block text-center">League not yet finished.</p>
 				</c:when>
 				<c:otherwise>
 					<div class="teamImage">

@@ -1,5 +1,6 @@
 package thescore.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -7,6 +8,7 @@ import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Repository;
 
 import thescore.classes.TeamWinLoseRecord;
+import thescore.model.LeagueTeam;
 import thescore.model.Match;
 import thescore.model.Team;
 
@@ -36,21 +38,41 @@ public class TeamRepository extends AbstractRepository<Integer, Team> {
 	public List<TeamWinLoseRecord> findTeamLoseRecords(Integer teamId){
 		Team team = getByKey(teamId);
 		
-		return getSession().createQuery("select new " + TeamWinLoseRecord.class
-				+ " (team, win, lose)"
-				+ " select :team,"
-				+ " sum(case when o.winner = :team then 1 else 0),"
-				+ " sum(case when o.winner = :team then 0 else 1),"
+		return getSession().createQuery("select new " + TeamWinLoseRecord.class.getName()
+				+ " (:team,"
+				+ " cast(sum(case when o.winner = :team then 1 else 0 end) as int),"
+				+ " cast(sum(case when o.winner = :team then 0 else 1 end) as int))"
 				+ " from " + Match.ENTITY_NAME
 				+ " o where o.winner is not null and (o.teamA = :team or o.teamB = :team)")
 				.setParameter("team", team)
 				.list();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<TeamWinLoseRecord> findTeamLoseRecordsByLeague(Integer leagueId){
+		List<Team> teams = getSession().createQuery("select o.team from " + LeagueTeam.ENTITY_NAME
+				+ " o where o.league.id = :leagueId order by o.team.name")
+				.setParameter("leagueId", leagueId)
+				.list();
+
+		List<TeamWinLoseRecord> records = new ArrayList<TeamWinLoseRecord>();
 		
-		
-		return null;
+		for(Team team : teams){
+			Object[] winLose = (Object[]) getSession().createQuery("select"
+					+ " sum(case when o.winner = :team then 1 else 0 end),"
+					+ " sum(case when o.winner = :team then 0 else 1 end)"
+					+ " from " + Match.ENTITY_NAME
+					+ " o where o.winner is not null and (o.teamA = :team or o.teamB = :team)")
+					.setParameter("team", team)
+					.uniqueResult();
+			
+			long win = winLose[0] != null ? (long) winLose[0] : 0;
+			long lose = winLose[1] != null ? (long) winLose[1] : 0;
+			
+			records.add(new TeamWinLoseRecord(team, Integer.valueOf(String.valueOf(win)), Integer.valueOf(String.valueOf(lose))));
+		}
+		return records;
 	}
 	
 }
+

@@ -1,5 +1,7 @@
 package thescore.classes;
 
+import java.text.NumberFormat;
+
 public class TeamPerformance {
 
 	private Integer score = 0;
@@ -133,16 +135,38 @@ public class TeamPerformance {
 		return score;
 	}
 	
-	public void updateScore(){
-		score = getFt() + getThreefg() + (getFg() * 2);
-	}
-
 	public Integer getTimeout() {
 		return timeout;
 	}
 
 	public void setTimeout(Integer timeout) {
 		this.timeout = timeout;
+	}
+	
+	public void updateScore(){
+		score = getFt() + getThreefg() + (getFg() * 2);
+	}
+	
+	public Integer getTotalRebounds(){
+		return getDef() + getOff();
+	}
+	
+	public String getFgPercent(){
+		double average = (double) getFg() / (double) getFga();
+		average = Double.isNaN(average) ? 0 : average;
+		return NumberFormat.getNumberInstance().format(average);
+	}
+	
+	public String getThreeFgPercent(){
+		double average = (double) getThreefg() / (double) getThreefga();
+		average = Double.isNaN(average) ? 0 : average;
+		return NumberFormat.getNumberInstance().format(average);
+	}
+	
+	public String getFtPercent(){
+		double average = (double) getFt() / (double) getFta();
+		average = Double.isNaN(average) ? 0 : average;
+		return NumberFormat.getNumberInstance().format(average);
 	}
 
 }

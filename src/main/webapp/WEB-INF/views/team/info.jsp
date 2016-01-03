@@ -49,7 +49,7 @@
 			
 			<c:choose>
 				<c:when test="${empty championships}">
-					<p class="help-block">No Championships yet.</p>
+					<p class="help-block text-center">No Championships yet.</p>
 				</c:when>
 				<c:otherwise>
 					<ul class="list-group">
