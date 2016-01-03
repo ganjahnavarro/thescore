@@ -38,6 +38,10 @@ public class MatchService {
 		updateMatchCommittees(match, committeePKs);
 		updateMatchPlayers(match, teamAPlayerPKs, teamBPlayerPKs);
 	}
+	
+	public List<Match> findMatchesByTeamId(Integer teamId){
+		return matchRepository.findMatchesByTeamId(teamId);
+	}
  
     public void updateMatch(Match source) {
         Match destination = matchRepository.findById(source.getId());

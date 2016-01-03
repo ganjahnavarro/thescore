@@ -22,6 +22,7 @@ public class Team implements IRecord{
 	private String code;
 	private String name;
 	private String coach;
+	private String remarks;
 	
 	private byte[] image;
 	private String imageFileName;
@@ -108,6 +109,15 @@ public class Team implements IRecord{
 			}
 		}
 		return super.equals(obj);
+	}
+
+	@Column(columnDefinition = "text")
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 	
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.validation.Valid;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import thescore.Utility;
+import thescore.classes.TeamPerformance;
 import thescore.editor.LeagueEditor;
 import thescore.editor.TeamEditor;
 import thescore.enums.UserType;
@@ -34,6 +36,7 @@ import thescore.model.Player;
 import thescore.model.Team;
 import thescore.service.LeagueService;
 import thescore.service.MatchService;
+import thescore.service.PlayerPerformanceService;
 import thescore.service.PlayerService;
 import thescore.service.UserService;
 
@@ -45,6 +48,7 @@ public class MatchController {
 	private @Autowired LeagueService leagueService;
 	private @Autowired UserService userService;
 	private @Autowired PlayerService playerService;
+	private @Autowired PlayerPerformanceService playerPerformanceService;
 	
 	private @Autowired TeamEditor teamEditor;
 	private @Autowired LeagueEditor leagueEditor;
@@ -144,11 +148,32 @@ public class MatchController {
 	}
     
     @RequestMapping(value = { "/view-{id}-match" }, method = RequestMethod.GET)
-    public String view(@PathVariable Integer id, ModelMap model) {
-        Match match = matchService.findById(id);
-        model.addAttribute("match", match);
-        return "match/info";
-    }
+	public String view(@PathVariable Integer id, ModelMap model) {
+		Match match = matchService.findById(id);
+
+		List<Player> startingPlayers = matchService.findStartingPlayers(match.getId());
+		Map<Integer, TeamPerformance> teamPerformances = Utility
+				.generateTeamPerformances(playerPerformanceService, match);
+
+		List<Player> teamAPlayers = new ArrayList<Player>();
+		List<Player> teamBPlayers = new ArrayList<Player>();
+
+		for (Player player : startingPlayers) {
+			if (player.getTeam().equals(match.getTeamA())) {
+				teamAPlayers.add(player);
+			} else {
+				teamBPlayers.add(player);
+			}
+		}
+
+		model.addAttribute("match", match);
+		model.addAttribute("teamPerformanceA", teamPerformances.get(match.getTeamA().getId()));
+		model.addAttribute("teamPerformanceB", teamPerformances.get(match.getTeamB().getId()));
+		model.addAttribute("teamAPlayers", teamAPlayers);
+		model.addAttribute("teamBPlayers", teamBPlayers);
+
+		return "match/info";
+	}
     
 	@RequestMapping(value = "/on-league-change", method = RequestMethod.GET)
 	public @ResponseBody String onLeagueChange(@RequestParam("leagueId") Integer leagueId) {

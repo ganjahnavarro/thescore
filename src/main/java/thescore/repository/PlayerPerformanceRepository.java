@@ -136,10 +136,14 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 	private void insertPerformanceComputation(Integer playerId, String sessionId, String fromEntityName, String action,
 			Boolean perLeague, Boolean perMatch) {
 		String sqlQuery = "insert into " + PerformanceComputation.ENTITY_NAME
-				+ " (" + (perLeague ? " leagueId," : "")
-				+ " playerId, action, sessionId, matches, maxOnSingleMatch, total)"
-				+ " select " + (perLeague ? " m.leagueId," : "")
-				+ " :playerId, :action, :sessionId,"
+				+ " (playerId,"
+				+ (perLeague ? " leagueId," : "")
+				+ (perMatch ? " matchId," : "")
+				+ " action, sessionId, matches, maxOnSingleMatch, total)"
+				+ " select :playerId,"
+				+ (perLeague ? " m.leagueId," : "")
+				+ (perMatch ? " pf.matchId," : "")
+				+ " :action, :sessionId,"
 				+ " cast(count(distinct o.performanceId) as int),"
 				
 				+ " coalesce(max(subq.mx), 0), "
@@ -152,7 +156,8 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 				+ " group by performanceId) subq on subq.performanceId = o.performanceId"
 				
 				+ " where pf.playerId = :playerId"
-				+ (perLeague ? " group by m.leagueId" : "");
+				+ (perLeague ? " group by m.leagueId" : "")
+				+ (perMatch ? " group by pf.matchId" : "");
 		
 		getSession().createSQLQuery(sqlQuery)
 			.setParameter("playerId", playerId)

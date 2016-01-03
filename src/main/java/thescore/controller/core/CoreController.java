@@ -2,7 +2,6 @@ package thescore.controller.core;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,16 +23,6 @@ import thescore.model.Match;
 import thescore.model.MatchCommittee;
 import thescore.model.Player;
 import thescore.model.PlayerPerformance;
-import thescore.model.performance.Assist;
-import thescore.model.performance.Block;
-import thescore.model.performance.DefensiveRebound;
-import thescore.model.performance.FieldGoal;
-import thescore.model.performance.Foul;
-import thescore.model.performance.FreeThrow;
-import thescore.model.performance.OffensiveRebound;
-import thescore.model.performance.Steal;
-import thescore.model.performance.ThreePointFieldGoal;
-import thescore.model.performance.Turnover;
 import thescore.service.MatchService;
 import thescore.service.NewsfeedService;
 import thescore.service.PlayerPerformanceService;
@@ -69,7 +58,7 @@ public class CoreController {
 		if(statisticsMap.get(id) != null){
 			teamPerformances = statisticsMap.get(id);
 		} else {
-			teamPerformances = generateTeamPerformances(match);
+			teamPerformances = Utility.generateTeamPerformances(playerPerformanceService, match);
 			statisticsMap.put(match.getId(), teamPerformances);
 		}
 		model.addAttribute("match", match);
@@ -158,103 +147,6 @@ public class CoreController {
 		return "redirect:/match/list";
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Map<Integer, TeamPerformance> generateTeamPerformances(Match match) {
-		Integer id = match.getId();
-		Integer teamAId = match.getTeamA().getId();
-		Integer teamBId = match.getTeamB().getId();
-		
-		Map<Integer, TeamPerformance> teamPerformances = new LinkedHashMap<Integer, TeamPerformance>();
-		TeamPerformance teamPerformanceA = new TeamPerformance();
-		TeamPerformance teamPerformanceB = new TeamPerformance();
-		
-		teamPerformanceA.setTimeout(match.getTeamATimeout());
-		teamPerformanceB.setTimeout(match.getTeamBTimeout());
-		
-		List<FieldGoal> fgs = (List) playerPerformanceService.findPerformanceRecords(id, FieldGoal.ENTITY_NAME);
-		for (FieldGoal fg : fgs) {
-			TeamPerformance teamPerformance = fg.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
-			
-			teamPerformance.setFga(teamPerformance.getFga() + 1);
-
-			if (fg.getMissed() == false) {
-				teamPerformance.setFg(teamPerformance.getFg() + 1);
-			}
-		}
-
-		List<ThreePointFieldGoal> threefgs = (List) playerPerformanceService.findPerformanceRecords(id,
-				ThreePointFieldGoal.ENTITY_NAME);
-		for (ThreePointFieldGoal threefg : threefgs) {
-			TeamPerformance teamPerformance = threefg.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
-			
-			teamPerformance.setThreefga(teamPerformance.getThreefga() + 1);
-
-			if (threefg.getMissed() == false) {
-				teamPerformance.setThreefg(teamPerformance.getThreefg() + 1);
-			}
-		}
-
-		List<FreeThrow> fts = (List) playerPerformanceService.findPerformanceRecords(id, FreeThrow.ENTITY_NAME);
-		for (FreeThrow ft : fts) {
-			TeamPerformance teamPerformance = ft.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
-			
-			teamPerformance.setFta(teamPerformance.getFta() + 1);
-
-			if (ft.getMissed() == false) {
-				teamPerformance.setFt(teamPerformance.getFt() + 1);
-			}
-		}
-
-		List<Steal> stls = (List) playerPerformanceService.findPerformanceRecords(id, Steal.ENTITY_NAME);
-		for(Steal stl : stls){
-			TeamPerformance teamPerformance = stl.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
-			teamPerformance.setStl(teamPerformance.getStl() + 1);
-		}
-
-		List<Block> blks = (List) playerPerformanceService.findPerformanceRecords(id, Block.ENTITY_NAME);
-		for(Block blk : blks){
-			TeamPerformance teamPerformance = blk.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
-			teamPerformance.setBlk(teamPerformance.getBlk() + 1);
-		}
-
-		List<Assist> asts = (List) playerPerformanceService.findPerformanceRecords(id, Assist.ENTITY_NAME);
-		for(Assist ast : asts){
-			TeamPerformance teamPerformance = ast.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
-			teamPerformance.setAst(teamPerformance.getAst() + 1);
-		}
-
-		List<DefensiveRebound> defs = (List) playerPerformanceService.findPerformanceRecords(id, DefensiveRebound.ENTITY_NAME);
-		for(DefensiveRebound def : defs){
-			TeamPerformance teamPerformance = def.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
-			teamPerformance.setDef(teamPerformance.getDef() + 1);
-		}
-
-		List<OffensiveRebound> offs = (List) playerPerformanceService.findPerformanceRecords(id, OffensiveRebound.ENTITY_NAME);
-		for(OffensiveRebound off : offs){
-			TeamPerformance teamPerformance = off.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
-			teamPerformance.setOff(teamPerformance.getOff() + 1);
-		}
-
-		List<Turnover> tos = (List) playerPerformanceService.findPerformanceRecords(id, Turnover.ENTITY_NAME);
-		for(Turnover to : tos){
-			TeamPerformance teamPerformance = to.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
-			teamPerformance.setTo(teamPerformance.getTo() + 1);
-		}
-
-		List<Foul> fouls = (List) playerPerformanceService.findPerformanceRecords(id, Foul.ENTITY_NAME);
-		for(Foul foul : fouls){
-			TeamPerformance teamPerformance = foul.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
-			teamPerformance.setFoul(teamPerformance.getFoul() + 1);
-		}
-		
-		teamPerformanceA.updateScore();
-		teamPerformanceB.updateScore();
-		
-		teamPerformances.put(teamAId, teamPerformanceA);
-		teamPerformances.put(teamBId, teamPerformanceB);
-		return teamPerformances;
-	}
-	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 	    binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
@@ -266,7 +158,7 @@ public class CoreController {
 	
 	public void revalidateMatchData(Integer matchId){
 		Match match = matchService.findById(matchId);
-		Map<Integer, TeamPerformance> teamPerformances = generateTeamPerformances(match);
+		Map<Integer, TeamPerformance> teamPerformances = Utility.generateTeamPerformances(playerPerformanceService, match);
 		statisticsMap.put(match.getId(), teamPerformances);
 	}
 	

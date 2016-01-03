@@ -89,6 +89,10 @@ public class LeagueService {
 		return repository.findAllLeagues();
 	}
 	
+	public List<League> findChampionships(Integer teamId) {
+		return repository.findChampionships(teamId);
+	}
+	
 	public List<LeagueTeam> findAllLeagueTeams(Integer leagueId) {
 		return repository.findAllLeagueTeams(leagueId);
 	}

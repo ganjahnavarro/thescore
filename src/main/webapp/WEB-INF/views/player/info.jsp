@@ -7,7 +7,7 @@
 <t:template>
 	<div class="app-header">
 		<h2>${player.displayString}</h2>
-		<a type="button" class="btn btn-default" href="<c:url value='/player/list' />">Back to List</a>
+		<a type="button" class="btn btn-default" href="<c:url value='/player/list' />">Player List</a>
 		<div class="clr"></div>
 	</div>
 	
@@ -32,32 +32,32 @@
 			<div class="row">
 				<div class="form-group col-md-4">
 					<label class="control-label">Birthdate</label>
-					<input class="form-control" value="<fmt:formatDate pattern="MM/dd/yyyy" value="${player.birthDate}" />" disabled="disabled"/>
+					<input class="form-control" value="<fmt:formatDate pattern="MM/dd/yyyy" value="${player.birthDate}" />" readonly="readonly"/>
 				</div>
 				
 				<div class="form-group col-md-4">
 					<label class="control-label">Contact No.</label>
-					<input class="form-control" value="${player.contactNo}" disabled="disabled"/>
+					<input class="form-control" value="${player.contactNo}" readonly="readonly"/>
 				</div>
 				
 				<div class="form-group col-md-4">
 					<label class="control-label">Email</label>
-					<input class="form-control" value="${player.email}" disabled="disabled"/>
+					<input class="form-control" value="${player.email}" readonly="readonly"/>
 				</div>
 				
 				<div class="form-group col-md-4">
 					<label class="control-label">Position</label>
-					<input class="form-control" value="${player.position.displayString}" disabled="disabled"/>
+					<input class="form-control" value="${player.position.displayString}" readonly="readonly"/>
 				</div>
 				
 				<div class="form-group col-md-4">
 					<label class="control-label">Height</label>
-					<input class="form-control" value="${player.height}" disabled="disabled"/>
+					<input class="form-control" value="${player.height}" readonly="readonly"/>
 				</div>
 				
 				<div class="form-group col-md-4">
 					<label class="control-label">Weight</label>
-					<input class="form-control" value="${player.weight}" disabled="disabled"/>
+					<input class="form-control" value="${player.weight}" readonly="readonly"/>
 				</div>
 			</div>
 		</div>
@@ -129,8 +129,8 @@
 			
 			<c:forEach items="${perMatchRecords}" var="entry">
 				<div class="info-table-label">
-					<a href="<c:url value='/match/view-${entry.key.id}-league' />">
-						<span class="label label-primary">${entry.key.displayString}</span>
+					<a href="<c:url value='/match/view-${entry.key.id}-match' />">
+						<span class="label label-primary">${entry.key.teamA.code} VS. ${entry.key.teamB.code}</span>
 					</a>
 				</div>
 			

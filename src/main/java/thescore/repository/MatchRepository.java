@@ -82,4 +82,13 @@ public class MatchRepository extends AbstractRepository<Integer, Match> {
 				.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Match> findMatchesByTeamId(Integer teamId){
+		return getSession().createQuery("select o from " + Match.ENTITY_NAME
+				+ " o where o.teamA.id = :teamId or o.teamB.id = :teamId"
+				+ " order by o.time desc")
+				.setParameter("teamId", teamId)
+				.list();
+	}
+	
 }

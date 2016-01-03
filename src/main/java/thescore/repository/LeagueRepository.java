@@ -42,4 +42,12 @@ public class LeagueRepository extends AbstractRepository<Integer, League> {
 		return (List<LeagueTeam>) criteria.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<League> findChampionships(Integer teamId) {
+		return createEntityCriteria()
+				.add(Restrictions.eq("champion.id", teamId))
+				.addOrder(Order.desc("startDate"))
+				.list();
+	}
+	
 }

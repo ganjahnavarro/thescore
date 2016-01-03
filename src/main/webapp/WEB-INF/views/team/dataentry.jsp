@@ -28,19 +28,25 @@
 			<form:input path="name" id="name" cssClass="form-control"
 				cssErrorClass="form-control has-error" />
 		</div>
+		
+		<div class="form-group col-md-4">
+			<label for="coach" class="control-label">Coach</label>
+			<form:input path="coach" id="coach" cssClass="form-control"
+				cssErrorClass="form-control has-error" />
+		</div>
 
 		<div class="clearfix"></div>
+		
+		<div class="form-group col-md-4">
+			<label for="remarks" class="control-label">Remarks</label>
+			<form:textarea path="remarks" id="remarks" cssClass="form-control"
+				cssErrorClass="form-control has-error" />
+		</div>
 
 		<div class="form-group col-md-4">
 			<label for="image" class="control-label">Image</label> <input
 				id="image" class="form-control" type="file" name="fileUpload"
 				size="50" />
-		</div>
-
-		<div class="form-group col-md-4">
-			<label for="coach" class="control-label">Coach</label>
-			<form:input path="coach" id="coach" cssClass="form-control"
-				cssErrorClass="form-control has-error" />
 		</div>
 
 		<div class="form-group col-sm-12">

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import thescore.classes.TeamWinLoseRecord;
 import thescore.model.Team;
 import thescore.repository.TeamRepository;
 
@@ -43,6 +44,14 @@ public class TeamService {
 
 	public List<Team> findAllTeams() {
 		return repository.findAllTeams();
+	}
+	
+	public List<TeamWinLoseRecord> findTeamLoseRecords(Integer teamId){
+		return repository.findTeamLoseRecords(teamId);
+	}
+	
+	public List<TeamWinLoseRecord> findTeamLoseRecordsByLeague(Integer leagueId){
+		return repository.findTeamLoseRecordsByLeague(leagueId);
 	}
 
 }

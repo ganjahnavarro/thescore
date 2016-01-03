@@ -80,6 +80,20 @@ input.has-error {
 	color: darkgray;
 }
 
+.teamImage {
+	text-align: center;
+}
+
+.teamImage img {
+	width: 130px;
+	min-width: 130px;
+	max-width: 130px;
+	
+	height: 100px;
+	min-height: 100px;
+	max-height: 100px;
+}
+
 .profileImage {
 	text-align: center;
 }
@@ -96,3 +110,38 @@ input.has-error {
 	max-height: 100px;
 }
 
+.info-table-label{
+	margin-bottom: 8px;
+}
+
+.info-table-label a:hover {
+    text-decoration: inherit;
+}
+
+.recent-match-badge{
+	width: 22px;
+}
+
+.substitution-item {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.substitution-item img {
+	width: 80px;
+	height: 100px;
+	border: 1px solid gainsboro;
+	border-radius: 3px;
+}
+
+.recent-match-unplayed {
+	float: right!important;
+    font-size: 1.1rem;
+    color: gray;
+    padding-top: 3px;
+    margin-left: 3px;
+}
+
+.print-pdf{
+	margin-right: 10px;
+}

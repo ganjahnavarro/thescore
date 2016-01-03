@@ -116,6 +116,7 @@ public class LeagueController {
     public String view(@PathVariable Integer id, ModelMap model) {
         League league = leagueService.findById(id);
         model.addAttribute("league", league);
+        model.addAttribute("teamWinLoseRecords", teamService.findTeamLoseRecordsByLeague(league.getId()));
         return "league/info";
     }
     

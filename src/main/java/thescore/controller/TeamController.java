@@ -24,17 +24,23 @@ import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
 import thescore.Utility;
 import thescore.model.Team;
+import thescore.service.LeagueService;
+import thescore.service.MatchService;
+import thescore.service.PlayerService;
 import thescore.service.TeamService;
 
 @Controller
 @RequestMapping("/team")
 public class TeamController {
 	
-	private @Autowired TeamService service;
+	private @Autowired TeamService teamService;
+	private @Autowired PlayerService playerService;
+	private @Autowired MatchService matchService;
+	private @Autowired LeagueService leagueService;
 	
 	@RequestMapping(value = { "/", "/list" }, method = RequestMethod.GET)
 	public String list(ModelMap model) {
-		List<Team> teams = service.findAllTeams();
+		List<Team> teams = teamService.findAllTeams();
 		model.addAttribute("teams", teams);
 		return "team/list";
 	}
@@ -63,14 +69,14 @@ public class TeamController {
 			return "team/dataentry";
 		}
 
-		service.saveTeam(team);
+		teamService.saveTeam(team);
 		model.addAttribute("infoMessage", "Team " + team.getDisplayString() + " registered successfully");
 		return "redirect:/team/list";
 	}
 	
 	@RequestMapping(value = { "/edit-{id}-team" }, method = RequestMethod.GET)
     public String edit(@PathVariable Integer id, ModelMap model) {
-		Team team = service.findById(id);
+		Team team = teamService.findById(id);
 		model.addAttribute("team", team);
 		model.addAttribute("edit", true);
 		model.addAttribute("actionParam", "/team/edit-" + id + "-team?");
@@ -92,28 +98,31 @@ public class TeamController {
             return "team/dataentry";
         }
  
-        service.updateTeam(team);
+        teamService.updateTeam(team);
         model.addAttribute("success", "Team " + team.getDisplayString()  + " updated successfully");
         return "redirect:/team/list";	
     }
  
     @RequestMapping(value = { "/delete-{id}-team" }, method = RequestMethod.GET)
     public String delete(@PathVariable Integer id) {
-        service.deleteTeamById(id);
+        teamService.deleteTeamById(id);
         return "redirect:/team/list";
     }
     
     @RequestMapping(value = { "/view-{id}-team" }, method = RequestMethod.GET)
     public String view(@PathVariable Integer id, ModelMap model) {
-        Team team = service.findById(id);
-        model.addAttribute("team", team);
-        return "team/info";
+		Team team = teamService.findById(id);
+		model.addAttribute("team", team);
+		model.addAttribute("championships", leagueService.findChampionships(team.getId()));
+		model.addAttribute("players", playerService.findPlayersByTeamId(team.getId()));
+		model.addAttribute("matches", matchService.findMatchesByTeamId(team.getId()));
+		return "team/info";
     }
     
 	@RequestMapping(value = "/image", method = RequestMethod.GET)
 	public void showImage(@RequestParam("id") Integer id, HttpServletResponse response, HttpServletRequest request)
 			throws ServletException, IOException {
-		Team team = service.findById(id);
+		Team team = teamService.findById(id);
 		response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
 		response.getOutputStream().write(team.getImage());
 		response.getOutputStream().close();
