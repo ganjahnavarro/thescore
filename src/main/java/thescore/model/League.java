@@ -74,19 +74,6 @@ public class League implements IRecord {
 		return getName();
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof League){
-			League league = (League) obj;
-
-			if(league.getId() != null && getId() != null){
-				return league.getId().equals(getId());
-			}
-		}
-		
-		return super.equals(obj);
-	}
-
 	@DateTimeFormat(pattern = "MM/dd/yyyy")
 	public Date getStartDate() {
 		return startDate;
@@ -154,6 +141,29 @@ public class League implements IRecord {
 
 	public void setGenerated(Boolean generated) {
 		this.generated = generated;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((prize == null) ? 0 : prize.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof League){
+			League league = (League) obj;
+
+			if(league.getId() != null && getId() != null){
+				return league.getId().equals(getId());
+			}
+		}
+		return super.equals(obj);
 	}
 
 }

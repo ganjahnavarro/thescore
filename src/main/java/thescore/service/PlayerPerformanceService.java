@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import thescore.classes.PlayerCareerRecord;
 import thescore.interfaces.IPerformanceRecord;
 import thescore.interfaces.IRecord;
 import thescore.model.PlayerPerformance;
+import thescore.model.computation.PerformanceComputation;
 import thescore.repository.PlayerPerformanceRepository;
 
 @Service
@@ -38,8 +38,16 @@ public class PlayerPerformanceService {
     	return repository.findPerformanceRecords(matchId, entityName);
     }
 	
-	public List<PlayerCareerRecord> findPlayerCareerRecords(Integer playerId){
-		return repository.findPlayerCareerRecords(playerId);
+	public List<PerformanceComputation> findOverallPerformanceComputations(Integer playerId){
+		return repository.findOverallPerformanceComputations(playerId);
+	}
+	
+	public List<PerformanceComputation> findPerLeaguePerformanceComputations(Integer playerId){
+		return repository.findPerLeaguePerformanceComputations(playerId);
+	}
+	
+	public List<PerformanceComputation> findPerMatchPerformanceComputations(Integer playerId){
+		return repository.findPerMatchPerformanceComputations(playerId);
 	}
 	
 	@SuppressWarnings("rawtypes")

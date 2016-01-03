@@ -9,11 +9,27 @@ public class PlayerCareerRecord {
 	private Player player;
 	private String action;
 
-	private Integer matches;
-	private Integer maxOnSingleMatch;
-	private Integer total;
+	private Number matches;
+	private Number maxOnSingleMatch;
+	private Number total;
 	
 	public PlayerCareerRecord(Player player, String action, Integer matches, Integer maxOnSingleMatch, Integer total) {
+		this.player = player;
+		this.action = action;
+		this.matches = matches;
+		this.maxOnSingleMatch = maxOnSingleMatch;
+		this.total = total;
+	}
+	
+	public PlayerCareerRecord(Player player, String action, Double matches, Double maxOnSingleMatch, Double total) {
+		this.player = player;
+		this.action = action;
+		this.matches = matches;
+		this.maxOnSingleMatch = maxOnSingleMatch;
+		this.total = total;
+	}
+	
+	public PlayerCareerRecord(Player player, String action, Long matches, Long maxOnSingleMatch, Long total) {
 		this.player = player;
 		this.action = action;
 		this.matches = matches;
@@ -37,27 +53,27 @@ public class PlayerCareerRecord {
 		this.action = action;
 	}
 
-	public Integer getMatches() {
+	public Number getMatches() {
 		return matches;
 	}
 
-	public void setMatches(Integer matches) {
+	public void setMatches(Number matches) {
 		this.matches = matches;
 	}
 
-	public Integer getMaxOnSingleMatch() {
+	public Number getMaxOnSingleMatch() {
 		return maxOnSingleMatch;
 	}
 
-	public void setMaxOnSingleMatch(Integer maxOnSingleMatch) {
+	public void setMaxOnSingleMatch(Number maxOnSingleMatch) {
 		this.maxOnSingleMatch = maxOnSingleMatch;
 	}
 
-	public Integer getTotal() {
+	public Number getTotal() {
 		return total;
 	}
 
-	public void setTotal(Integer total) {
+	public void setTotal(Number total) {
 		this.total = total;
 	}
 	

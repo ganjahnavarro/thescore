@@ -10,4 +10,7 @@
 		<a type="button" class="btn btn-default" href="<c:url value='/match/list' />">Back to List</a>
 		<div class="clr"></div>
 	</div>
+	
+	<a type="button" class="btn btn-danger" href="<c:url value='/match/result/download' />">Print PDF</a>
+	
 </t:template>

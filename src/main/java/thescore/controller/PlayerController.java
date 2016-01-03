@@ -1,7 +1,10 @@
 package thescore.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,8 +29,11 @@ import org.springframework.web.servlet.ModelAndView;
 import thescore.Utility;
 import thescore.editor.TeamEditor;
 import thescore.enums.Position;
+import thescore.model.League;
+import thescore.model.Match;
 import thescore.model.Player;
 import thescore.model.Team;
+import thescore.model.computation.PerformanceComputation;
 import thescore.service.PlayerPerformanceService;
 import thescore.service.PlayerService;
 import thescore.service.TeamService;
@@ -125,10 +131,46 @@ public class PlayerController {
     @RequestMapping(value = { "/view-{id}-player" }, method = RequestMethod.GET)
     public String view(@PathVariable Integer id, ModelMap model) {
         Player player = playerService.findById(id);
-        model.addAttribute("player", player);
-        model.addAttribute("records", playerPerformanceService.findPlayerCareerRecords(player.getId()));
+		model.addAttribute("player", player);
+
+		model.addAttribute("overAllRecords", playerPerformanceService.findOverallPerformanceComputations(player.getId()));
+        model.addAttribute("perLeagueRecords", generateLeagueRecords(player));
+        model.addAttribute("perMatchRecords", generatePerMatchRecords(player));
+        
         return "player/info";
     }
+
+	private Map<Match, List<PerformanceComputation>> generatePerMatchRecords(Player player) {
+		Map<Match, List<PerformanceComputation>> matchRecords = new LinkedHashMap<Match, List<PerformanceComputation>>();
+        List<PerformanceComputation> perMatchPerformanceComputations = playerPerformanceService.findPerMatchPerformanceComputations(player.getId());
+        
+        for(PerformanceComputation computation : perMatchPerformanceComputations){
+        	if(matchRecords.get(computation.getMatch()) != null){
+        		matchRecords.get(computation.getMatch()).add(computation);
+        	} else {
+        		List<PerformanceComputation> computations = new ArrayList<PerformanceComputation>();
+        		computations.add(computation);
+        		matchRecords.put(computation.getMatch(), computations);
+        	}
+        }
+		return matchRecords;
+	}
+
+	private Map<League, List<PerformanceComputation>> generateLeagueRecords(Player player) {
+		Map<League, List<PerformanceComputation>> leagueRecords = new LinkedHashMap<League, List<PerformanceComputation>>();
+        List<PerformanceComputation> perLeaguePerformanceComputations = playerPerformanceService.findPerLeaguePerformanceComputations(player.getId());
+        
+        for(PerformanceComputation computation : perLeaguePerformanceComputations){
+        	if(leagueRecords.get(computation.getLeague()) != null){
+        		leagueRecords.get(computation.getLeague()).add(computation);
+        	} else {
+        		List<PerformanceComputation> computations = new ArrayList<PerformanceComputation>();
+        		computations.add(computation);
+        		leagueRecords.put(computation.getLeague(), computations);
+        	}
+        }
+		return leagueRecords;
+	}
     
 	@RequestMapping(value = "/image", method = RequestMethod.GET)
 	public void showImage(@RequestParam("id") Integer id, HttpServletResponse response, HttpServletRequest request)
