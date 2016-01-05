@@ -56,7 +56,7 @@ public class LeagueController {
 		League league = new League();
 		model.addAttribute("league", league);
 		model.addAttribute("edit", false);
-		model.addAttribute("teams", teamService.findAllTeams());
+		model.addAttribute("teams", teamService.findAllValidTeams());
 		model.addAttribute("existingTeamPKs", new ArrayList<Integer>());
 		return "league/dataentry";
 	}
@@ -66,7 +66,7 @@ public class LeagueController {
 			@RequestParam(required = false) String[] teams) {
 		if (result.hasErrors()) {
 			Utility.parseErrors(result, model);
-			model.addAttribute("teams", teamService.findAllTeams());
+			model.addAttribute("teams", teamService.findAllValidTeams());
 			return "league/dataentry";
 		}
 
@@ -80,7 +80,7 @@ public class LeagueController {
         League league = leagueService.findById(id);
         model.addAttribute("league", league);
         model.addAttribute("edit", true);
-        model.addAttribute("teams", teamService.findAllTeams());
+        model.addAttribute("teams", teamService.findAllValidTeams());
         
         List<LeagueTeam> leagueTeams = leagueService.findAllLeagueTeams(league.getId());
         List<Integer> existingTeamPKs = new ArrayList<Integer>();
@@ -98,6 +98,7 @@ public class LeagueController {
             @RequestParam(required = false) String[] teams) {
         if (result.hasErrors()) {
         	Utility.parseErrors(result, model);
+        	model.addAttribute("teams", teamService.findAllValidTeams());
             return "league/dataentry";
         }
  
@@ -197,7 +198,6 @@ public class LeagueController {
 				match.setLeague(league);
 				match.setTeamA(leagueTeams.get(i).getTeam());
 				match.setTeamB(leagueTeams.get(j).getTeam());
-				match.setTime(new Date());
 				
 				matchService.saveMatch(match);
 			}

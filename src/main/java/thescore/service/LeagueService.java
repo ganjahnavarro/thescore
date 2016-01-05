@@ -6,36 +6,63 @@ import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import thescore.enums.UserType;
 import thescore.model.League;
 import thescore.model.LeagueTeam;
+import thescore.model.User;
 import thescore.repository.LeagueRepository;
 import thescore.repository.TeamRepository;
+import thescore.repository.UserRepository;
 
 @Service
 @Transactional
 public class LeagueService {
+	
+	private @Autowired MailSender mailSender;
 
-    private @Autowired LeagueRepository repository;
+    private @Autowired LeagueRepository leagueRepository;
     private @Autowired TeamRepository teamRepository;
+    private @Autowired UserRepository userRepository;
      
     public League findById(int id) {
-        return repository.findById(id);
+        return leagueRepository.findById(id);
     }
  
-	public void saveLeague(League league) {
-		repository.saveLeague(league);
+	public void saveLeague(League league, String[] teamPKs) {
+		leagueRepository.saveLeague(league);
+		updateLeagueTeams(league, teamPKs);
+		sendEmailToSubscribeUsers(league);
 	}
 	
-	public void saveLeague(League league, String[] teamPKs) {
-		repository.saveLeague(league);
-		updateLeagueTeams(league, teamPKs);
+	private void sendEmailToSubscribeUsers(League league){
+	for(User user : userRepository.findAllUsers(UserType.DEFAULT)){
+		if(user.getEmail() != null && !user.getEmail().isEmpty()){
+			try {
+				SimpleMailMessage mailMessage = new SimpleMailMessage();
+				mailMessage.setFrom("1applicationbot@gmail.com");
+				mailMessage.setTo(user.getEmail());
+				mailMessage.setSubject("New Basketball League");
+				
+				String messageBody = "New League has been created (" + league.getName() + ")"
+						+ (league.getPrize() != null ? " with a prize of " + league.getPrize() : "")
+						+ (league.getAddress() != null ? " at address " + league.getAddress() : "");
+				
+				mailMessage.setText(messageBody);
+				mailSender.send(mailMessage);
+			} catch (Exception e){
+				System.out.println("Error sending email to: " + user.getEmail());
+			}
+		}
 	}
+}
     
     public void updateLeague(League source) {
-        League destination = repository.findById(source.getId());
+        League destination = leagueRepository.findById(source.getId());
         
 		if (destination != null) {
 			try {
@@ -66,7 +93,7 @@ public class LeagueService {
 		if(leagueTeams != null){
 			for(LeagueTeam leagueTeam : leagueTeams){
 				if(newTeamPKs.contains(leagueTeam.getTeam().getId()) == false){
-					repository.deleteRecordById(LeagueTeam.ENTITY_NAME, leagueTeam.getId());
+					leagueRepository.deleteRecordById(LeagueTeam.ENTITY_NAME, leagueTeam.getId());
 				}
 				
 				existingTeamPKs.add(leagueTeam.getTeam().getId());
@@ -78,25 +105,25 @@ public class LeagueService {
 				LeagueTeam leagueTeam = new LeagueTeam();
 				leagueTeam.setLeague(league);
 				leagueTeam.setTeam(teamRepository.findById(newTeamPK));
-				repository.persist(leagueTeam);
+				leagueRepository.persist(leagueTeam);
 			}
 		}
 	}
  
     public void deleteLeagueById(Integer id) {
-        repository.deleteRecordById(id);
+        leagueRepository.deleteRecordById(id);
     }
      
 	public List<League> findAllLeagues() {
-		return repository.findAllLeagues();
+		return leagueRepository.findAllLeagues();
 	}
 	
 	public List<League> findChampionships(Integer teamId) {
-		return repository.findChampionships(teamId);
+		return leagueRepository.findChampionships(teamId);
 	}
 	
 	public List<LeagueTeam> findAllLeagueTeams(Integer leagueId) {
-		return repository.findAllLeagueTeams(leagueId);
+		return leagueRepository.findAllLeagueTeams(leagueId);
 	}
  
 }

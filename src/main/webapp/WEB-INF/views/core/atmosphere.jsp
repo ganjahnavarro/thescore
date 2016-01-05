@@ -40,12 +40,44 @@
 
 	<script>
 		$(function() {
-			$('.draggable').draggable({
+			$('.draggable-a').draggable({
 				revert : true,
-				stack : ".draggable"
+				stack : ".draggable-a"
 			});
 			
-			$('.droppable').droppable({
+			$('.droppable-a').droppable({
+				accept : ".draggable-a",
+				drop : function(event, ui) {
+					//console.log('Incoming Player ID: ' + ui.draggable.data('playerid'));
+					//console.log('Outgoing Player ID: ' + $(this).data('playerid'));
+
+					var draggedImg = ui.draggable.find('img');
+					var droppedImg = $(this).find('img');
+
+					//swap img src
+					var srcHolder = draggedImg.attr('src');
+					draggedImg.attr('src', droppedImg.attr('src'));
+					droppedImg.attr('src', srcHolder);
+
+					//swap playerid attribute
+					var playerIdHolder = ui.draggable.data('playerid');
+					ui.draggable.data('playerid', $(this).data('playerid'));
+					$(this).data('playerid', playerIdHolder);
+					
+					//swap img playerid attribute
+					var imagePlayerIdHolder = draggedImg.data('playerid');
+					draggedImg.data('playerid', droppedImg.data('playerid'));
+					droppedImg.data('playerid', imagePlayerIdHolder);
+				}
+			});
+			
+			$('.draggable-b').draggable({
+				revert : true,
+				stack : ".draggable-b"
+			});
+			
+			$('.droppable-b').droppable({
+				accept : ".draggable-b",
 				drop : function(event, ui) {
 					//console.log('Incoming Player ID: ' + ui.draggable.data('playerid'));
 					//console.log('Outgoing Player ID: ' + $(this).data('playerid'));

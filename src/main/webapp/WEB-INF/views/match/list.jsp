@@ -20,7 +20,7 @@
 		<table class="table table-hover table-striped">
 			<tr>
 				<td>League</td>
-				<td>Time</td>
+				<td>Match Start</td>
 				<td>Match Up</td>
 				<td>Referee</td>
 				<td>Winner</td>

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import thescore.classes.TeamWinLoseRecord;
 import thescore.model.LeagueTeam;
 import thescore.model.Match;
+import thescore.model.Player;
 import thescore.model.Team;
 
 @Repository
@@ -32,6 +33,12 @@ public class TeamRepository extends AbstractRepository<Integer, Team> {
 		Criteria criteria = createEntityCriteria();
 		criteria.addOrder(Order.asc("name"));
 		return (List<Team>) criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Team> findAllValidTeams() {
+		return (List<Team>) getSession().createQuery("select t.id from " + Team.ENTITY_NAME + " t, " + Player.ENTITY_NAME
+				+ " p where t.id = p.team.id group by t.id having count(p.id) >= 5").list();
 	}
 	
 	@SuppressWarnings("unchecked")

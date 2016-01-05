@@ -90,7 +90,9 @@
 						</div>
 					</div>
 				</div>
-				
+			</sec:authorize>
+			
+			<sec:authorize access="hasRole('HEAD_COMMITTEE')">	
 				<div class="col-sm-6 col-md-4 col-lg-3">
 					<div class="thumbnail">
 						<div class="launcher-content">

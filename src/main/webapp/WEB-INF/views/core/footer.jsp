@@ -4,18 +4,20 @@
 <div class="footer">
 	<div class="container-fluid">
 		<div id="quarter-selection-panel" class="col-md-4">
-			<p class="footer-score">Quarter</p>
-			
-			<div class="footer-score">
-				<span class="quarter-selection-item" data-quarter="1">1st </span>
-				<span class="quarter-selection-item" data-quarter="2">2nd </span>
-				<span class="quarter-selection-item" data-quarter="3">3rd </span>
-				<span class="quarter-selection-item" data-quarter="4">4th </span>
+			<c:if test="${allowedStatisticsModification}">
+				<p class="footer-score">Quarter</p>
 				
-				<a id="add-quarter">
-					<button type="button" class="close" aria-label="Close"><span aria-hidden="true">+</span></button>
-				</a>
-			</div>
+				<div class="footer-score">
+					<span class="quarter-selection-item" data-quarter="1">1st </span>
+					<span class="quarter-selection-item" data-quarter="2">2nd </span>
+					<span class="quarter-selection-item" data-quarter="3">3rd </span>
+					<span class="quarter-selection-item" data-quarter="4">4th </span>
+					
+					<a id="add-quarter">
+						<button type="button" class="close" aria-label="Close"><span aria-hidden="true">+</span></button>
+					</a>
+				</div>
+			</c:if>
 		</div>
 		
 		<div class="hidden">

@@ -46,6 +46,10 @@ public class TeamService {
 		return repository.findAllTeams();
 	}
 	
+	public List<Team> findAllValidTeams() {
+		return repository.findAllValidTeams();
+	}
+	
 	public List<TeamWinLoseRecord> findTeamLoseRecords(Integer teamId){
 		return repository.findTeamLoseRecords(teamId);
 	}

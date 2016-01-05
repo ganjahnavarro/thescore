@@ -3,6 +3,7 @@ package thescore.repository;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -31,6 +32,18 @@ public class MatchRepository extends AbstractRepository<Integer, Match> {
 	@SuppressWarnings("unchecked")
 	public List<Match> findAllMatches() {
 		Criteria criteria = createEntityCriteria();
+		criteria.addOrder(Order.asc("time"));
+		return (List<Match>) criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Match> findAllMatches(Criterion... criterions) {
+		Criteria criteria = createEntityCriteria();
+		
+		for(Criterion criterion : criterions){
+			criteria.add(criterion);
+		}
+		
 		criteria.addOrder(Order.asc("time"));
 		return (List<Match>) criteria.list();
 	}

@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.validation.Valid;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
@@ -125,9 +126,9 @@ public class MatchController {
 			return false;
 		}
 		
-		if((teamAPlayers != null && teamAPlayers.length > 5) ||
-				(teamBPlayers != null && teamBPlayers.length > 5)){
-			model.addAttribute("errorMessage", "Only 5 Players is allowed on starting roster.");
+		if(teamAPlayers == null || teamBPlayers == null
+				|| teamAPlayers.length != 5 || teamBPlayers.length != 5){
+			model.addAttribute("errorMessage", "Both Team A and B should have 5 Starting Players.");
 			return false;
 		}
 		
@@ -142,7 +143,7 @@ public class MatchController {
     
     @RequestMapping(value = "/calendar", method = RequestMethod.GET)
 	public String calendar(ModelMap model) {
-		List<Match> matches = matchService.findAllMatches();
+		List<Match> matches = matchService.findAllMatches(Restrictions.isNotEmpty("time"));
 		model.addAttribute("matches", matches);
 		return "match/calendar";
 	}

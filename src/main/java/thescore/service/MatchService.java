@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import thescore.model.MatchCommittee;
 import thescore.model.Match;
+import thescore.model.MatchCommittee;
 import thescore.model.MatchPlayer;
 import thescore.model.Player;
 import thescore.repository.MatchRepository;
@@ -149,6 +150,10 @@ public class MatchService {
      
     public List<Match> findAllMatches() {
         return matchRepository.findAllMatches();
+    }
+    
+    public List<Match> findAllMatches(Criterion... criterions) {
+        return matchRepository.findAllMatches(criterions);
     }
  
 }
