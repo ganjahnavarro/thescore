@@ -57,8 +57,10 @@ public class LeagueService {
 		List<Integer> newTeamPKs = new ArrayList<Integer>();
 		List<Integer> existingTeamPKs = new ArrayList<Integer>();
 		
-		for(String pk : teamPKs){
-			newTeamPKs.add(Integer.valueOf(pk));
+		if(teamPKs != null){
+			for(String pk : teamPKs){
+				newTeamPKs.add(Integer.valueOf(pk));
+			}
 		}
 		
 		if(leagueTeams != null){

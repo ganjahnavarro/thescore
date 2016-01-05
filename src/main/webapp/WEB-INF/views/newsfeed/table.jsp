@@ -22,7 +22,7 @@
 			<c:choose>
 				<c:when test="${viewOnly == false}">
 					<td>
-						<a href="<c:url value='/app/edit-${newsfeed.id}-newsfeed' />">
+						<a href="<c:url value='/newsfeed/edit-${newsfeed.id}-newsfeed' />">
 							<button type="button" class="btn btn-default" aria-label="Edit">
 								<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 							</button>
@@ -30,7 +30,7 @@
 	
 						<button type="button" class="btn btn-default" aria-label="Delete"
 							data-toggle="modal" data-target="#defaultModal"
-							data-action="<c:url value='/app/delete-${newsfeed.id}-newsfeed' />">
+							data-action="<c:url value='/newsfeed/delete-${newsfeed.id}-newsfeed' />">
 							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 						</button>
 					</td>

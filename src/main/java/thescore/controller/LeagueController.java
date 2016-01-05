@@ -156,10 +156,13 @@ public class LeagueController {
 		return null;
 	}
     
-	@RequestMapping(value = { "/end-{id}-league" }, method = RequestMethod.POST)
-	public String end(@PathVariable Integer id, ModelMap model) {
+	@RequestMapping(value = { "/end-{id}-league" }, method = RequestMethod.GET)
+	public String end(@PathVariable Integer id, ModelMap model,
+			@RequestParam(required = false) String championPK) {
+		Team champion = teamService.findById(Integer.valueOf(championPK));
 		League league = leagueService.findById(id);
 		
+		league.setChampion(champion);
 		league.setEndDate(new Date());
 		leagueService.updateLeague(league);
 		

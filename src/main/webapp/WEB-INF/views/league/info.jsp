@@ -92,7 +92,11 @@
 					</tr>
 					<c:forEach items="${teamWinLoseRecords}" var="record">
 						<tr>
-							<td>${record.team.displayString}</td>
+							<td>
+								<a href="<c:url value='/team/view-${record.team.id}-team' />">
+									${record.team.displayString}									
+								</a>
+							</td>
 							<td>${record.win}</td>
 							<td>${record.lose}</td>
 						</tr>

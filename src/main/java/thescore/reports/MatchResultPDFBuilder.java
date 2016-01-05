@@ -44,18 +44,18 @@ public class MatchResultPDFBuilder extends AbstractPDFView {
 		
 		Font font = FontFactory.getFont(FontFactory.HELVETICA);
          
-        PdfPCell cell = new PdfPCell();
-        cell.setPadding(5);
-        cell.setBorderColor(BaseColor.LIGHT_GRAY);
+		defaultCell = new PdfPCell();
+		defaultCell.setPadding(5);
+		defaultCell.setBorderColor(BaseColor.LIGHT_GRAY);
          
-        cell.setPhrase(new Phrase(match.getTeamA().getDisplayString(), font));
-        table.addCell(cell);
+		defaultCell.setPhrase(new Phrase(match.getTeamA().getDisplayString(), font));
+        table.addCell(defaultCell);
         
-        cell.setPhrase(new Phrase("VS.", font));
-        table.addCell(cell);
+        defaultCell.setPhrase(new Phrase("VS.", font));
+        table.addCell(defaultCell);
         
-        cell.setPhrase(new Phrase(match.getTeamB().getDisplayString(), font));
-        table.addCell(cell);
+        defaultCell.setPhrase(new Phrase(match.getTeamB().getDisplayString(), font));
+        table.addCell(defaultCell);
         
         table = addCell(table, match.getTeamATimeout());
         table = addCell(table, "Timeouts");

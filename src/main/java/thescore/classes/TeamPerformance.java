@@ -2,6 +2,9 @@ package thescore.classes;
 
 import java.text.NumberFormat;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TeamPerformance {
 
 	private Integer score = 0;

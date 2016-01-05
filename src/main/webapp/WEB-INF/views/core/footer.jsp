@@ -18,26 +18,27 @@
 			</div>
 		</div>
 		
-		
-		<div class="col-md-4">
-			<p class="footer-score">${match.teamA.code}</p>
-			
-			<div class="footer-score">
-				<span id="qtr-1-a">22 </span>
-				<span id="qtr-2-a">27 </span>
-				<span id="qtr-3-a">24 </span>
-				<span id="qtr-4-a">26 </span>
+		<div class="hidden">
+			<div class="col-md-4">
+				<p class="footer-score">${match.teamA.code}</p>
+				
+				<div class="footer-score">
+					<span id="qtr-1-a">22 </span>
+					<span id="qtr-2-a">27 </span>
+					<span id="qtr-3-a">24 </span>
+					<span id="qtr-4-a">26 </span>
+				</div>
 			</div>
-		</div>
-		
-		<div class="col-md-4">
-			<p class="footer-score">${match.teamB.code}</p>
 			
-			<div class="footer-score">
-				<span id="qtr-1-b">28 </span>
-				<span id="qtr-2-b">23 </span>
-				<span id="qtr-3-b">18 </span>
-				<span id="qtr-4-b">25 </span>
+			<div class="col-md-4">
+				<p class="footer-score">${match.teamB.code}</p>
+				
+				<div class="footer-score">
+					<span id="qtr-1-b">28 </span>
+					<span id="qtr-2-b">23 </span>
+					<span id="qtr-3-b">18 </span>
+					<span id="qtr-4-b">25 </span>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -93,10 +93,10 @@
 				<div class="modal-body">
 					<p id="modal-title" class="modal-title modal-margin-bottom">Are you sure you want to end this league?</p>
 					
-					<form action="/update-this" method="POST">
+					<form action="/update-this" method="GET">
 						<div class="form-group col-sm-12">
 							<label for="championSelect" class="control-label">Champion</label>
-							<select id="championSelect" class="form-control" required="required">
+							<select id="championSelect" class="form-control" required="required" name="championPK">
 							</select>
 						</div>
 						

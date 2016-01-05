@@ -134,7 +134,7 @@ $(function() {
 				action : actionParam,
 				missed : missedParam,
 				subtract : subtractParam,
-				selectedQuarter : selectedQuarter
+				quarter : selectedQuarter
 			}));
 		}
 	});

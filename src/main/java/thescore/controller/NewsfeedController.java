@@ -29,6 +29,7 @@ public class NewsfeedController {
 	public String list(ModelMap model) {
 		List<Newsfeed> newsfeeds = newsfeedService.findNewsfeeds();
 		model.addAttribute("newsfeeds", newsfeeds);
+		model.addAttribute("viewOnly", false);
 		return "newsfeed/list";
 	}
 	

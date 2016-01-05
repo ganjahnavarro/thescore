@@ -67,8 +67,10 @@ public class MatchService {
 		List<Integer> newCommitteePKs = new ArrayList<Integer>();
 		List<Integer> existingCommitteePKs = new ArrayList<Integer>();
 		
-		for(String pk : committeePKs){
-			newCommitteePKs.add(Integer.valueOf(pk));
+		if(committeePKs != null){
+			for(String pk : committeePKs){
+				newCommitteePKs.add(Integer.valueOf(pk));
+			}
 		}
 		
 		if(matchCommittees != null){
@@ -97,12 +99,16 @@ public class MatchService {
 		List<Integer> newPlayerPKs = new ArrayList<Integer>();
 		List<Integer> existingPlayerPKs = new ArrayList<Integer>();
 		
-		for(String teamAPlayerPK : teamAPlayerPKs){
-			newPlayerPKs.add(Integer.valueOf(teamAPlayerPK));
+		if(teamAPlayerPKs != null){
+			for(String teamAPlayerPK : teamAPlayerPKs){
+				newPlayerPKs.add(Integer.valueOf(teamAPlayerPK));
+			}
 		}
 		
-		for(String teamBPlayerPK : teamBPlayerPKs){
-			newPlayerPKs.add(Integer.valueOf(teamBPlayerPK));
+		if(teamBPlayerPKs != null){
+			for(String teamBPlayerPK : teamBPlayerPKs){
+				newPlayerPKs.add(Integer.valueOf(teamBPlayerPK));
+			}
 		}
 		
 		if(matchPlayers != null){

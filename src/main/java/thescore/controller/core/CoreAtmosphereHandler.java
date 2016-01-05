@@ -48,6 +48,8 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 					matchId = data.getMatchId();
 					
 					if(data.getAction().equals("TIMEOUT")){
+						System.out.println(message);
+						
 						ApplicationContext context = Utility.getApplicationContext();
 						MatchService service = context.getBean(MatchService.class);
 						Match match = service.findById(matchId);
@@ -224,7 +226,10 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 			}
 			
 			if(action.equals("TIMEOUT")){
-				teamPerformance.setTimeout(teamPerformance.getTimeout() != null ? teamPerformance.getTimeout() + value : value);
+				Integer timeOut = teamPerformance.getTimeout() != null ? teamPerformance.getTimeout() : 0;
+				System.out.println(timeOut);
+				teamPerformance.setTimeout(timeOut + value);
+				System.out.println(teamPerformance.getTimeout());
 			}
 			
 			teamPerformance.updateScore();

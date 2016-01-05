@@ -11,10 +11,13 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import thescore.enums.UserType;
 import thescore.model.Match;
 import thescore.model.Newsfeed;
+import thescore.model.User;
 import thescore.repository.MatchRepository;
 import thescore.repository.NewsfeedRepository;
+import thescore.repository.UserRepository;
 
 @Service
 @Transactional
@@ -22,9 +25,9 @@ public class NewsfeedService {
 	
 	private @Autowired MailSender mailSender;
 	
+	private @Autowired UserRepository userRepository;
 	private @Autowired NewsfeedRepository newsfeedRepository;
 	private @Autowired MatchRepository matchRepository;
-//	private @Autowired PlayerPerformanceRepository playerPerformanceRepository;
 	
 	public Newsfeed findById(int id) {
         return newsfeedRepository.findById(id);
@@ -68,24 +71,31 @@ public class NewsfeedService {
 	}
 	
 	private void sendEmailToSubscribeUsers(Match match){
-		SimpleMailMessage mailMessage = new SimpleMailMessage();
-		mailMessage.setFrom("ganjaboi.navarro@gmail.com");
-		mailMessage.setTo("ganjaboi.navarro@gmail.com");
-		mailMessage.setSubject("Match Results");
-		
-		String loserTeamName = match.getWinner().equals(match.getTeamA()) ?
-				match.getTeamA().getDisplayString() : match.getTeamB().getDisplayString();
-		
-		String messageBody = match.getWinner().getDisplayString() + " wins against "
-				+ loserTeamName + " on " + match.getLeague().getDisplayString();
-		
-		mailMessage.setText(messageBody);
-		mailSender.send(mailMessage);
+		for(User user : userRepository.findAllUsers(UserType.DEFAULT)){
+			if(user.getEmail() != null && !user.getEmail().isEmpty()){
+				try {
+					SimpleMailMessage mailMessage = new SimpleMailMessage();
+					mailMessage.setFrom("1applicationbot@gmail.com");
+					mailMessage.setTo(user.getEmail());
+					mailMessage.setSubject("Match Results");
+					
+					String loserTeamName = match.getWinner().equals(match.getTeamA()) ?
+							match.getTeamA().getDisplayString() : match.getTeamB().getDisplayString();
+					
+					String messageBody = match.getWinner().getDisplayString() + " wins against "
+							+ loserTeamName + " on " + match.getLeague().getDisplayString();
+					
+					mailMessage.setText(messageBody);
+					mailSender.send(mailMessage);
+				} catch (Exception e){
+					System.out.println("Error sending email to: " + user.getEmail());
+				}
+			}
+		}
 	}
 	
 	public void createNewsfeeds(Match match){
 		createWinnerNewsfeed(match);
-//		createHighestScorerNewsfeed(match);
 	}
 
 	private void createWinnerNewsfeed(Match match) {
@@ -100,26 +110,6 @@ public class NewsfeedService {
 		
 		saveNewsfeed(newsfeed);
 	}
-	
-//	private void createHighestScorerNewsfeed(Match match) {
-//		Newsfeed newsfeed = new Newsfeed();
-//		newsfeed.setDate(new Date());
-//		
-//		List<PlayerPerformance> performances = playerPerformanceRepository.findHighestScorePerformances(match.getId());
-//		
-//		String player = "";
-//		Integer score = 0;
-//		
-//		for(PlayerPerformance performance : performances){
-//			player += performance.getPlayer().getDisplayString() + ". ";
-//			score = performance.getFinalScore();
-//		}
-//		
-//		if(player.isEmpty() == false && score > 0){
-//			newsfeed.setDescription(player + " scores " + score + " points on " + match.getDisplayString() + " match up.");
-//			saveNewsfeed(newsfeed);
-//		}
-//	}
 	
 	public void deleteNewsfeedById(Integer id) {
 		newsfeedRepository.deleteRecordById(id);
