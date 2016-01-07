@@ -2,12 +2,12 @@ package thescore.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Lob;
 import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,9 +21,13 @@ public class Newsfeed implements IRecord {
 	private static final long serialVersionUID = 4776520911339952390L;
 
 	private Integer id;
-	private PlayerPerformance performance;
+	private String title;
 	private String description;
 	private Date date;
+	
+	private String body;
+	private byte[] image;
+	private String imageFileName;
 	
 	@Id
 	@Override
@@ -32,16 +36,6 @@ public class Newsfeed implements IRecord {
 		return id;
 	}
 	
-	@ManyToOne(targetEntity = PlayerPerformance.class)
-	@JoinColumn(name = "performanceId")
-	public PlayerPerformance getPerformance() {
-		return performance;
-	}
-
-	public void setPerformance(PlayerPerformance performance) {
-		this.performance = performance;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -67,6 +61,40 @@ public class Newsfeed implements IRecord {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	@Column(columnDefinition = "text")
+	public String getBody() {
+		return body;
+	}
+
+	public void setBody(String body) {
+		this.body = body;
+	}
+
+	@Lob
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	public String getImageFileName() {
+		return imageFileName;
+	}
+
+	public void setImageFileName(String imageFileName) {
+		this.imageFileName = imageFileName;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 }

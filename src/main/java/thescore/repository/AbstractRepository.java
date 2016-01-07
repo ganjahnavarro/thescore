@@ -35,6 +35,10 @@ public abstract class AbstractRepository<PK extends Serializable, T> {
    public void persist(IRecord record) {
        getSession().persist(record);
    }
+   
+   public void merge(IRecord record) {
+       getSession().merge(record);
+   }
 
    public void delete(IRecord record) {
        getSession().delete(record);

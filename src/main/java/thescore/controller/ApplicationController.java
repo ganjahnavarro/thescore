@@ -22,6 +22,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import thescore.Utility;
 import thescore.enums.Gender;
 import thescore.model.User;
+import thescore.service.ForumService;
 import thescore.service.NewsfeedService;
 import thescore.service.UserService;
 
@@ -30,11 +31,13 @@ import thescore.service.UserService;
 public class ApplicationController {
 
 	private @Autowired UserService userService;
+	private @Autowired ForumService forumService;
 	private @Autowired NewsfeedService newsfeedService;
 	
 	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
 	public String home(ModelMap model) {
 		model.addAttribute("newsfeeds", newsfeedService.findNewsfeeds());
+		model.addAttribute("topics", forumService.findAllTopics());
 		model.addAttribute("viewOnly", true);
 		return "app/home";
 	}

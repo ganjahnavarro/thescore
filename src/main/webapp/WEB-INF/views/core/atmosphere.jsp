@@ -37,6 +37,7 @@
 	<script src="<c:url value="/resources/js/atmosphere.js" />"></script>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 
 	<script>
 		$(function() {

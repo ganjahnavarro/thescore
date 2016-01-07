@@ -27,6 +27,8 @@ public class Team implements IRecord{
 	private byte[] image;
 	private String imageFileName;
 	
+	private Boolean includedOnLeague;
+	
 	@Id
 	@Override
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -118,6 +120,15 @@ public class Team implements IRecord{
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	@Transient
+	public Boolean getIncludedOnLeague() {
+		return includedOnLeague;
+	}
+
+	public void setIncludedOnLeague(Boolean includedOnLeague) {
+		this.includedOnLeague = includedOnLeague;
 	}
 	
 }

@@ -8,7 +8,7 @@
 	<div class="app-header">
 		<h2>${match.matchUp}</h2>
 		<a type="button" class="btn btn-default" href="<c:url value='/match/list' />">Match List</a>
-		<a type="button" class="btn btn-danger print-pdf" href="<c:url value='/match/result/download?matchId=${match.id}' />">Print PDF</a>
+		<a type="button" class="btn btn-danger additional-btn" href="<c:url value='/match/result/download?matchId=${match.id}' />">Print PDF</a>
 		<div class="clr"></div>
 	</div>
 	

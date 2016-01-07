@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import thescore.Utility;
 import thescore.model.Comment;
+import thescore.model.ForumFilter;
 import thescore.model.Topic;
 import thescore.service.ForumService;
 
@@ -79,32 +80,62 @@ public class ForumController {
     
 	@RequestMapping(value = { "/view-{id}-topic" }, method = RequestMethod.GET)
 	public String view(@PathVariable Integer id, ModelMap model) {
-		Topic topic = forumService.findTopicById(id);
-		model.addAttribute("comment", new Comment());
-		model.addAttribute("topic", topic);
-		model.addAttribute("comments", forumService.findAllComments(topic.getId()));
+		addCommentDefaultAttributes(id, model);
 		return "topic/thread";
 	}
 	
 	@RequestMapping(value = { "/view-{id}-topic" }, method = RequestMethod.POST)
 	public String addComment(@PathVariable Integer id, @Valid Comment comment, BindingResult result, ModelMap model) {
-		if (result.hasErrors()) {
-			Utility.parseErrors(result, model);
+		if(forumService.isCommentValueValid(comment.getValue()) == false){
+			model.addAttribute("errorMessage", "Your comment contains prohibited word/s.");
+			addCommentDefaultAttributes(id, model);
 			return "topic/thread";
 		}
+		
+		if (result.hasErrors()) {
+			Utility.parseErrors(result, model);
+			addCommentDefaultAttributes(id, model);
+			return "topic/thread";
+		}
+		
 		Topic topic = forumService.findTopicById(id);
 		comment.setTopic(topic);
 		forumService.saveComment(comment);
 		return "redirect:/topic/view-" + comment.getTopic().getId() + "-topic";
 	}
-	
+
 	@RequestMapping(value = { "/comment/delete-{id}-comment" }, method = RequestMethod.GET)
 	public String deleteComment(@PathVariable Integer id) {
 		Comment comment = forumService.findCommentById(id);
 		forumService.deleteCommentById(comment.getId());
 		return "redirect:/topic/view-" + comment.getTopic().getId() + "-topic";
 	}
-    
+	
+	@RequestMapping(value = { "/filter" }, method = RequestMethod.GET)
+    public String editForumFilter(ModelMap model) {
+        ForumFilter forumFilter = forumService.findDefaultForumFilter();
+        model.addAttribute("forumFilter", forumFilter);
+        return "topic/filter";
+    }
+     
+	@RequestMapping(value = { "/filter" }, method = RequestMethod.POST)
+	public String updateForumFilter(@Valid ForumFilter forumFilter, BindingResult result, ModelMap model) {
+		if (result.hasErrors()) {
+			Utility.parseErrors(result, model);
+			return "topic/filter";
+		}
+		forumService.updateForumFilter(forumFilter);
+		model.addAttribute("success", "Forum Filter " + forumFilter.getDisplayString() + " updated successfully");
+		return "redirect:/topic/list";
+	}
+	
+	private void addCommentDefaultAttributes(Integer id, ModelMap model) {
+		Topic topic = forumService.findTopicById(id);
+		model.addAttribute("comment", new Comment());
+		model.addAttribute("topic", topic);
+		model.addAttribute("comments", forumService.findAllComments(topic.getId()));
+	}
+	
     @InitBinder
 	public void initBinder(WebDataBinder binder) {
 	    binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import thescore.Utility;
 import thescore.model.Comment;
+import thescore.model.ForumFilter;
 import thescore.model.Topic;
 import thescore.repository.ForumRepository;
 
@@ -79,5 +80,17 @@ public class ForumService {
 	public List<Comment> findAllComments(Integer topicId) {
 		return repository.findAllComments(topicId);
 	}
-
+	
+	public void updateForumFilter(ForumFilter forumFilter) {
+		repository.merge(forumFilter);
+	}
+	
+	public ForumFilter findDefaultForumFilter(){
+		return repository.findDefaultForumFilter();
+	}
+	
+	public Boolean isCommentValueValid(String value){
+		return repository.isCommentValueValid(value);
+	}
+	
 }

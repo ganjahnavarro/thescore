@@ -66,7 +66,7 @@
 			<select id="teams" multiple="multiple" class="form-control" size="${fn:length(teams)}" name="teams">
 				<c:forEach items="${teams}" var="team">
 					<c:choose>
-						<c:when test="${existingTeamPKs.contains(team.id)}">
+						<c:when test="${team.includedOnLeague}">
 							<option selected="selected" value="${team.id}">${team.name}</option>
 						</c:when>
 						<c:otherwise>

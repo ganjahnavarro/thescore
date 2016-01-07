@@ -44,7 +44,9 @@ public class CoreController {
 		Map<Integer, TeamPerformance> teamPerformances = null;
 		Match match = matchService.findById(id);
 		
-		if(match.getActualStart() == null){
+		Boolean allowedStatisticsModification = allowedStatisticsModification(match.getId());
+		
+		if(match.getActualStart() == null && allowedStatisticsModification){
 			match.setActualStart(new Date());
 			matchService.updateMatch(match);
 		}
@@ -114,7 +116,7 @@ public class CoreController {
 		model.addAttribute("teamPerformanceA", teamPerformanceA);
 		model.addAttribute("teamPerformanceB", teamPerformanceB);
 
-		model.addAttribute("allowedStatisticsModification", allowedStatisticsModification(match.getId()));
+		model.addAttribute("allowedStatisticsModification", allowedStatisticsModification);
 		
 		return "core/atmosphere";
 	}

@@ -143,7 +143,7 @@ public class MatchController {
     
     @RequestMapping(value = "/calendar", method = RequestMethod.GET)
 	public String calendar(ModelMap model) {
-		List<Match> matches = matchService.findAllMatches(Restrictions.isNotEmpty("time"));
+		List<Match> matches = matchService.findAllMatches(Restrictions.isNotNull("time"));
 		model.addAttribute("matches", matches);
 		return "match/calendar";
 	}

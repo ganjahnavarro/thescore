@@ -56,8 +56,14 @@ public class LeagueController {
 		League league = new League();
 		model.addAttribute("league", league);
 		model.addAttribute("edit", false);
-		model.addAttribute("teams", teamService.findAllValidTeams());
-		model.addAttribute("existingTeamPKs", new ArrayList<Integer>());
+		
+		List<Team> teams = teamService.findAllValidTeams();
+		
+		for(Team team : teams){
+			team.setIncludedOnLeague(false);
+		}
+		
+		model.addAttribute("teams", teams);
 		return "league/dataentry";
 	}
 	
@@ -80,7 +86,8 @@ public class LeagueController {
         League league = leagueService.findById(id);
         model.addAttribute("league", league);
         model.addAttribute("edit", true);
-        model.addAttribute("teams", teamService.findAllValidTeams());
+        
+        List<Team> teams = teamService.findAllValidTeams();
         
         List<LeagueTeam> leagueTeams = leagueService.findAllLeagueTeams(league.getId());
         List<Integer> existingTeamPKs = new ArrayList<Integer>();
@@ -89,7 +96,11 @@ public class LeagueController {
         	existingTeamPKs.add(leagueTeam.getTeam().getId());
         }
         
-        model.addAttribute("existingTeamPKs", existingTeamPKs);
+        for(Team team : teams){
+			team.setIncludedOnLeague(existingTeamPKs.contains(team.getId()));
+		}
+        
+        model.addAttribute("teams", teams);
         return "league/dataentry";
     }
      

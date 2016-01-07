@@ -3,6 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <t:template>
 	<script>
@@ -35,21 +36,23 @@
 				</div>
 				
 				<div class="col-xs-2">
-					<c:if test="${comment.entryBy == userName}">
+					<sec:authorize access="hasRole('HEAD_COMMITTEE')">
 						<button type="button" class="btn btn-default btn-sm pull-right" aria-label="Delete"
 							data-toggle="modal" data-target="#defaultModal"
 							data-action="<c:url value='/topic/comment/delete-${comment.id}-comment' />">
 							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 						</button>
-					</c:if>
+					</sec:authorize>
 					
-					<c:if test="${comment.entryBy == userName}">
-						<button type="button" class="btn btn-default btn-sm pull-right" aria-label="Delete"
-							data-toggle="modal" data-target="#defaultModal"
-							data-action="<c:url value='/topic/comment/delete-${comment.id}-comment' />">
-							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-						</button>
-					</c:if>
+					<sec:authorize access="!hasRole('HEAD_COMMITTEE')">
+						<c:if test="${comment.entryBy == userName}">
+							<button type="button" class="btn btn-default btn-sm pull-right" aria-label="Delete"
+								data-toggle="modal" data-target="#defaultModal"
+								data-action="<c:url value='/topic/comment/delete-${comment.id}-comment' />">
+								<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+							</button>
+						</c:if>
+					</sec:authorize>
 				</div>
 				
 				<div class="clearfix"></div>
