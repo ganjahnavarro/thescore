@@ -52,79 +52,12 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	
-	<script src="<c:url value="/resources/js/jquery.atmosphere.js" />"></script>
-	<script src="<c:url value="/resources/js/atmosphere.js" />"></script>
-	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-
-	<script>
-		$(function() {
-			$('.draggable-a').draggable({
-				revert : true,
-				stack : ".draggable-a"
-			});
-			
-			$('.droppable-a').droppable({
-				accept : ".draggable-a",
-				drop : function(event, ui) {
-					var draggedImg = ui.draggable.find('img');
-					var droppedImg = $(this).find('img');
-
-					var srcHolder = draggedImg.attr('src');
-					draggedImg.attr('src', droppedImg.attr('src'));
-					droppedImg.attr('src', srcHolder);
-
-					var playerIdHolder = ui.draggable.data('playerid');
-					ui.draggable.data('playerid', $(this).data('playerid'));
-					$(this).data('playerid', playerIdHolder);
-					
-					var imagePlayerIdHolder = draggedImg.data('playerid');
-					draggedImg.data('playerid', droppedImg.data('playerid'));
-					droppedImg.data('playerid', imagePlayerIdHolder);
-					
-					console.log('.');
-					console.log('..');
-					console.log('...');
-					console.log('sub socket: ' + subSocket);
-					console.log('...');
-					console.log('..');
-					console.log('.');
-				}
-			});
-			
-			$('.draggable-b').draggable({
-				revert : true,
-				stack : ".draggable-b"
-			});
-			
-			$('.droppable-b').droppable({
-				accept : ".draggable-b",
-				drop : function(event, ui) {
-					var draggedImg = ui.draggable.find('img');
-					var droppedImg = $(this).find('img');
-
-					var srcHolder = draggedImg.attr('src');
-					draggedImg.attr('src', droppedImg.attr('src'));
-					droppedImg.attr('src', srcHolder);
-
-					var playerIdHolder = ui.draggable.data('playerid');
-					ui.draggable.data('playerid', $(this).data('playerid'));
-					$(this).data('playerid', playerIdHolder);
-					
-					var imagePlayerIdHolder = draggedImg.data('playerid');
-					draggedImg.data('playerid', droppedImg.data('playerid'));
-					droppedImg.data('playerid', imagePlayerIdHolder);
-					
-					var draggedNumber = ui.draggable.find('span').html();
-					var droppedNumber = $(this).find('span').html();
-					ui.draggable.find('span').html(droppedNumber);
-					$(this).find('span').html(draggedNumber);
-				}
-			});
-		});
-	</script>
 	
+	<script src="<c:url value="/resources/js/jquery.atmosphere.js" />"></script>
+	<script src="<c:url value="/resources/js/atmosphere.js" />"></script>
+
 	<script>
 		$('#defaultModal').on('show.bs.modal', function(event) {
 			var teamAScore = $('#score-a').html();

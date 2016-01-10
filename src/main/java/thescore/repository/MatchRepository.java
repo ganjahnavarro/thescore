@@ -1,5 +1,9 @@
 package thescore.repository;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -74,7 +78,6 @@ public class MatchRepository extends AbstractRepository<Integer, Match> {
 		if(matchId != null){
 			criteria.add(Restrictions.eq("match.id", matchId));
 		}
-		
 		return (List<MatchCommittee>) criteria.list();
 	}
 	
@@ -83,6 +86,15 @@ public class MatchRepository extends AbstractRepository<Integer, Match> {
 		Criteria criteria = getSession().createCriteria(MatchStartingPlayer.class);
 		criteria.add(Restrictions.eq("match.id", matchId));
 		return (List<MatchStartingPlayer>) criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Integer> findPlayableMatches() {
+		return getSession().createSQLQuery("select o.id from " + Match.ENTITY_NAME
+				+ " o where o.id in (select mc.matchId from " + MatchCommittee.ENTITY_NAME + " mc)"
+				+ " and o.id in (select msp.matchId from " + MatchStartingPlayer.ENTITY_NAME + " msp"
+				+ " group by msp.matchId having count(*) = 10)")
+				.list();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -108,6 +120,46 @@ public class MatchRepository extends AbstractRepository<Integer, Match> {
 				+ " o where o.match.id = :matchId")
 				.setParameter("matchId", matchId)
 				.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Match> findCommitteeIncomingMatches(Integer committeeId){
+		Format dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		Calendar today = Calendar.getInstance();
+		Calendar tommorow = Calendar.getInstance();
+		tommorow.add(Calendar.DATE, 1);
+		
+		String formattedToday = dateFormat.format(today.getTime());
+		String formattedTommorow = dateFormat.format(tommorow.getTime());
+		
+		List<Match> matches = getSession().createQuery("select o from " + Match.ENTITY_NAME
+				+ " o where o.id in (select mc.match.id from " + MatchCommittee.ENTITY_NAME
+				+ " mc where mc.committee.id = :committeeId)")
+				.setParameter("committeeId", committeeId)
+				.list();
+		
+		List<Match> incomingMatches = new ArrayList<Match>();
+		
+		if(matches != null){
+			for(Match match : matches){
+				if(match.getTime() != null){
+					String formattedMatchTime = dateFormat.format(match.getTime());
+					
+					if(formattedMatchTime.equals(formattedToday) || formattedMatchTime.equals(formattedTommorow)){
+						incomingMatches.add(match);
+					}
+				}
+			}
+		}
+		return incomingMatches;
+	}
+	
+	public void deleteMatchActivePlayer(Integer matchId, Integer playerId){
+		getSession().createQuery("delete from " + MatchActivePlayer.ENTITY_NAME
+				+ " o where o.match.id = :matchId and o.player.id = :playerId")
+				.setParameter("matchId", matchId)
+				.setParameter("playerId", playerId)
+				.executeUpdate();
 	}
 	
 }

@@ -43,6 +43,15 @@ public class LeagueRepository extends AbstractRepository<Integer, League> {
 				.list();
 	}
 	
+	public LeagueMythicalPlayer findMythicalPlayer(Integer leagueId, Integer playerId) {
+		return (LeagueMythicalPlayer) getSession().createQuery("select o from " + LeagueMythicalPlayer.ENTITY_NAME
+				+ " o where o.league.id = :leagueId and o.player.id = :playerId")
+				.setParameter("leagueId", leagueId)
+				.setParameter("playerId", playerId)
+				.setMaxResults(1)
+				.uniqueResult();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<LeagueTeam> findAllLeagueTeams(Integer leagueId) {
 		Criteria criteria = getSession().createCriteria(LeagueTeam.class)

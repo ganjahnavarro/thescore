@@ -20,7 +20,7 @@
 			</c:if>
 		</div>
 		
-		<div class="hidden">
+		<div>
 			<div class="col-md-4">
 				<p class="footer-score">${match.teamA.code}</p>
 				

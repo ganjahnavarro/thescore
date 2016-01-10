@@ -38,6 +38,11 @@ public class LeagueService {
     public void saveMythicalPlayer(LeagueMythicalPlayer mythicalPlayer){
     	leagueRepository.persist(mythicalPlayer);
     }
+    
+    public void deleteMythicalPlayer(Integer leagueId, Integer playerId){
+    	LeagueMythicalPlayer leagueMythicalPlayer = leagueRepository.findMythicalPlayer(leagueId, playerId);
+    	leagueRepository.deleteRecordById(LeagueMythicalPlayer.ENTITY_NAME, leagueMythicalPlayer.getId());
+    }
  
 	public void saveLeague(League league, String[] teamPKs) {
 		leagueRepository.saveLeague(league);

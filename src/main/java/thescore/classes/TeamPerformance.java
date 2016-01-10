@@ -1,6 +1,8 @@
 package thescore.classes;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
@@ -29,6 +31,8 @@ public class TeamPerformance {
 	private Integer foul = 0;
 	
 	private Integer timeout = 0;
+	
+	private List<Integer> quarterScores = new ArrayList<Integer>();
 
 	public Integer getFg() {
 		return fg;
@@ -170,6 +174,14 @@ public class TeamPerformance {
 		double average = (double) getFt() / (double) getFta();
 		average = Double.isNaN(average) ? 0 : average;
 		return NumberFormat.getNumberInstance().format(average);
+	}
+
+	public List<Integer> getQuarterScores() {
+		return quarterScores;
+	}
+
+	public void setQuarterScores(List<Integer> quarterScores) {
+		this.quarterScores = quarterScores;
 	}
 
 }

@@ -1,6 +1,8 @@
 package thescore.controller.core;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.atmosphere.config.service.AtmosphereHandlerService;
@@ -18,6 +20,8 @@ import thescore.classes.TeamPerformance;
 import thescore.interfaces.IAttempt;
 import thescore.interfaces.IPerformanceRecord;
 import thescore.model.Match;
+import thescore.model.MatchActivePlayer;
+import thescore.model.Player;
 import thescore.model.PlayerPerformance;
 import thescore.service.MatchService;
 import thescore.service.PlayerPerformanceService;
@@ -50,17 +54,14 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 					matchId = data.getMatchId();
 					
 					if(data.getAction().equals("TIMEOUT")){
-						ApplicationContext context = Utility.getApplicationContext();
-						MatchService service = context.getBean(MatchService.class);
-						Match match = service.findById(matchId);
-						
-						if(match.getTeamA().getId().equals(data.getTeamId())){
-							match.setTeamATimeout((match.getTeamATimeout() != null ? match.getTeamATimeout() : 0) + 1);
-						} else {
-							match.setTeamBTimeout((match.getTeamBTimeout() != null ? match.getTeamBTimeout() : 0) + 1);
-						}
-						service.updateMatch(match);
+						handleTimeOut(matchId, data);
 						teamId = data.getTeamId();
+					} else if(data.getAction().equals("SUBSTITUTION")){
+						handleSubstitution(matchId, data);
+						broadCastMessage = mapper.writeValueAsString(data);
+						
+						System.out.println("From: " + data.getFromPlayerId());
+						System.out.println("To: " + data.getToPlayerId());
 					} else {
 						if(data.getSubtract()){
 							teamId = deletePerformanceAndGetTeamId(data);
@@ -71,8 +72,8 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 					
 					if(teamId != null){
 						broadCastMessage = mapper.writeValueAsString(generateTeamPerformance(data, teamId));
-						atmosphereResource.getBroadcaster().broadcast(broadCastMessage);
 					}
+					atmosphereResource.getBroadcaster().broadcast(broadCastMessage);
 				}
 				
 			} catch (Exception e){
@@ -83,6 +84,43 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 				}
 				revalidateMatchFromStatisticsMap(matchId);
 			}
+		}
+	}
+
+	private void handleTimeOut(Integer matchId, ActionData data) {
+		ApplicationContext context = Utility.getApplicationContext();
+		MatchService service = context.getBean(MatchService.class);
+		Match match = service.findById(matchId);
+		
+		if(match.getTeamA().getId().equals(data.getTeamId())){
+			match.setTeamATimeout((match.getTeamATimeout() != null ? match.getTeamATimeout() : 0) + 1);
+		} else {
+			match.setTeamBTimeout((match.getTeamBTimeout() != null ? match.getTeamBTimeout() : 0) + 1);
+		}
+		service.updateMatch(match);
+	}
+	
+	private void handleSubstitution(Integer matchId, ActionData data) {
+		ApplicationContext context = Utility.getApplicationContext();
+		MatchService matchService = context.getBean(MatchService.class);
+		PlayerService playerService = context.getBean(PlayerService.class);
+		
+		List<Integer> activePlayerPKs = new ArrayList<Integer>();
+		
+		for(Player player : matchService.findActivePlayers(matchId)){
+			activePlayerPKs.add(player.getId());
+		}
+		
+		Boolean fromActivePlayer = activePlayerPKs.contains(data.getFromPlayerId());
+		Boolean toActivePlayer = activePlayerPKs.contains(data.getToPlayerId());
+
+		if(fromActivePlayer != toActivePlayer){
+			MatchActivePlayer activePlayer = new MatchActivePlayer();
+			activePlayer.setMatch(matchService.findById(matchId));
+			activePlayer.setPlayer(playerService.findById(fromActivePlayer ? data.getToPlayerId() : data.getFromPlayerId()));
+			matchService.saveMatchActivePlayer(activePlayer);
+			
+			matchService.deleteMatchActivePlayer(matchId, fromActivePlayer ? data.getFromPlayerId() : data.getToPlayerId());
 		}
 	}
 
@@ -167,6 +205,12 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 			Map<Integer, TeamPerformance> teamPerformanceMap = statisticsMap.get(matchId);
 			TeamPerformance teamPerformance = teamPerformanceMap.get(teamId);
 			
+//			TODO Query Scores
+			teamPerformance.setQuarterScores(new ArrayList<Integer>());
+			for(int i = 0; i < 4; i ++){
+				teamPerformance.getQuarterScores().add(50 + i);
+			}
+			
 			if(action.equals("FG")){
 				teamPerformance.setFg(teamPerformance.getFg() + value);
 				teamPerformance.setFga(teamPerformance.getFga() + value);
@@ -227,9 +271,7 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 			
 			if(action.equals("TIMEOUT")){
 				Integer timeOut = teamPerformance.getTimeout() != null ? teamPerformance.getTimeout() : 0;
-				System.out.println(timeOut);
 				teamPerformance.setTimeout(timeOut + value);
-				System.out.println(teamPerformance.getTimeout());
 			}
 			
 			teamPerformance.updateScore();

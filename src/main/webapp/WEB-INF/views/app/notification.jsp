@@ -9,6 +9,12 @@
 		<h2>Notifications</h2>
 		<div class="clr"></div>
 	</div>
+	
+	<c:forEach items="${notifications}" var="ntfc">
+		<p>${ntfc.message}</p>
+	</c:forEach>
+	
+	<br/>
 
 	<div class="list-group">
 		<c:forEach items="${notifications}" var="notification">

@@ -95,7 +95,7 @@
 							<td>
 								<c:choose>
 									<c:when test="${match.winner == null}">
-										<c:if test="${match.hasCommittee == true}">
+										<c:if test="${match.playable == true}">
 											<a href="<c:url value='/core/play-${match.id}-match' />" title="Open Match">
 												<button type="button" class="btn btn-default" aria-label="Start">
 													<span class="glyphicon glyphicon-play" aria-hidden="true"></span>

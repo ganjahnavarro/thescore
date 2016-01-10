@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import thescore.model.Match;
 import thescore.model.Newsfeed;
+import thescore.model.Notification;
 import thescore.repository.MatchRepository;
 import thescore.repository.NewsfeedRepository;
+import thescore.repository.NotificationRepository;
 
 @Service
 @Transactional
@@ -20,6 +22,7 @@ public class NewsfeedService {
 	
 	private @Autowired NewsfeedRepository newsfeedRepository;
 	private @Autowired MatchRepository matchRepository;
+	private @Autowired NotificationRepository notificationRepository;
 	
 	public Newsfeed findById(int id) {
         return newsfeedRepository.findById(id);
@@ -70,23 +73,23 @@ public class NewsfeedService {
 			destination.setWinner(destination.getTeamA().getId().equals(defWinTeamId) ? destination.getTeamA() : destination.getTeamB());
 			destination.setDefaultWin(true);
 		}
+		
+		createNotification(destination);
 	}
 	
-	public void createNewsfeeds(Match match){
-		createWinnerNewsfeed(match);
-	}
-
-	private void createWinnerNewsfeed(Match match) {
-		Newsfeed newsfeed = new Newsfeed();
-		newsfeed.setDate(new Date());
+	private void createNotification(Match match) {
+		Notification notification = new Notification();
+		notification.setDate(new Date());
+		notification.setUrl("/match/view-" + match.getId() + "-match");
 		
 		String loserTeamName = match.getWinner().equals(match.getTeamA()) ?
 				match.getTeamA().getDisplayString() : match.getTeamB().getDisplayString();
 		
-		newsfeed.setDescription(match.getWinner().getDisplayString() + " wins against "
-				+ loserTeamName + " on " + match.getLeague().getDisplayString());
+		notification.setMessage(match.getWinner().getDisplayString() + " wins against "
+				+ loserTeamName + (match.getDefaultWin() ? " by default" : "")
+				+ " on " + match.getLeague().getDisplayString());
 		
-		saveNewsfeed(newsfeed);
+		notificationRepository.saveNotification(notification);
 	}
 	
 	public void deleteNewsfeedById(Integer id) {

@@ -43,11 +43,13 @@
 									<ul class="dropdown-menu">
 										<c:forEach items="${notifications}" var="notification">
 											<li>
-												<a class="notification-list-item" href="<c:url value='${notification.url}'/>">
-													${notification.message}
-												</a>
+												<a class="notification-list-item" href="<c:url value='${notification.url}'/>">${notification.message}</a>
 											</li>
 										</c:forEach>
+										
+										<li>
+											<a href="<c:url value='/notification/list'/>">View All</a>
+										</li>
 									</ul>
 								</li>
 							</c:if>

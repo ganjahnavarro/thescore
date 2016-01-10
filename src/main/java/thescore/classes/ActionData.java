@@ -18,12 +18,6 @@ public class ActionData {
 	private Integer fromPlayerId;
 	private Integer toPlayerId;
 	
-	private String fromPlayerImage;
-	private String byPlayerImage;
-	
-	private Integer fromPlayerNumber;
-	private Integer toPlayerNumber;
-	
 	public Integer getPlayerId() {
 		return playerId;
 	}
@@ -96,36 +90,4 @@ public class ActionData {
 		this.toPlayerId = toPlayerId;
 	}
 
-	public String getFromPlayerImage() {
-		return fromPlayerImage;
-	}
-
-	public void setFromPlayerImage(String fromPlayerImage) {
-		this.fromPlayerImage = fromPlayerImage;
-	}
-
-	public String getByPlayerImage() {
-		return byPlayerImage;
-	}
-
-	public void setByPlayerImage(String byPlayerImage) {
-		this.byPlayerImage = byPlayerImage;
-	}
-
-	public Integer getFromPlayerNumber() {
-		return fromPlayerNumber;
-	}
-
-	public void setFromPlayerNumber(Integer fromPlayerNumber) {
-		this.fromPlayerNumber = fromPlayerNumber;
-	}
-
-	public Integer getToPlayerNumber() {
-		return toPlayerNumber;
-	}
-
-	public void setToPlayerNumber(Integer toPlayerNumber) {
-		this.toPlayerNumber = toPlayerNumber;
-	}
-	
 }

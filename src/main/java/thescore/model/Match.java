@@ -39,7 +39,7 @@ public class Match implements IRecord {
 	private Team winner;
 	private League league;
 	
-	private Boolean hasCommittee;
+	private Boolean playable;
 	
 	@Id
 	@Override
@@ -192,12 +192,12 @@ public class Match implements IRecord {
 	}
 
 	@Transient
-	public Boolean getHasCommittee() {
-		return hasCommittee;
+	public Boolean getPlayable() {
+		return playable;
 	}
 
-	public void setHasCommittee(Boolean hasCommittee) {
-		this.hasCommittee = hasCommittee;
+	public void setPlayable(Boolean playable) {
+		this.playable = playable;
 	}
 
 }

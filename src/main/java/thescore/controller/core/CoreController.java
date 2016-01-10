@@ -20,6 +20,7 @@ import thescore.Utility;
 import thescore.classes.TeamPerformance;
 import thescore.enums.UserType;
 import thescore.model.Match;
+import thescore.model.MatchActivePlayer;
 import thescore.model.MatchCommittee;
 import thescore.model.Player;
 import thescore.model.PlayerPerformance;
@@ -77,10 +78,17 @@ public class CoreController {
 		List<Player> allPlayers = new ArrayList<Player>(listA);
 		allPlayers.addAll(listB);
 		
-		List<Player> activePlayers = matchService.findStartingPlayers(match.getId());
+		List<Player> activePlayers = matchService.findActivePlayers(match.getId());
 		
 		if(activePlayers == null || activePlayers.isEmpty()){
-			activePlayers = matchService.findActivePlayers(match.getId());
+			activePlayers = matchService.findStartingPlayers(match.getId());
+			
+			for(Player startingPlayer : activePlayers){
+				MatchActivePlayer activePlayer = new MatchActivePlayer();
+				activePlayer.setPlayer(startingPlayer);
+				activePlayer.setMatch(match);
+				matchService.saveMatchActivePlayer(activePlayer);
+			}
 		}
 		
 		List<Integer> existingPlayerPKs = playerPerformanceService.findPlayerPerformancePlayerPKs(match.getId());

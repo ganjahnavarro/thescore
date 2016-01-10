@@ -118,8 +118,8 @@
 							$("#teamBSelect").append($("<option></option>").attr("value", jsonArray[i].key).text(jsonArray[i].value));
 						}
 						
-						$("teamASelect").prop("selectedIndex", 0);
-						$("teamBSelect").prop("selectedIndex", 0);
+						$("#teamASelect").prop("selectedIndex", 0).trigger('change');
+						$("#teamBSelect").prop("selectedIndex", 1).trigger('change');
 					} catch (e) {
 						console.log('This doesn\'t look like a valid JSON: ', data);
 						return;

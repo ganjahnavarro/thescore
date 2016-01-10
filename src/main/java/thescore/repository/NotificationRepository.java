@@ -42,13 +42,14 @@ public class NotificationRepository extends AbstractRepository<Integer, Notifica
 	}
 	
 	public void updateUnseenNotifications(User user) {
-		getSession().createQuery("insert into " + NotificationView.ENTITY_NAME
-				+ " (notification, user)"
-				+ " select o, :user from " + Notification.ENTITY_NAME
-				+ " o where o.id not in (select v.notification.id from " + NotificationView.ENTITY_NAME
-				+ " v where v.user = :user)")
-				.setParameter("user", user)
-				.executeUpdate();
+		List<Notification> unseenNotifications = findAllUnseenNotifications(user);
+		
+		for(Notification notification : unseenNotifications){
+			NotificationView notificationView = new NotificationView();
+			notificationView.setNotification(notification);
+			notificationView.setUser(user);
+			persist(notificationView);
+		}
 	}
 
 }

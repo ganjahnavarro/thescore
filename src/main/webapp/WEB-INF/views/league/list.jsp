@@ -62,7 +62,7 @@
 								</button>
 							</c:if>
 							
-							<c:if test="${league.lockedDate != null && league.generated == false}">
+							<c:if test="${league.lockedDate != null && league.endDate == null && league.generated == false}">
 								<button type="button" class="btn btn-default" title="Generate round robin matches"
 									aria-label="Generate" data-toggle="modal" data-target="#defaultModal"
 									data-action="<c:url value='/league/generate-${league.id}-league' />"

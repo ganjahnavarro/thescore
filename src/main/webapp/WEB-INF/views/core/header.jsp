@@ -4,6 +4,10 @@
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<div class="col-md-6">
+			<div class="pull-left">
+				<p id="current-quarter"></p>
+			</div>
+
 			<div class="pull-right">
 				<c:if test="${allowedStatisticsModification}">
 					<button type="button" class="btn btn-default btn-xs time-out-item"

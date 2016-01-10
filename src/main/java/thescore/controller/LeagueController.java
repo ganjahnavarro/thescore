@@ -1,6 +1,7 @@
 package thescore.controller;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +32,7 @@ import thescore.model.League;
 import thescore.model.LeagueMythicalPlayer;
 import thescore.model.LeagueTeam;
 import thescore.model.Match;
+import thescore.model.Notification;
 import thescore.model.Player;
 import thescore.model.Team;
 import thescore.model.computation.PerformanceComputation;
@@ -176,19 +178,36 @@ public class LeagueController {
     
 	@RequestMapping(value = { "/end-{id}-league" }, method = RequestMethod.GET)
 	public String end(@PathVariable Integer id, ModelMap model,
-			@RequestParam(required = false) String championPK,
-			@RequestParam(required = false) String[] mythicalFivePKs) {
-		Team champion = teamService.findById(Integer.valueOf(championPK));
+			@RequestParam(required = false) String championPK) {
 		League league = leagueService.findById(id);
+		List<Player> mythicalFive = leagueService.findMythicalFive(id);
 		
+		if(mythicalFive == null || mythicalFive.size() < 5){
+			model.addAttribute("errorMessage", "League Mythical Five is incomplete.");
+			addLeagueInfoAttributes(model, league);
+			return "league/info";
+		}
+		
+		Team champion = teamService.findById(Integer.valueOf(championPK));
 		league.setChampion(champion);
 		league.setEndDate(new Date());
 		leagueService.updateLeague(league);
+		
+		createLeagueEndNotification(league, champion);
 		
 		List<League> leagues = leagueService.findAllLeagues();
 		model.addAttribute("leagues", leagues);
 		model.addAttribute("infoMessage", "League " + league.getDisplayString() + " has concluded.");
 		return "redirect:/league/list";
+	}
+
+	private void createLeagueEndNotification(League league, Team champion) {
+		Notification notification = new Notification();
+		notification.setDate(new Date());
+		notification.setUrl("/league/view-" + league.getId() + "league");
+		notification.setMessage("Team " + champion.getName() + " wins"
+				+ (league.getPrize() != null ? " " + NumberFormat.getCurrencyInstance().format(league.getPrize()) : "")
+				+ " on League: " + league.getName() + ".");
 	}
 	
 	@RequestMapping(value = "/on-player-add", method = RequestMethod.GET)
@@ -196,35 +215,57 @@ public class LeagueController {
 			@RequestParam("playerId") Integer playerId) {
 		List<Player> players = leagueService.findMythicalFive(leagueId);
 		
-		if(players != null && players.size() >= 5){
-			return null;
-		}
-
-		Boolean found = false;
-		
-		for(Player player : players){
-			if(player.getId().equals(playerId)){
-				found = true;
-				break;
+		if(players == null || players.size() < 5){
+			Boolean found = false;
+			
+			for(Player player : players){
+				if(player.getId().equals(playerId)){
+					found = true;
+					break;
+				}
+			}
+			
+			if(!found){
+				LeagueMythicalPlayer mythPlayer = new LeagueMythicalPlayer();
+				League league = leagueService.findById(leagueId);
+				Player player = playerService.findById(playerId);
+				
+				mythPlayer.setLeague(league);
+				mythPlayer.setPlayer(player);
+				leagueService.saveMythicalPlayer(mythPlayer);
+				
+				players.add(player);
 			}
 		}
-		
-		if(!found){
-			LeagueMythicalPlayer mythPlayer = new LeagueMythicalPlayer();
-			League league = leagueService.findById(leagueId);
-			Player player = playerService.findById(playerId);
-			
-			mythPlayer.setLeague(league);
-			mythPlayer.setPlayer(player);
-			leagueService.saveMythicalPlayer(mythPlayer);
-			
-			players.add(player);
-		}
-		
+
 		List<SimpleEntry<Integer, String>> list = new ArrayList<SimpleEntry<Integer, String>>();;
 		
 		for(Player player : players){
 			list.add(new SimpleEntry<Integer, String>(player.getId(), player.getDisplayString()));
+		}
+		
+		try {
+			return mapper.writeValueAsString(list);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	@RequestMapping(value = "/on-player-remove", method = RequestMethod.GET)
+	public @ResponseBody String onPlayerRemove(@RequestParam("leagueId") Integer leagueId,
+			@RequestParam("playerId") Integer playerId) {
+		List<Player> players = leagueService.findMythicalFive(leagueId);
+		
+		List<SimpleEntry<Integer, String>> list = new ArrayList<SimpleEntry<Integer, String>>();;
+		
+		for(Player player : players){
+			if(player.getId().equals(playerId)){
+				leagueService.deleteMythicalPlayer(leagueId, playerId);
+			} else {
+				list.add(new SimpleEntry<Integer, String>(player.getId(), player.getDisplayString()));
+			}
 		}
 		
 		try {

@@ -225,4 +225,12 @@ li>a.notification-list-item {
 	background-color: #5cb85c;
     color: white;
     border: none;
+    margin-right: 5px;
+}
+
+.btn.btn-default.remove-player-to-mythical-five{
+	background-color: #d9534f;
+    color: white;
+    border: none;
+    margin-right: 5px;
 }

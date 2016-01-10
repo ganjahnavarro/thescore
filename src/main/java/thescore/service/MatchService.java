@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import thescore.model.Match;
+import thescore.model.MatchActivePlayer;
 import thescore.model.MatchCommittee;
 import thescore.model.MatchStartingPlayer;
 import thescore.model.Player;
@@ -32,6 +33,14 @@ public class MatchService {
  
     public void saveMatch(Match match) {
         matchRepository.saveMatch(match);
+    }
+    
+    public void saveMatchActivePlayer(MatchActivePlayer matchActivePlayer) {
+        matchRepository.persist(matchActivePlayer);
+    }
+    
+    public void deleteMatchActivePlayer(Integer matchId, Integer playerId) {
+        matchRepository.deleteMatchActivePlayer(matchId, playerId);
     }
     
 	public void saveMatch(Match match, String[] committeePKs, String[] teamAPlayerPKs, String[] teamBPlayerPKs) {
@@ -159,5 +168,13 @@ public class MatchService {
     public List<Player> findActivePlayers(Integer matchId) {
 		return matchRepository.findActivePlayers(matchId);
 	}
+    
+    public List<Match> findCommitteeIncomingMatches(Integer committeeId){
+    	return matchRepository.findCommitteeIncomingMatches(committeeId);
+    }
+    
+    public List<Integer> findPlayableMatches() {
+    	return matchRepository.findPlayableMatches();
+    }
  
 }
