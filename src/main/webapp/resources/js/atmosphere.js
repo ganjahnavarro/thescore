@@ -39,25 +39,49 @@ $(function() {
 			return;
 		}
 		
-		var draggedImg = $('#player-' + reply.fromPlayerId).find('img');
-		var droppedImg = $('#player-' + reply.toPlayerId).find('img');
-		
-		var srcHolder = draggedImg.attr('src');
-		draggedImg.attr('src', droppedImg.attr('src'));
-		droppedImg.attr('src', srcHolder);
-		
-		var playerIdHolder = $('#player-' + reply.fromPlayerId).data('playerid');
-		$('#player-' + reply.fromPlayerId).data('playerid', $('#player-' + reply.toPlayerId).data('playerid'));
-		$('#player-' + reply.toPlayerId).data('playerid', playerIdHolder);
-		
-		var imagePlayerIdHolder = draggedImg.data('playerid');
-		draggedImg.data('playerid', droppedImg.data('playerid'));
-		droppedImg.data('playerid', imagePlayerIdHolder);
-		
-		var draggedNumber = $('#player-' + reply.fromPlayerId).find('span').html();
-		var droppedNumber = $('#player-' + reply.toPlayerId).find('span').html();
-		$('#player-' + reply.fromPlayerId).find('span').html(droppedNumber);
-		$('#player-' + reply.toPlayerId).find('span').html(draggedNumber);
+		if(reply.type == 'SUBSTITUTION'){
+			var draggedImg = $('#player-' + reply.actionData.fromPlayerId).find('img');
+			var droppedImg = $('#player-' + reply.actionData.toPlayerId).find('img');
+			
+			var srcHolder = draggedImg.attr('src');
+			draggedImg.attr('src', droppedImg.attr('src'));
+			droppedImg.attr('src', srcHolder);
+			
+			var playerIdHolder = $('#player-' + reply.actionData.fromPlayerId).data('playerid');
+			$('#player-' + reply.actionData.fromPlayerId).data('playerid', $('#player-' + reply.actionData.toPlayerId).data('playerid'));
+			$('#player-' + reply.actionData.toPlayerId).data('playerid', playerIdHolder);
+			
+			var imagePlayerIdHolder = draggedImg.data('playerid');
+			draggedImg.data('playerid', droppedImg.data('playerid'));
+			droppedImg.data('playerid', imagePlayerIdHolder);
+			
+			var draggedNumber = $('#player-' + reply.actionData.fromPlayerId).find('span').html();
+			var droppedNumber = $('#player-' + reply.actionData.toPlayerId).find('span').html();
+			$('#player-' + reply.actionData.fromPlayerId).find('span').html(droppedNumber);
+			$('#player-' + reply.actionData.toPlayerId).find('span').html(draggedNumber);
+		} else {
+			var keys = ["", "a", "b"];
+			
+			for(i in reply.performances){
+				$('#fg-' + keys[i]).html(reply.performances[i].fg + " / " + reply.performances[i].fga);
+				$('#threefg-' + keys[i]).html(reply.performances[i].threefg + " / " + reply.performances[i].threefga);
+				$('#ft-' + keys[i]).html(reply.performances[i].ft + " / " + reply.performances[i].fta);
+				$('#ast-' + keys[i]).html(reply.performances[i].ast);
+				$('#stl-' + keys[i]).html(reply.performances[i].stl);
+				$('#blk-' + keys[i]).html(reply.performances[i].blk);
+				$('#def-' + keys[i]).html(reply.performances[i].def);
+				$('#off-' + keys[i]).html(reply.performances[i].off);
+				$('#to-' + keys[i]).html(reply.performances[i].to);
+				$('#foul-' + keys[i]).html(reply.performances[i].foul);
+				
+				$('#score-' + keys[i]).html(reply.performances[i].score);
+				$('#timeout-' + keys[i]).html('Timeout/s: ' + reply.performances[i].timeout);
+				
+				for (var j = 0; j < reply.performances[i].quarterScores.length; j++) {
+					$('#qrt-' + (j + 1) + '-' + keys[i]).html(reply.performances[i].quarterScores[j]);
+				}
+			}
+		}
 	};
 
 	request.onClose = function(response) {

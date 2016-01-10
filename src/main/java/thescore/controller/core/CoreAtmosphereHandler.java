@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 
 import thescore.Utility;
 import thescore.classes.ActionData;
+import thescore.classes.ResponseData;
 import thescore.classes.TeamPerformance;
 import thescore.interfaces.IAttempt;
 import thescore.interfaces.IPerformanceRecord;
@@ -58,10 +59,10 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 						teamId = data.getTeamId();
 					} else if(data.getAction().equals("SUBSTITUTION")){
 						handleSubstitution(matchId, data);
+						ResponseData responseData = new ResponseData();
+						responseData.setActionData(data);
+						responseData.setType("SUBSTITUTION");
 						broadCastMessage = mapper.writeValueAsString(data);
-						
-						System.out.println("From: " + data.getFromPlayerId());
-						System.out.println("To: " + data.getToPlayerId());
 					} else {
 						if(data.getSubtract()){
 							teamId = deletePerformanceAndGetTeamId(data);
@@ -71,7 +72,10 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 					}
 					
 					if(teamId != null){
-						broadCastMessage = mapper.writeValueAsString(generateTeamPerformance(data, teamId));
+						ResponseData responseData = new ResponseData();
+						responseData.setType("ETC");
+						responseData.setPerformances(generateTeamPerformance(data, teamId));
+						broadCastMessage = mapper.writeValueAsString(responseData);
 					}
 					atmosphereResource.getBroadcaster().broadcast(broadCastMessage);
 				}
