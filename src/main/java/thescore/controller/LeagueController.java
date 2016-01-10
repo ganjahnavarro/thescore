@@ -3,8 +3,11 @@ package thescore.controller;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -27,9 +30,12 @@ import thescore.editor.TeamEditor;
 import thescore.model.League;
 import thescore.model.LeagueTeam;
 import thescore.model.Match;
+import thescore.model.Player;
 import thescore.model.Team;
+import thescore.model.computation.PerformanceComputation;
 import thescore.service.LeagueService;
 import thescore.service.MatchService;
+import thescore.service.PlayerPerformanceService;
 import thescore.service.TeamService;
 
 @Controller
@@ -39,6 +45,7 @@ public class LeagueController {
 	private @Autowired LeagueService leagueService;
 	private @Autowired TeamService teamService;
 	private @Autowired MatchService matchService;
+	private @Autowired PlayerPerformanceService playerPerformanceService;
 	
 	private @Autowired TeamEditor teamEditor;
 	
@@ -129,6 +136,30 @@ public class LeagueController {
         League league = leagueService.findById(id);
         model.addAttribute("league", league);
         model.addAttribute("teamWinLoseRecords", teamService.findTeamLoseRecordsByLeague(league.getId()));
+        
+        List<PerformanceComputation> computations = playerPerformanceService.findLeaguePlayerPerformanceComputations(league.getId());
+        List<String> actions = Arrays.asList("FG", "3FG", "FT", "STL", "BLK", "AST", "DEF", "OFF", "TO", "PF");
+        
+        Map<Player, Map<String, Integer>> playerRecords = new LinkedHashMap<Player, Map<String, Integer>>(); 
+        
+//      TODO
+        for(String action : actions){
+        	for(PerformanceComputation computation : computations){
+        		if(computation.getAction().equalsIgnoreCase(action)){
+        			if(playerRecords.get(computation.getPlayer()) != null){
+        				playerRecords.get(computation.getPlayer()).put(action, computation.getTotal());
+                	} else {
+            			Map<String, Integer> actionRecords = new LinkedHashMap<String, Integer>();
+            			actionRecords.put(action, computation.getTotal());
+            			playerRecords.put(computation.getPlayer(), actionRecords);
+                	}
+        		}
+        	}
+        }
+        
+        model.addAttribute("playerRecords", playerRecords);
+        model.addAttribute("actions", actions);
+        
         return "league/info";
     }
     

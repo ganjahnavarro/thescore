@@ -84,7 +84,7 @@
 			<h4>Teams</h4>
 			
 			<div class="table-responsive">
-				<table class="table table-hover table-striped">
+				<table id="player-records" class="table table-hover table-striped">
 					<tr>
 						<td>Team</td>
 						<td>Win</td>
@@ -105,5 +105,44 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="row">
+		<div class="col-md-8">
+			<h4>Players</h4>
+			
+			<div class="table-responsive">
+				<table class="table table-hover table-striped">
+					<thead> 
+						<tr>
+							<th>Player</th>
+							<c:forEach items="${actions}" var="entry">
+								<th>${action}</th> 
+							</c:forEach> 
+						</tr> 
+					</thead>
+					
+					<tbody>
+						<c:forEach items="${playerRecords}" var="entry">
+							<tr>
+								<td>${entry.key.displayString}</td>
+								
+								<c:forEach items="${entry.value}" var="subentry">
+									<td>${subentry.value}</td>
+								</c:forEach>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<br/>
+	
+	<script>
+		$(document).ready(function() {
+			$("#player-records").tablesorter();
+		});
+	</script>
 	
 </t:template>

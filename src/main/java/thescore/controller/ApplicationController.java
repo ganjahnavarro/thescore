@@ -1,5 +1,8 @@
 package thescore.controller;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -21,6 +24,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import thescore.Utility;
 import thescore.enums.Gender;
+import thescore.model.Newsfeed;
 import thescore.model.User;
 import thescore.service.ForumService;
 import thescore.service.NewsfeedService;
@@ -102,6 +106,15 @@ public class ApplicationController {
 		userService.saveUser(user);
 		model.addAttribute("infoMessage", "User " + user.getDisplayString() + " registered successfully");
 		return "app/login";
+	}
+	
+	@RequestMapping(value = "/slider/image", method = RequestMethod.GET)
+	public void showImage(@RequestParam("id") Integer id, HttpServletResponse response, HttpServletRequest request)
+			throws ServletException, IOException {
+		Newsfeed newsfeed = newsfeedService.findById(id);
+		response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
+		response.getOutputStream().write(newsfeed.getImage());
+		response.getOutputStream().close();
 	}
 	
 	@InitBinder

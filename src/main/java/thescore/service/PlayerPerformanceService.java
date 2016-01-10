@@ -38,6 +38,10 @@ public class PlayerPerformanceService {
     	return repository.findPerformanceRecords(matchId, entityName);
     }
 	
+	public List<PerformanceComputation> findLeaguePlayerPerformanceComputations(Integer leagueId){
+		return repository.findLeaguePlayerPerformanceComputations(leagueId);
+	}
+	
 	public List<PerformanceComputation> findOverallPerformanceComputations(Integer playerId){
 		return repository.findOverallPerformanceComputations(playerId);
 	}

@@ -11,18 +11,19 @@
 		<div class="clr"></div>
 	</div>
 	
+	<br/>
+	
 	<c:if test="${not empty newsfeed.image}">
 		<div class="newsfeed-image">
 			<img src="<c:url value='/newsfeed/image?id=${newsfeed.id}'/>"/>
 		</div>
 	</c:if>
 	
-	<div class="newsfeed-description">
-		<p>${newsfeed.description}</p>
-	</div>
-	
-	<div class="newsfeed-body">
-		<p>${newsfeed.body}</p>
+	<div class="newsfeed-body panel panel-default">
+		<div class="panel-body">
+			<p class="help-block">${newsfeed.description}</p>
+			<p>${newsfeed.body}</p>
+		</div>
 	</div>
 
 </t:template>

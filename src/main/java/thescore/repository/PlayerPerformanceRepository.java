@@ -14,6 +14,7 @@ import thescore.interfaces.IRecord;
 import thescore.model.Match;
 import thescore.model.Player;
 import thescore.model.PlayerPerformance;
+import thescore.model.Team;
 import thescore.model.computation.PerformanceComputation;
 import thescore.model.performance.Assist;
 import thescore.model.performance.Block;
@@ -59,6 +60,27 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 			.setParameter("matchId", matchId)
 			.list();
     }
+	
+	@SuppressWarnings("unchecked")
+	public List<PerformanceComputation> findLeaguePlayerPerformanceComputations(Integer leagueId){
+		String sessionId = UUID.randomUUID().toString();
+		
+		insertLeaguePerformanceComputation(leagueId, sessionId, FieldGoal.ENTITY_NAME, "FG");
+		insertLeaguePerformanceComputation(leagueId, sessionId, ThreePointFieldGoal.ENTITY_NAME, "3FG");
+		insertLeaguePerformanceComputation(leagueId, sessionId, FreeThrow.ENTITY_NAME, "FT");
+		insertLeaguePerformanceComputation(leagueId, sessionId, Steal.ENTITY_NAME, "STL");
+		insertLeaguePerformanceComputation(leagueId, sessionId, Block.ENTITY_NAME, "BLK");
+		insertLeaguePerformanceComputation(leagueId, sessionId, Assist.ENTITY_NAME, "AST");
+		insertLeaguePerformanceComputation(leagueId, sessionId, DefensiveRebound.ENTITY_NAME, "DEF");
+		insertLeaguePerformanceComputation(leagueId, sessionId, OffensiveRebound.ENTITY_NAME, "OFF");
+		insertLeaguePerformanceComputation(leagueId, sessionId, Turnover.ENTITY_NAME, "TO");
+		insertLeaguePerformanceComputation(leagueId, sessionId, Foul.ENTITY_NAME, "PF");
+		
+		return getSession().createCriteria(PerformanceComputation.class)
+				.add(Restrictions.eq("league.id", leagueId))
+				.add(Restrictions.eq("sessionId", sessionId))
+				.list();
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<PerformanceComputation> findOverallPerformanceComputations(Integer playerId){
@@ -186,6 +208,10 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 				.list();
 	}
 	
+	private void insertLeaguePerformanceComputation(Integer leagueId, String sessionId, String fromEntityName, String action) {
+		insertPerformanceComputation(null, null, leagueId, sessionId, fromEntityName, action, false, false);
+	}
+	
 	private void insertPerformanceComputation(Integer playerId, String sessionId, String fromEntityName, String action) {
 		insertPerformanceComputation(playerId, null, null, sessionId, fromEntityName, action, false, false);
 	}
@@ -216,6 +242,7 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 		String sqlQuery = "insert into " + PerformanceComputation.ENTITY_NAME
 				+ (playerId != null ? " (playerId," : "")
 				+ (teamId != null ? " (teamId," : "")
+				+ (leagueId != null ? " (leagueId," : "")
 				
 				+ (perLeague ? " leagueId," : "")
 				+ (perMatch ? " matchId," : "")
@@ -224,6 +251,7 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 				+ " select"
 				+ (playerId != null ? " :playerId," : "")
 				+ (teamId != null ? " :teamId," : "")
+				+ (leagueId != null ? " :leagueId," : "")
 				
 				+ (perLeague ? " m.leagueId," : "")
 				+ (perMatch ? " pf.matchId," : "")
@@ -232,9 +260,9 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 				
 				+ " coalesce(max(subq.mx), 0), "
 				
-				+ " cast(count(o.id) as int) from " + Player.ENTITY_NAME + " p, " + PlayerPerformance.ENTITY_NAME + " pf "
+				+ " cast(count(o.id) as int) from " + Player.ENTITY_NAME + " p, " + Team.ENTITY_NAME + " t," + PlayerPerformance.ENTITY_NAME + " pf "
 				+ " left join " + fromEntityName + " o on o.performanceId = pf.id"
-				+ (perLeague ? " left join " +  Match.ENTITY_NAME + " m on pf.matchId = m.id" : "")
+				+ (perLeague || leagueId != null ? " left join " +  Match.ENTITY_NAME + " m on pf.matchId = m.id" : "")
 				
 				+ " left join (select count(id) as mx, performanceId from " + fromEntityName
 				+ " group by performanceId) subq on subq.performanceId = o.performanceId"
@@ -242,9 +270,10 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 				+ " where pf.playerId = p.id"
 				+ (playerId != null ? " and pf.playerId = :playerId" : "")
 				+ (teamId != null ? " and p.teamId = :teamId" : "")
+				+ (leagueId != null ? " and m.leagueId = :leagueId" : "")
 				+ (perLeague ? " group by m.leagueId" : "")
-				+ (perMatch ? " group by pf.matchId" : "");
-		
+				+ (perMatch ? " group by pf.matchId" : "")
+				+ " order by t.name, p.lastName";
 		
 		Query query =getSession().createSQLQuery(sqlQuery)
 				.setParameter("sessionId", sessionId)
@@ -256,6 +285,10 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 		
 		if(teamId != null){
 			query.setParameter("teamId", teamId);
+		}
+		
+		if(leagueId != null){
+			query.setParameter("leagueId", leagueId);
 		}
 		
 		query.executeUpdate();

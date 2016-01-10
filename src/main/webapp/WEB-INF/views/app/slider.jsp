@@ -16,7 +16,7 @@
 				<c:choose>
 					<c:when test="${not empty newsfeed.image}">
 						<a href="<c:url value='/newsfeed/view-${newsfeed.id}-newsfeed' />">
-							<img src="<c:url value='/newsfeed/image?id=${newsfeed.id}'/>" alt="${newsfeed.title}">
+							<img src="<c:url value='/slider/image?id=${newsfeed.id}'/>" alt="${newsfeed.title}">
 						</a>
 					</c:when>
 					

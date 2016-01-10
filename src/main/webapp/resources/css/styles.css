@@ -206,3 +206,10 @@ input.has-error {
     border-radius: 50px;
     color: white;
 }
+
+.newsfeed-image img {
+    width: 100%;
+    max-height: 350px;
+    margin-bottom: 20px;
+}
+
