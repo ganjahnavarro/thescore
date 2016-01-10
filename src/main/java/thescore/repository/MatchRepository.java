@@ -1,6 +1,5 @@
 package thescore.repository;
 
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -64,14 +63,17 @@ public class MatchRepository extends AbstractRepository<Integer, Match> {
 				.executeUpdate();
 		
 		match.setWinner(aWins ? match.getTeamA() : match.getTeamB());
-		match.setActualEnd(new Date());
 		return match;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<MatchCommittee> findAllMatchCommittees(Integer matchId) {
 		Criteria criteria = getSession().createCriteria(MatchCommittee.class);
-		criteria.add(Restrictions.eq("match.id", matchId));
+		
+		if(matchId != null){
+			criteria.add(Restrictions.eq("match.id", matchId));
+		}
+		
 		return (List<MatchCommittee>) criteria.list();
 	}
 	

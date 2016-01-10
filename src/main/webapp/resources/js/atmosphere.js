@@ -79,11 +79,6 @@ $(function() {
 		var target = $(event.target);
 		var teamIdParam = target.data('teamid');
 		
-		console.log('timeout..');
-		console.log(matchId);
-		console.log(teamIdParam);
-		console.log('-==-');
-		
 		if(matchId != null && teamIdParam != null){
 			subSocket.push(jQuery.stringifyJSON({
 				action : 'TIMEOUT',

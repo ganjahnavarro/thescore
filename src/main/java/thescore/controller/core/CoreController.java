@@ -41,6 +41,8 @@ public class CoreController {
 	
 	@RequestMapping(value = "/play-{id}-match", method = RequestMethod.GET)
 	public String openMatch(@PathVariable Integer id, ModelMap model) {
+		System.out.println(id);
+		
 		Map<Integer, TeamPerformance> teamPerformances = null;
 		Match match = matchService.findById(id);
 		
@@ -145,7 +147,22 @@ public class CoreController {
 	@RequestMapping(value = "/end-{id}-match", method = RequestMethod.GET)
 	public String endMatch(@PathVariable Integer id, ModelMap model) {
 		Match match = matchService.findById(id);
-		newsfeedService.onMatchEnd(match);
+		newsfeedService.onMatchEnd(match, null);
+
+		Integer teamAScore = statisticsMap.get(match.getId()).get(match.getTeamA().getId()).getScore();
+		Integer teamBScore = statisticsMap.get(match.getId()).get(match.getTeamB().getId()).getScore();
+		
+		if(teamAScore == teamBScore){
+			return "redirect:/core/play-" + match.getId() + "-match";
+		}
+		return "redirect:/match/list";
+	}
+	
+	@RequestMapping(value = "/end-{matchId}-match-defwin-{teamId}", method = RequestMethod.GET)
+	public String endMatchDefaultWin(@PathVariable Integer matchId,
+			@PathVariable Integer teamId, ModelMap model) {
+		Match match = matchService.findById(matchId);
+		newsfeedService.onMatchEnd(match, teamId);
 		return "redirect:/match/list";
 	}
 

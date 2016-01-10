@@ -50,7 +50,7 @@ public class NewsfeedService {
 		return newsfeedRepository.findNewsfeeds();
 	}
 	
-	public void onMatchEnd(Match match){
+	public void onMatchEnd(Match match, Integer defWinTeamId){
 		Match destination = matchRepository.findById(match.getId());
 
 		if (destination != null) {
@@ -62,34 +62,15 @@ public class NewsfeedService {
 		}
 		
 		newsfeedRepository.updatePlayerPerformanceFinalScores(destination);
-		destination = matchRepository.updateWinner(destination);
-//		createNewsfeeds(destination);
-//		sendEmailToSubscribeUsers(destination);
+		destination.setActualEnd(new Date());
+		
+		if(defWinTeamId == null){
+			destination = matchRepository.updateWinner(destination);
+		} else {
+			destination.setWinner(destination.getTeamA().getId().equals(defWinTeamId) ? destination.getTeamA() : destination.getTeamB());
+			destination.setDefaultWin(true);
+		}
 	}
-	
-//	private void sendEmailToSubscribeUsers(Match match){
-//		for(User user : userRepository.findAllUsers(UserType.DEFAULT)){
-//			if(user.getEmail() != null && !user.getEmail().isEmpty()){
-//				try {
-//					SimpleMailMessage mailMessage = new SimpleMailMessage();
-//					mailMessage.setFrom("1applicationbot@gmail.com");
-//					mailMessage.setTo(user.getEmail());
-//					mailMessage.setSubject("Match Results");
-//					
-//					String loserTeamName = match.getWinner().equals(match.getTeamA()) ?
-//							match.getTeamA().getDisplayString() : match.getTeamB().getDisplayString();
-//					
-//					String messageBody = match.getWinner().getDisplayString() + " wins against "
-//							+ loserTeamName + " on " + match.getLeague().getDisplayString();
-//					
-//					mailMessage.setText(messageBody);
-//					mailSender.send(mailMessage);
-//				} catch (Exception e){
-//					System.out.println("Error sending email to: " + user.getEmail());
-//				}
-//			}
-//		}
-//	}
 	
 	public void createNewsfeeds(Match match){
 		createWinnerNewsfeed(match);

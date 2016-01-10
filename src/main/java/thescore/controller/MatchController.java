@@ -33,6 +33,7 @@ import thescore.enums.UserType;
 import thescore.model.League;
 import thescore.model.LeagueTeam;
 import thescore.model.Match;
+import thescore.model.MatchCommittee;
 import thescore.model.Player;
 import thescore.model.Team;
 import thescore.service.LeagueService;
@@ -58,13 +59,28 @@ public class MatchController {
 	
 	@RequestMapping(value = { "/", "/list" }, method = RequestMethod.GET)
 	public String list(ModelMap model) {
+		List<MatchCommittee> matchCommittees = matchService.findAllMatchCommittees(null);
+		
 		model.addAttribute("liveMatches", matchService
 				.findAllMatches(Restrictions.isNotNull("actualStart"),
 						Restrictions.isNull("actualEnd")));
 		
-		model.addAttribute("unplayedMatches", matchService
+		List<Match> unplayedMatches = matchService
 				.findAllMatches(Restrictions.isNull("actualStart"),
-						Restrictions.isNull("actualEnd")));
+						Restrictions.isNull("actualEnd"));
+		
+		for(Match match : unplayedMatches){
+			match.setHasCommittee(false);
+			
+			for(MatchCommittee matchCommittee : matchCommittees){
+				if(matchCommittee.getMatch().getId().equals(match.getId())){
+					match.setHasCommittee(true);
+					break;
+				}
+			}
+		}
+		
+		model.addAttribute("unplayedMatches", unplayedMatches);
 		
 		model.addAttribute("finishedMatches", matchService
 				.findAllMatches(Restrictions.isNotNull("actualEnd")));

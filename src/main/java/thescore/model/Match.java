@@ -35,8 +35,11 @@ public class Match implements IRecord {
 	private Integer teamATimeout = 0;
 	private Integer teamBTimeout = 0;
 	
+	private Boolean defaultWin = false;
 	private Team winner;
 	private League league;
+	
+	private Boolean hasCommittee;
 	
 	@Id
 	@Override
@@ -178,6 +181,23 @@ public class Match implements IRecord {
 
 	public void setActualEnd(Date actualEnd) {
 		this.actualEnd = actualEnd;
+	}
+
+	public Boolean getDefaultWin() {
+		return defaultWin;
+	}
+
+	public void setDefaultWin(Boolean defaultWin) {
+		this.defaultWin = defaultWin;
+	}
+
+	@Transient
+	public Boolean getHasCommittee() {
+		return hasCommittee;
+	}
+
+	public void setHasCommittee(Boolean hasCommittee) {
+		this.hasCommittee = hasCommittee;
 	}
 
 }

@@ -220,7 +220,11 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 				+ (perLeague ? " leagueId," : "")
 				+ (perMatch ? " matchId," : "")
 				+ " action, sessionId, matches, maxOnSingleMatch, total)"
-				+ " select :playerId,"
+				
+				+ " select"
+				+ (playerId != null ? " :playerId," : "")
+				+ (teamId != null ? " :teamId," : "")
+				
 				+ (perLeague ? " m.leagueId," : "")
 				+ (perMatch ? " pf.matchId," : "")
 				+ " :action, :sessionId,"

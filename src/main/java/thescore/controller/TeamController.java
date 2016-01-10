@@ -137,6 +137,7 @@ public class TeamController {
 		model.addAttribute("overAllRecords", playerPerformanceService.findTeamOverallPerformanceComputations(team.getId()));
         model.addAttribute("perLeagueRecords", generateLeagueRecords(team, leagueCount));
         model.addAttribute("perMatchRecords", generatePerMatchRecords(team, matchCount));
+        
         model.addAttribute("allLeague", allLeague);
         model.addAttribute("allMatch", allMatch);
         

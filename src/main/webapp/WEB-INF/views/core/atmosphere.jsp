@@ -21,10 +21,29 @@
 			<div class="modal-content">
 				<div class="modal-body">
 					<p id="modal-title" class="modal-title modal-margin-bottom">Are you sure you want to End this Match?</p>
-					<a id="actionButton">
-						<button type="button" class="btn btn-danger">Confirm</button>
-					</a>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					
+					<div id="defwin-match-option">
+						<p class="help-block">Please select winner for default win.</p>
+						<a href="<c:url value='/core/end-${match.id}-match-defwin-${match.teamA.id}' />">
+							<button type="button" class="btn btn-danger">${match.teamA.code}</button>
+						</a>
+						<a href="<c:url value='/core/end-${match.id}-match-defwin-${match.teamB.id}' />">
+							<button type="button" class="btn btn-danger">${match.teamB.code}</button>
+						</a>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					</div>
+					
+					<div id="normal-match-option">
+						<a id="actionButton" href="<c:url value='/core/end-${match.id}-match' />">
+							<button type="button" class="btn btn-danger">Confirm</button>
+						</a>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					</div>
+					
+					<div id="tie-score-match-option">
+						<p class="help-block">Match is tied. Can't end yet.</p>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -49,23 +68,17 @@
 			$('.droppable-a').droppable({
 				accept : ".draggable-a",
 				drop : function(event, ui) {
-					//console.log('Incoming Player ID: ' + ui.draggable.data('playerid'));
-					//console.log('Outgoing Player ID: ' + $(this).data('playerid'));
-
 					var draggedImg = ui.draggable.find('img');
 					var droppedImg = $(this).find('img');
 
-					//swap img src
 					var srcHolder = draggedImg.attr('src');
 					draggedImg.attr('src', droppedImg.attr('src'));
 					droppedImg.attr('src', srcHolder);
 
-					//swap playerid attribute
 					var playerIdHolder = ui.draggable.data('playerid');
 					ui.draggable.data('playerid', $(this).data('playerid'));
 					$(this).data('playerid', playerIdHolder);
 					
-					//swap img playerid attribute
 					var imagePlayerIdHolder = draggedImg.data('playerid');
 					draggedImg.data('playerid', droppedImg.data('playerid'));
 					droppedImg.data('playerid', imagePlayerIdHolder);
@@ -80,26 +93,25 @@
 			$('.droppable-b').droppable({
 				accept : ".draggable-b",
 				drop : function(event, ui) {
-					//console.log('Incoming Player ID: ' + ui.draggable.data('playerid'));
-					//console.log('Outgoing Player ID: ' + $(this).data('playerid'));
-
 					var draggedImg = ui.draggable.find('img');
 					var droppedImg = $(this).find('img');
 
-					//swap img src
 					var srcHolder = draggedImg.attr('src');
 					draggedImg.attr('src', droppedImg.attr('src'));
 					droppedImg.attr('src', srcHolder);
 
-					//swap playerid attribute
 					var playerIdHolder = ui.draggable.data('playerid');
 					ui.draggable.data('playerid', $(this).data('playerid'));
 					$(this).data('playerid', playerIdHolder);
 					
-					//swap img playerid attribute
 					var imagePlayerIdHolder = draggedImg.data('playerid');
 					draggedImg.data('playerid', droppedImg.data('playerid'));
 					droppedImg.data('playerid', imagePlayerIdHolder);
+					
+					var draggedNumber = ui.draggable.find('span').html();
+					var droppedNumber = $(this).find('span').html();
+					ui.draggable.find('span').html(droppedNumber);
+					$(this).find('span').html(draggedNumber);
 				}
 			});
 		});
@@ -107,10 +119,23 @@
 	
 	<script>
 		$('#defaultModal').on('show.bs.modal', function(event) {
-			var button = $(event.relatedTarget);
-			var action = button.data('action');
-			var modal = $(this);
-			modal.find('#actionButton').attr("href", action);
+			var teamAScore = $('#score-a').html();
+			var teamBScore = $('#score-b').html();
+			
+			if((teamAScore == null || teamAScore == 0) && (teamBScore == null || teamBScore == 0)){
+				$('#defwin-match-option').removeClass('hidden');
+				$('#normal-match-option').addClass('hidden');
+				$('#tie-score-match-option').addClass('hidden');
+				
+			} else if(teamAScore == teamBScore){
+				$('#defwin-match-option').addClass('hidden');
+				$('#normal-match-option').addClass('hidden');
+				$('#tie-score-match-option').removeClass('hidden');
+			} else {
+				$('#defwin-match-option').addClass('hidden');
+				$('#normal-match-option').removeClass('hidden');
+				$('#tie-score-match-option').addClass('hidden');
+			}
 		})
 	</script>
 	

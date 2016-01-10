@@ -72,7 +72,7 @@
 	</div>
 	
 	<div class="row">
-		<div class="form-group col-lg-8 col-md-7">
+		<div class="form-group col-lg-7 col-md-6">
 			<h4>Players</h4>
 			<c:forEach items="${players}" var="player">
 				<div class="substitution-item" data-playerid="${player.id}">
@@ -93,7 +93,7 @@
 			</c:forEach>
 		</div>
 		
-		<div class="form-group col-lg-4 col-md-5">
+		<div class="form-group col-lg-5 col-md-6">
 			<h4>Matches</h4>
 			<ul class="list-group">
 				<c:forEach items="${matches}" var="match">
@@ -107,7 +107,7 @@
 								</c:when>
 								
 								<c:when test="${match.winner.id == team.id}">
-									<span class="label label-danger pull-right recent-match-badge">W</span>
+									<span class="label label-success pull-right recent-match-badge">W</span>
 								</c:when>
 								
 								<c:otherwise>

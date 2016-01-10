@@ -8,7 +8,7 @@
 				<c:if test="${allowedStatisticsModification}">
 					<button type="button" class="btn btn-default btn-xs time-out-item"
 						data-teamid="${match.teamA.id}">
-						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+						<span class="glyphicon glyphicon-plus" data-teamid="${match.teamA.id}" aria-hidden="true"></span>
 					</button>
 				</c:if>
 
@@ -44,8 +44,8 @@
 
 				<c:if test="${allowedStatisticsModification}">				
 					<button type="button" class="btn btn-default btn-xs time-out-item"
-						data-teamid="${match.teamA.id}">
-						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+						data-teamid="${match.teamB.id}">
+						<span class="glyphicon glyphicon-plus" aria-hidden="true" data-teamid="${match.teamB.id}"></span>
 					</button>
 					
 					<button type="button" class="btn btn-danger header-middle" aria-label="End Match"
