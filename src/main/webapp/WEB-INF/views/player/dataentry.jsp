@@ -24,13 +24,13 @@
 		<form:input type="hidden" path="id" id="id" />
 
 		<div class="form-group col-md-4">
-			<label for="lastName" class="control-label">Last Name</label>
+			<label for="lastName" class="control-label">Last Name *</label>
 			<form:input path="lastName" id="lastName" cssClass="form-control"
 				cssErrorClass="form-control has-error" />
 		</div>
 		
 		<div class="form-group col-md-4">
-			<label for="firstName" class="control-label">First Name</label>
+			<label for="firstName" class="control-label">First Name *</label>
 			<form:input path="firstName" id="firstName" cssClass="form-control"
 				cssErrorClass="form-control has-error" />
 		</div>
@@ -60,7 +60,7 @@
 		</div>
 		
 		<div class="form-group col-md-4">
-			<label for="team" class="control-label">Team</label>
+			<label for="team" class="control-label">Team *</label>
 			<form:select path="team" id="team" cssClass="form-control"
 				cssErrorClass="form-control has-error" items="${teams}"
 				itemLabel="name" itemValue="id">
@@ -68,11 +68,17 @@
 		</div>
 		
 		<div class="form-group col-md-4">
-			<label for="position" class="control-label">Position</label>
+			<label for="position" class="control-label">Position *</label>
 			<form:select path="position" id="position" cssClass="form-control"
 				cssErrorClass="form-control has-error" items="${positions}"
 				itemLabel="displayString">
 			</form:select>
+		</div>
+		
+		<div class="form-group col-md-3">
+			<label for="number" class="control-label">Number *</label>
+			<form:input path="number" id="number" cssClass="form-control"
+				cssErrorClass="form-control has-error" type="number" />
 		</div>
 		
 		<div class="form-group col-md-3">

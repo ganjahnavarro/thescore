@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -25,8 +26,6 @@ public class Topic implements IRecord{
 	private Date date = new Date();
 	private String entryBy;
 	
-//	private List<Comment> comments = new ArrayList<Comment>();
-	
 	@Id
 	@Override
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +39,7 @@ public class Topic implements IRecord{
 		return title;
 	}
 
+	@NotNull(message = "Title is required.")
 	public String getTitle() {
 		return title;
 	}
@@ -76,13 +76,5 @@ public class Topic implements IRecord{
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-//	public List<Comment> getComments() {
-//		return comments;
-//	}
-//
-//	public void setComments(List<Comment> comments) {
-//		this.comments = comments;
-//	}
 
 }

@@ -66,7 +66,7 @@ public class ForumRepository extends AbstractRepository<Integer, Topic> {
 		System.out.println(invalidWords);
 		
 		for(String invalidWord : invalidWords){
-			if(value.contains(invalidWord)){
+			if(value.contains(invalidWord.trim())){
 				return false;
 			}
 		}

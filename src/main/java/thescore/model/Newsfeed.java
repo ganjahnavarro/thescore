@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -54,6 +55,7 @@ public class Newsfeed implements IRecord {
 		return description;
 	}
 
+	@NotNull(message = "Date is required.")
 	@DateTimeFormat(pattern = "MM/dd/yyyy HH:mm")
 	public Date getDate() {
 		return date;
@@ -89,6 +91,7 @@ public class Newsfeed implements IRecord {
 		this.imageFileName = imageFileName;
 	}
 
+	@NotNull(message = "Title is required.")
 	public String getTitle() {
 		return title;
 	}

@@ -58,8 +58,16 @@ public class MatchController {
 	
 	@RequestMapping(value = { "/", "/list" }, method = RequestMethod.GET)
 	public String list(ModelMap model) {
-		List<Match> matches = matchService.findAllMatches();
-		model.addAttribute("matches", matches);
+		model.addAttribute("liveMatches", matchService
+				.findAllMatches(Restrictions.isNotNull("actualStart"),
+						Restrictions.isNull("actualEnd")));
+		
+		model.addAttribute("unplayedMatches", matchService
+				.findAllMatches(Restrictions.isNull("actualStart"),
+						Restrictions.isNull("actualEnd")));
+		
+		model.addAttribute("finishedMatches", matchService
+				.findAllMatches(Restrictions.isNotNull("actualEnd")));
 		return "match/list";
 	}
 	

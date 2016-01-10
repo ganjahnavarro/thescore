@@ -28,7 +28,7 @@
 				
 				<div class="form-group col-sm-6 col-md-4">
 					<label class="control-label">Prize</label>
-					<input class="form-control" value="${league.prize}" readonly="readonly"/>
+					<input class="form-control" value="<fmt:formatNumber value="${league.prize}" pattern="#,##0.00"/>" readonly="readonly"/>
 				</div>
 				
 				<div class="form-group col-sm-6 col-md-4">

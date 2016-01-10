@@ -25,6 +25,10 @@
 						<img src="<c:url value="/resources/images/placeholder.png" />"/>
 					</c:otherwise>
 				</c:choose>
+				
+				<div class="detail">
+					<span>${player.number}</span>
+				</div>
 			</div>
 		</div>
 		
@@ -122,6 +126,14 @@
 					</table>
 				</div>
 			</c:forEach>
+			
+			<c:if test="${allLeague == false}">
+				<div class="info-table-label">
+					<a href="<c:url value='/view-${player.id}-player?allLeague=true&allMatch=${allMatch}' />">
+						<span class="label label-danger">VIEW ALL</span>
+					</a>
+				</div>
+			</c:if>
 		</div>
 		
 		<div class="col-md-4">
@@ -153,7 +165,17 @@
 					</table>
 				</div>
 			</c:forEach>
+			
+			<c:if test="${allMatch == false}">
+				<div class="info-table-label">
+					<a href="<c:url value='/view-${player.id}-player?allLeague=${allLeague}&allMatch=true' />">
+						<span class="label label-danger">VIEW ALL</span>
+					</a>
+				</div>
+			</c:if>
 		</div>
 	</div>
+	
+	<br/>
 
 </t:template>

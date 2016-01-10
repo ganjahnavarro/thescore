@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -42,6 +43,8 @@ public class Player implements IRecord {
 	
 	private byte[] image;
 	private String imageFileName;
+	
+	private Integer number;
 	
 	@Id
 	@Override
@@ -109,6 +112,7 @@ public class Player implements IRecord {
 		this.birthDate = birthDate;
 	}
 
+	@NotNull(message = "Team is required.")
 	@ManyToOne(targetEntity = Team.class)
 	@JoinColumn(name = "teamId")
 	public Team getTeam() {
@@ -119,6 +123,7 @@ public class Player implements IRecord {
 		this.team = team;
 	}
 
+	@NotNull(message = "Position is required.")
 	@Enumerated(EnumType.STRING)
 	public Position getPosition() {
 		return position;
@@ -188,6 +193,15 @@ public class Player implements IRecord {
 			}
 		}
 		return super.equals(obj);
+	}
+
+	@NotNull(message = "Number is required.")
+	public Integer getNumber() {
+		return number;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
 	}
 	
 }

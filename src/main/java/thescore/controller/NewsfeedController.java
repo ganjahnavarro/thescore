@@ -81,10 +81,13 @@ public class NewsfeedController {
     @RequestMapping(value = { "/edit-{id}-newsfeed" }, method = RequestMethod.POST)
     public String update(@Valid Newsfeed newsfeed, BindingResult result, ModelMap model, @PathVariable Integer id,
     		@RequestParam CommonsMultipartFile fileUpload) {
+    	Boolean updateImage = false;
+    	
 		if (fileUpload != null && fileUpload.getOriginalFilename() != null
     			&& !fileUpload.getOriginalFilename().isEmpty()) {
 			newsfeed.setImageFileName(fileUpload.getOriginalFilename());
 			newsfeed.setImage(fileUpload.getBytes());
+			updateImage = true;
 		}
     	
         if (result.hasErrors()) {
@@ -93,7 +96,7 @@ public class NewsfeedController {
             return "newsfeed/dataentry";
         }
  
-        newsfeedService.updateNewsfeed(newsfeed);
+        newsfeedService.updateNewsfeed(newsfeed, updateImage);
         model.addAttribute("success", "Newsfeed " + newsfeed.getDisplayString()  + " updated successfully");
         return "redirect:/newsfeed/list";	
     }

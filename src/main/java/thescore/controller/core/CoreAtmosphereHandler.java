@@ -42,14 +42,14 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 				String broadCastMessage = null;
 				String message = req.getReader().readLine().trim();
 				
+				System.out.println(message);
+				
 				if(message != null){
 					ActionData data = new ActionData();
 					data = mapper.readValue(message, ActionData.class);
 					matchId = data.getMatchId();
 					
 					if(data.getAction().equals("TIMEOUT")){
-						System.out.println(message);
-						
 						ApplicationContext context = Utility.getApplicationContext();
 						MatchService service = context.getBean(MatchService.class);
 						Match match = service.findById(matchId);

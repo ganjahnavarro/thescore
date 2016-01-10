@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import thescore.interfaces.IPerformanceRecord;
 import thescore.interfaces.IRecord;
 import thescore.model.Match;
+import thescore.model.Player;
 import thescore.model.PlayerPerformance;
 import thescore.model.computation.PerformanceComputation;
 import thescore.model.performance.Assist;
@@ -121,22 +123,100 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 				.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PerformanceComputation> findTeamOverallPerformanceComputations(Integer teamId){
+		String sessionId = UUID.randomUUID().toString();
+		
+		insertTeamPerformanceComputation(teamId, sessionId, FieldGoal.ENTITY_NAME, "FG");
+		insertTeamPerformanceComputation(teamId, sessionId, ThreePointFieldGoal.ENTITY_NAME, "3FG");
+		insertTeamPerformanceComputation(teamId, sessionId, FreeThrow.ENTITY_NAME, "FT");
+		insertTeamPerformanceComputation(teamId, sessionId, Steal.ENTITY_NAME, "STL");
+		insertTeamPerformanceComputation(teamId, sessionId, Block.ENTITY_NAME, "BLK");
+		insertTeamPerformanceComputation(teamId, sessionId, Assist.ENTITY_NAME, "AST");
+		insertTeamPerformanceComputation(teamId, sessionId, DefensiveRebound.ENTITY_NAME, "DEF");
+		insertTeamPerformanceComputation(teamId, sessionId, OffensiveRebound.ENTITY_NAME, "OFF");
+		insertTeamPerformanceComputation(teamId, sessionId, Turnover.ENTITY_NAME, "TO");
+		insertTeamPerformanceComputation(teamId, sessionId, Foul.ENTITY_NAME, "PF");
+		
+		return getSession().createCriteria(PerformanceComputation.class)
+				.add(Restrictions.eq("team.id", teamId))
+				.add(Restrictions.eq("sessionId", sessionId))
+				.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PerformanceComputation> findTeamPerLeaguePerformanceComputations(Integer teamId){
+		String sessionId = UUID.randomUUID().toString();
+		
+		insertTeamPerformanceComputationPerLeague(teamId, sessionId, FieldGoal.ENTITY_NAME, "FG");
+		insertTeamPerformanceComputationPerLeague(teamId, sessionId, ThreePointFieldGoal.ENTITY_NAME, "3FG");
+		insertTeamPerformanceComputationPerLeague(teamId, sessionId, FreeThrow.ENTITY_NAME, "FT");
+		insertTeamPerformanceComputationPerLeague(teamId, sessionId, Steal.ENTITY_NAME, "STL");
+		insertTeamPerformanceComputationPerLeague(teamId, sessionId, Block.ENTITY_NAME, "BLK");
+		insertTeamPerformanceComputationPerLeague(teamId, sessionId, Assist.ENTITY_NAME, "AST");
+		insertTeamPerformanceComputationPerLeague(teamId, sessionId, DefensiveRebound.ENTITY_NAME, "DEF");
+		insertTeamPerformanceComputationPerLeague(teamId, sessionId, OffensiveRebound.ENTITY_NAME, "OFF");
+		insertTeamPerformanceComputationPerLeague(teamId, sessionId, Turnover.ENTITY_NAME, "TO");
+		insertTeamPerformanceComputationPerLeague(teamId, sessionId, Foul.ENTITY_NAME, "PF");
+		
+		return getSession().createCriteria(PerformanceComputation.class)
+				.add(Restrictions.eq("team.id", teamId))
+				.add(Restrictions.eq("sessionId", sessionId))
+				.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PerformanceComputation> findTeamPerMatchPerformanceComputations(Integer teamId){
+		String sessionId = UUID.randomUUID().toString();
+		
+		insertTeamPerformanceComputationPerMatch(teamId, sessionId, FieldGoal.ENTITY_NAME, "FG");
+		insertTeamPerformanceComputationPerMatch(teamId, sessionId, ThreePointFieldGoal.ENTITY_NAME, "3FG");
+		insertTeamPerformanceComputationPerMatch(teamId, sessionId, FreeThrow.ENTITY_NAME, "FT");
+		insertTeamPerformanceComputationPerMatch(teamId, sessionId, Steal.ENTITY_NAME, "STL");
+		insertTeamPerformanceComputationPerMatch(teamId, sessionId, Block.ENTITY_NAME, "BLK");
+		insertTeamPerformanceComputationPerMatch(teamId, sessionId, Assist.ENTITY_NAME, "AST");
+		insertTeamPerformanceComputationPerMatch(teamId, sessionId, DefensiveRebound.ENTITY_NAME, "DEF");
+		insertTeamPerformanceComputationPerMatch(teamId, sessionId, OffensiveRebound.ENTITY_NAME, "OFF");
+		insertTeamPerformanceComputationPerMatch(teamId, sessionId, Turnover.ENTITY_NAME, "TO");
+		insertTeamPerformanceComputationPerMatch(teamId, sessionId, Foul.ENTITY_NAME, "PF");
+		
+		return getSession().createCriteria(PerformanceComputation.class)
+				.add(Restrictions.eq("team.id", teamId))
+				.add(Restrictions.eq("sessionId", sessionId))
+				.list();
+	}
+	
 	private void insertPerformanceComputation(Integer playerId, String sessionId, String fromEntityName, String action) {
-		insertPerformanceComputation(playerId, sessionId, fromEntityName, action, false, false);
+		insertPerformanceComputation(playerId, null, null, sessionId, fromEntityName, action, false, false);
 	}
 	
 	private void insertPerformanceComputationPerLeague(Integer playerId, String sessionId, String fromEntityName, String action) {
-		insertPerformanceComputation(playerId, sessionId, fromEntityName, action, true, false);
+		insertPerformanceComputation(playerId, null, null, sessionId, fromEntityName, action, true, false);
 	}
 	
 	private void insertPerformanceComputationPerMatch(Integer playerId, String sessionId, String fromEntityName, String action) {
-		insertPerformanceComputation(playerId, sessionId, fromEntityName, action, false, true);
+		insertPerformanceComputation(playerId, null, null, sessionId, fromEntityName, action, false, true);
 	}
 	
-	private void insertPerformanceComputation(Integer playerId, String sessionId, String fromEntityName, String action,
+	private void insertTeamPerformanceComputation(Integer teamId, String sessionId, String fromEntityName, String action) {
+		insertPerformanceComputation(null, teamId, null, sessionId, fromEntityName, action, false, false);
+	}
+	
+	private void insertTeamPerformanceComputationPerLeague(Integer teamId, String sessionId, String fromEntityName, String action) {
+		insertPerformanceComputation(null, teamId, null, sessionId, fromEntityName, action, true, false);
+	}
+	
+	private void insertTeamPerformanceComputationPerMatch(Integer teamId, String sessionId, String fromEntityName, String action) {
+		insertPerformanceComputation(null, teamId, null, sessionId, fromEntityName, action, false, true);
+	}
+	
+	private void insertPerformanceComputation(Integer playerId, Integer teamId, Integer leagueId,
+			String sessionId, String fromEntityName, String action,
 			Boolean perLeague, Boolean perMatch) {
 		String sqlQuery = "insert into " + PerformanceComputation.ENTITY_NAME
-				+ " (playerId,"
+				+ (playerId != null ? " (playerId," : "")
+				+ (teamId != null ? " (teamId," : "")
+				
 				+ (perLeague ? " leagueId," : "")
 				+ (perMatch ? " matchId," : "")
 				+ " action, sessionId, matches, maxOnSingleMatch, total)"
@@ -148,22 +228,33 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 				
 				+ " coalesce(max(subq.mx), 0), "
 				
-				+ " cast(count(o.id) as int) from " + PlayerPerformance.ENTITY_NAME + " pf "
+				+ " cast(count(o.id) as int) from " + Player.ENTITY_NAME + " p, " + PlayerPerformance.ENTITY_NAME + " pf "
 				+ " left join " + fromEntityName + " o on o.performanceId = pf.id"
 				+ (perLeague ? " left join " +  Match.ENTITY_NAME + " m on pf.matchId = m.id" : "")
 				
 				+ " left join (select count(id) as mx, performanceId from " + fromEntityName
 				+ " group by performanceId) subq on subq.performanceId = o.performanceId"
 				
-				+ " where pf.playerId = :playerId"
+				+ " where pf.playerId = p.id"
+				+ (playerId != null ? " and pf.playerId = :playerId" : "")
+				+ (teamId != null ? " and p.teamId = :teamId" : "")
 				+ (perLeague ? " group by m.leagueId" : "")
 				+ (perMatch ? " group by pf.matchId" : "");
 		
-		getSession().createSQLQuery(sqlQuery)
-			.setParameter("playerId", playerId)
-			.setParameter("sessionId", sessionId)
-			.setParameter("action", action)
-			.executeUpdate();
+		
+		Query query =getSession().createSQLQuery(sqlQuery)
+				.setParameter("sessionId", sessionId)
+				.setParameter("action", action); 
+
+		if(playerId != null){
+			query.setParameter("playerId", playerId);
+		}
+		
+		if(teamId != null){
+			query.setParameter("teamId", teamId);
+		}
+		
+		query.executeUpdate();
 	}
 	
 	@SuppressWarnings("rawtypes")

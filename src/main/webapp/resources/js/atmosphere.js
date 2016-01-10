@@ -68,9 +68,9 @@ $(function() {
 
 	var subSocket = socket.subscribe(request);
 	
-	$('#add-quarter').click(function(event) {
+	$("#quarters-holder").on("click", "#add-quarter", function(){
 		quarterCount = quarterCount + 1;
-		$('#add-quarter').before('<span class="quarter-selection-item" data-quarter="' + quarterCount + '">' + quarterCount + 'th </span>');
+		$('#add-quarter').before('<span class="quarter-selection-item" data-quarter="' + quarterCount + '"> OT' + (quarterCount - 4) + '</span>');
 	});
 	
 	$('.time-out-item').click(function(event) {
@@ -78,6 +78,11 @@ $(function() {
 		
 		var target = $(event.target);
 		var teamIdParam = target.data('teamid');
+		
+		console.log('timeout..');
+		console.log(matchId);
+		console.log(teamIdParam);
+		console.log('-==-');
 		
 		if(matchId != null && teamIdParam != null){
 			subSocket.push(jQuery.stringifyJSON({

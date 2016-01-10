@@ -57,7 +57,7 @@
 							<li class="list-group-item">
 								<a href="<c:url value='/league/view-${league.id}-league' />">
 									<span class="recent-match-unplayed">
-										${league.prize}
+										<fmt:formatNumber value="${league.prize}" pattern="#,##0.00"/>
 									</span>
 									${league.name}
 								</a>
@@ -123,5 +123,114 @@
 		
 		<div class="clearfix"></div>
 	</div>
+	
+	<div class="row">
+		<div class="col-md-4">
+			<h4>Career</h4>
+			
+			<div class="info-table-label">
+				<span class="label label-default">Overall</span>
+			</div>
+			
+			<div class="table-responsive">
+				<table class="table table-hover table-striped">
+					<tr>
+						<td></td>
+						<td>Total</td>
+						<td>Maximum</td>
+						<td>Average</td>
+					</tr>
+					<c:forEach items="${overAllRecords}" var="record">
+						<tr>
+							<td>${record.action}</td>
+							<td>${record.total}</td>
+							<td>${record.maxOnSingleMatch}</td>
+							<td>${record.displayString}</td>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
+		</div>
+		
+		<div class="col-md-4">
+			<h4>Per League</h4>
+			
+			<c:forEach items="${perLeagueRecords}" var="entry">
+				<div class="info-table-label">
+					<a href="<c:url value='/league/view-${entry.key.id}-league' />">
+						<span class="label label-success">${entry.key.displayString}</span>
+					</a>
+				</div>
+			
+				<div class="table-responsive">
+					<table class="table table-hover table-striped">
+						<tr>
+							<td></td>
+							<td>Total</td>
+							<td>Maximum</td>
+							<td>Average</td>
+						</tr>
+						<c:forEach items="${entry.value}" var="record">
+							<tr>
+								<td>${record.action}</td>
+								<td>${record.total}</td>
+								<td>${record.maxOnSingleMatch}</td>
+								<td>${record.displayString}</td>
+							</tr>
+						</c:forEach>
+					</table>
+				</div>
+			</c:forEach>
+			
+			<c:if test="${allLeague == false}">
+				<div class="info-table-label">
+					<a href="<c:url value='/view-${team.id}-team?allLeague=true&allMatch=${allMatch}' />">
+						<span class="label label-danger">VIEW ALL</span>
+					</a>
+				</div>
+			</c:if>
+		</div>
+		
+		<div class="col-md-4">
+			<h4>Per Match</h4>
+			
+			<c:forEach items="${perMatchRecords}" var="entry">
+				<div class="info-table-label">
+					<a href="<c:url value='/match/view-${entry.key.id}-match' />">
+						<span class="label label-primary">${entry.key.teamA.code} VS. ${entry.key.teamB.code}</span>
+					</a>
+				</div>
+			
+				<div class="table-responsive">
+					<table class="table table-hover table-striped">
+						<tr>
+							<td></td>
+							<td>Total</td>
+							<td>Maximum</td>
+							<td>Average</td>
+						</tr>
+						<c:forEach items="${entry.value}" var="record">
+							<tr>
+								<td>${record.action}</td>
+								<td>${record.total}</td>
+								<td>${record.maxOnSingleMatch}</td>
+								<td>${record.displayString}</td>
+							</tr>
+						</c:forEach>
+					</table>
+				</div>
+			</c:forEach>
+			
+			<c:if test="${allMatch == false}">
+				<div class="info-table-label">
+					<a href="<c:url value='/view-${team.id}-team?allLeague=${allLeague}&allMatch=true' />">
+						<span class="label label-danger">VIEW ALL</span>
+					</a>
+				</div>
+			</c:if>
+		</div>
+	</div>
+	
+	<br/>
 	
 </t:template>

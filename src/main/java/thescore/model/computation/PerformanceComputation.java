@@ -14,6 +14,7 @@ import thescore.interfaces.IRecord;
 import thescore.model.League;
 import thescore.model.Match;
 import thescore.model.Player;
+import thescore.model.Team;
 
 @Entity(name = PerformanceComputation.ENTITY_NAME)
 public class PerformanceComputation implements IRecord{
@@ -30,6 +31,7 @@ public class PerformanceComputation implements IRecord{
 	private Integer total;
 	
 	private Player player;
+	private Team team;
 	private League league;
 	private Match match;
 	
@@ -120,6 +122,16 @@ public class PerformanceComputation implements IRecord{
 
 	public void setMatch(Match match) {
 		this.match = match;
+	}
+
+	@ManyToOne(targetEntity = Team.class)
+	@JoinColumn(name = "teamId")
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
 	}
 	
 }

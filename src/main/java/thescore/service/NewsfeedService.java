@@ -25,8 +25,13 @@ public class NewsfeedService {
         return newsfeedRepository.findById(id);
     }
  
-    public void updateNewsfeed(Newsfeed source) {
+    public void updateNewsfeed(Newsfeed source, Boolean updateImage) {
     	Newsfeed destination = newsfeedRepository.findById(source.getId());
+    	
+    	if(!updateImage){
+        	source.setImage(destination.getImage());
+        	source.setImageFileName(destination.getImageFileName());
+        }
         
 		if (destination != null) {
 			try {

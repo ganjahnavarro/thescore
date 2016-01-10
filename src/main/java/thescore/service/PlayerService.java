@@ -25,8 +25,13 @@ public class PlayerService {
         repository.savePlayer(player);
     }
  
-    public void updatePlayer(Player source) {
+    public void updatePlayer(Player source, Boolean updateImage) {
         Player destination = repository.findById(source.getId());
+        
+        if(!updateImage){
+        	source.setImage(destination.getImage());
+        	source.setImageFileName(destination.getImageFileName());
+        }
         
 		if (destination != null) {
 			try {

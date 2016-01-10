@@ -31,6 +31,13 @@
 				<ul class="nav navbar-nav navbar-right">
 					<c:choose>
 						<c:when test="${not empty userName}">
+							<li>
+								<a href="#">
+									<span class="glyphicon glyphicon-globe"></span>
+									<span class="notification-count">3</span>
+								</a>
+							</li>
+						
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 									<c:out value="${userName}"/>

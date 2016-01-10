@@ -50,6 +50,18 @@ public class PlayerPerformanceService {
 		return repository.findPerMatchPerformanceComputations(playerId);
 	}
 	
+	public List<PerformanceComputation> findTeamOverallPerformanceComputations(Integer teamId){
+		return repository.findTeamOverallPerformanceComputations(teamId);
+	}
+	
+	public List<PerformanceComputation> findTeamPerLeaguePerformanceComputations(Integer teamId){
+		return repository.findTeamPerLeaguePerformanceComputations(teamId);
+	}
+	
+	public List<PerformanceComputation> findTeamPerMatchPerformanceComputations(Integer teamId){
+		return repository.findTeamPerMatchPerformanceComputations(teamId);
+	}
+	
 	@SuppressWarnings("rawtypes")
 	public Boolean checkAndRemoveLatestPerformance(Class clazz, Integer matchId, Integer playerId){
 		return repository.checkAndRemoveLatestPerformance(clazz, matchId, playerId);

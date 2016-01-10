@@ -15,7 +15,7 @@
 		<form:input type="hidden" path="id" id="id" />
 
 		<div class="form-group col-md-4">
-			<label for="title" class="control-label">Title</label>
+			<label for="title" class="control-label">Title *</label>
 			<form:input path="title" id="title" cssClass="form-control"
 				cssErrorClass="form-control has-error" />
 		</div>

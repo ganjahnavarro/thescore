@@ -107,6 +107,8 @@ public class UserController {
     @RequestMapping(value = { "/edit-{id}-user" }, method = RequestMethod.POST)
     public String update(@Valid User user, BindingResult result, ModelMap model, @PathVariable Integer id,
             @RequestParam CommonsMultipartFile fileUpload, @RequestParam String passwordConfirmation) {
+    	Boolean updateImage = false;
+    	
 		if (user.getPassword().equals(passwordConfirmation) == false) {
 			model.addAttribute("errorMessage", "Password doesn't match");
 			model.addAttribute("actionParam", "/user/edit-" + id + "-user?");
@@ -117,6 +119,7 @@ public class UserController {
 				&& !fileUpload.getOriginalFilename().isEmpty()) {
 			user.setImageFileName(fileUpload.getOriginalFilename());
 			user.setImage(fileUpload.getBytes());
+			updateImage = true;
 		}
 
 		if (result.hasErrors()) {
@@ -125,7 +128,7 @@ public class UserController {
 			return "user/dataentry";
 		}
 
-		service.updateUser(user);
+		service.updateUser(user, updateImage);
 		model.addAttribute("success", "User " + user.getDisplayString() + " updated successfully");
 		String redirect = "redirect:" + (user.getType().isDefaultUser() ? "/user/list" : "/user/committees");
 		return redirect;

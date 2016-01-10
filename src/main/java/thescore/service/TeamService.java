@@ -26,8 +26,13 @@ public class TeamService {
 		repository.saveTeam(team);
 	}
 
-	public void updateTeam(Team source) {
+	public void updateTeam(Team source, Boolean updateImage) {
 		Team destination = repository.findById(source.getId());
+		
+		if(!updateImage){
+        	source.setImage(destination.getImage());
+        	source.setImageFileName(destination.getImageFileName());
+        }
 
 		if (destination != null) {
 			try {

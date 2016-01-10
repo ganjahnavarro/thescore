@@ -95,7 +95,9 @@ input.has-error {
 }
 
 .profileImage {
-	text-align: center;
+	left: 50%;
+    transform: translate(-50%, 0%);
+    position: absolute;
 }
 
 .profileImage img {
@@ -106,6 +108,19 @@ input.has-error {
 	height: 120px;
 	min-height: 120px;
 	max-height: 120px;
+}
+
+.profileImage img .detail {
+	background-color: rgba(0, 0, 0, 0.5);
+    width: 100px;
+    position: absolute;
+    text-align: center;
+    bottom: 0px;
+}
+
+.profileImage img .detail span {
+	color: white;
+	font-weight: bold;
 }
 
 .info-table-label{
@@ -178,4 +193,16 @@ input.has-error {
 	height: 10px;
 	margin: 1px;
     background-color: rgba(255, 255, 255, 0.6);
+}
+
+.notification-count {
+	position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #FB5050;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    border-radius: 50px;
+    color: white;
 }

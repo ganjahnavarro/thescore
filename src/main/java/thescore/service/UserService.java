@@ -30,9 +30,14 @@ public class UserService {
 		repository.saveUser(user);
 	}
 
-	public void updateUser(User source) {
+	public void updateUser(User source, Boolean updateImage) {
 		User destination = repository.findById(source.getId());
 
+		if(!updateImage){
+        	source.setImage(destination.getImage());
+        	source.setImageFileName(destination.getImageFileName());
+        }
+		
 		if (destination != null) {
 			try {
 				PropertyUtils.copyProperties(destination, source);

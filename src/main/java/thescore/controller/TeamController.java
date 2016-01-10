@@ -1,7 +1,10 @@
 package thescore.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -23,9 +26,13 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
 import thescore.Utility;
+import thescore.model.League;
+import thescore.model.Match;
 import thescore.model.Team;
+import thescore.model.computation.PerformanceComputation;
 import thescore.service.LeagueService;
 import thescore.service.MatchService;
+import thescore.service.PlayerPerformanceService;
 import thescore.service.PlayerService;
 import thescore.service.TeamService;
 
@@ -37,6 +44,7 @@ public class TeamController {
 	private @Autowired PlayerService playerService;
 	private @Autowired MatchService matchService;
 	private @Autowired LeagueService leagueService;
+	private @Autowired PlayerPerformanceService playerPerformanceService;
 	
 	@RequestMapping(value = { "/", "/list" }, method = RequestMethod.GET)
 	public String list(ModelMap model) {
@@ -86,10 +94,13 @@ public class TeamController {
     @RequestMapping(value = { "/edit-{id}-team" }, method = RequestMethod.POST)
     public String update(@Valid Team team, BindingResult result, ModelMap model, @PathVariable Integer id,
             @RequestParam CommonsMultipartFile fileUpload) {
+    	Boolean updateImage = false;
+    	
     	if (fileUpload != null && fileUpload.getOriginalFilename() != null
     			&& !fileUpload.getOriginalFilename().isEmpty()) {
 			team.setImageFileName(fileUpload.getOriginalFilename());
 			team.setImage(fileUpload.getBytes());
+			updateImage = true;
 		}
     	
         if (result.hasErrors()) {
@@ -98,7 +109,7 @@ public class TeamController {
             return "team/dataentry";
         }
  
-        teamService.updateTeam(team);
+        teamService.updateTeam(team, updateImage);
         model.addAttribute("success", "Team " + team.getDisplayString()  + " updated successfully");
         return "redirect:/team/list";	
     }
@@ -110,14 +121,59 @@ public class TeamController {
     }
     
     @RequestMapping(value = { "/view-{id}-team" }, method = RequestMethod.GET)
-    public String view(@PathVariable Integer id, ModelMap model) {
-		Team team = teamService.findById(id);
+    public String view(@PathVariable Integer id, ModelMap model,
+    		@RequestParam(required = false) Boolean allLeague,
+    		@RequestParam(required = false) Boolean allMatch) {
+    	Team team = teamService.findById(id);
+
+		Integer leagueCount = allLeague != null && allLeague ? null : 5;
+		Integer matchCount = allMatch != null && allMatch ? null : 5;
+		
 		model.addAttribute("team", team);
 		model.addAttribute("championships", leagueService.findChampionships(team.getId()));
 		model.addAttribute("players", playerService.findPlayersByTeamId(team.getId()));
 		model.addAttribute("matches", matchService.findMatchesByTeamId(team.getId()));
-		return "team/info";
+		
+		model.addAttribute("overAllRecords", playerPerformanceService.findTeamOverallPerformanceComputations(team.getId()));
+        model.addAttribute("perLeagueRecords", generateLeagueRecords(team, leagueCount));
+        model.addAttribute("perMatchRecords", generatePerMatchRecords(team, matchCount));
+        model.addAttribute("allLeague", allLeague);
+        model.addAttribute("allMatch", allMatch);
+        
+        return "team/info";
     }
+    
+	private Map<Match, List<PerformanceComputation>> generatePerMatchRecords(Team team, Integer maxResult) {
+		Map<Match, List<PerformanceComputation>> matchRecords = new LinkedHashMap<Match, List<PerformanceComputation>>();
+        List<PerformanceComputation> perMatchPerformanceComputations = playerPerformanceService.findTeamPerMatchPerformanceComputations(team.getId());
+        
+        for(PerformanceComputation computation : perMatchPerformanceComputations){
+        	if(matchRecords.get(computation.getMatch()) != null){
+        		matchRecords.get(computation.getMatch()).add(computation);
+        	} else if(maxResult == null || matchRecords.size() < 5){
+    			List<PerformanceComputation> computations = new ArrayList<PerformanceComputation>();
+    			computations.add(computation);
+    			matchRecords.put(computation.getMatch(), computations);
+        	}
+        }
+		return matchRecords;
+	}
+
+	private Map<League, List<PerformanceComputation>> generateLeagueRecords(Team team, Integer maxResult) {
+		Map<League, List<PerformanceComputation>> leagueRecords = new LinkedHashMap<League, List<PerformanceComputation>>();
+        List<PerformanceComputation> perLeaguePerformanceComputations = playerPerformanceService.findTeamPerLeaguePerformanceComputations(team.getId());
+        
+        for(PerformanceComputation computation : perLeaguePerformanceComputations){
+        	if(leagueRecords.get(computation.getLeague()) != null){
+        		leagueRecords.get(computation.getLeague()).add(computation);
+        	} else if(maxResult == null || leagueRecords.size() < 5){
+    			List<PerformanceComputation> computations = new ArrayList<PerformanceComputation>();
+    			computations.add(computation);
+    			leagueRecords.put(computation.getLeague(), computations);
+        	}
+        }
+		return leagueRecords;
+	}
     
 	@RequestMapping(value = "/image", method = RequestMethod.GET)
 	public void showImage(@RequestParam("id") Integer id, HttpServletResponse response, HttpServletRequest request)

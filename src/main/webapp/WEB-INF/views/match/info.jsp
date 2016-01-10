@@ -41,8 +41,8 @@
 			<table class="table table-hover table-striped">
 				<tr>
 					<td></td>
-					<td>Team A</td>
-					<td>Team B</td>
+					<td>${match.teamA.code}</td>
+					<td>${match.teamB.code}</td>
 				</tr>
 				
 				<tr>

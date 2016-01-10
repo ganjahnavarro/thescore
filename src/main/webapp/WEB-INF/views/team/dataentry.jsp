@@ -18,13 +18,13 @@
 		<form:input type="hidden" path="id" id="id" />
 
 		<div class="form-group col-md-4">
-			<label for="code" class="control-label">Code</label>
+			<label for="code" class="control-label">Code *</label>
 			<form:input path="code" id="code" cssClass="form-control"
 				cssErrorClass="form-control has-error" />
 		</div>
 
 		<div class="form-group col-md-4">
-			<label for="name" class="control-label">Name</label>
+			<label for="name" class="control-label">Name *</label>
 			<form:input path="name" id="name" cssClass="form-control"
 				cssErrorClass="form-control has-error" />
 		</div>

@@ -25,13 +25,13 @@
 		<form:input type="hidden" path="id" id="id" />
 
 		<div class="form-group col-md-4">
-			<label for="lastName" class="control-label">Last Name</label>
+			<label for="lastName" class="control-label">Last Name *</label>
 			<form:input path="lastName" id="lastName" cssClass="form-control"
 				cssErrorClass="form-control has-error" />
 		</div>
 		
 		<div class="form-group col-md-4">
-			<label for="firstName" class="control-label">First Name</label>
+			<label for="firstName" class="control-label">First Name *</label>
 			<form:input path="firstName" id="firstName" cssClass="form-control"
 				cssErrorClass="form-control has-error" />
 		</div>
@@ -63,7 +63,7 @@
 		</div>
 		
 		<div class="form-group col-md-4">
-			<label for="email" class="control-label">Email</label>
+			<label for="email" class="control-label">Email *</label>
 			<form:input path="email" id="email" cssClass="form-control"
 				cssErrorClass="form-control has-error" type="email" />
 		</div>
@@ -86,20 +86,20 @@
 		</div>
 		
 		<div class="form-group col-md-4">
-			<label for="userName" class="control-label">Username</label>
+			<label for="userName" class="control-label">Username *</label>
 			<form:input path="userName" id="userName" cssClass="form-control"
 				cssErrorClass="form-control has-error" />
 		</div>
 		
 		<c:if test="${edit == false}">
 			<div class="form-group col-md-4">
-				<label for="password" class="control-label">Password</label>
+				<label for="password" class="control-label">Password *</label>
 				<form:input path="password" id="password" cssClass="form-control"
 					cssErrorClass="form-control has-error" type="password" />
 			</div>
 			
 			<div class="form-group col-md-4">
-				<label for="passwordConfirmation" class="control-label">Password Confirmation</label>
+				<label for="passwordConfirmation" class="control-label">Password Confirmation *</label>
 				<input id="passwordConfirmation" class="form-control"
 					type="password" name="passwordConfirmation" />
 			</div>

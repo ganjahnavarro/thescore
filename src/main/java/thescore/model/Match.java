@@ -26,6 +26,7 @@ public class Match implements IRecord {
 	private Integer id;
 	private Date time;
 	private Date actualStart;
+	private Date actualEnd;
 	private String referee;
 	
 	private Team teamA;
@@ -167,6 +168,16 @@ public class Match implements IRecord {
 			}
 		}
 		return super.equals(obj);
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "MM/dd/yyyy HH:mm")
+	public Date getActualEnd() {
+		return actualEnd;
+	}
+
+	public void setActualEnd(Date actualEnd) {
+		this.actualEnd = actualEnd;
 	}
 
 }

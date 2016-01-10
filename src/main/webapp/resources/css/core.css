@@ -109,3 +109,26 @@ body {
 	display: inline-block;
 	margin: 20px;
 }
+
+.player-detail {
+	background-color: rgba(0, 0, 0, 0.5);
+    width: 80px;
+    position: absolute;
+    text-align: center;
+    bottom: 0px;
+}
+
+.player-detail span {
+	color: white;
+	font-weight: bold;
+}
+
+.bench-player .player-detail {
+    width: 80px;
+}
+
+.active-player .player-detail {
+    width: 120px;
+}
+
+

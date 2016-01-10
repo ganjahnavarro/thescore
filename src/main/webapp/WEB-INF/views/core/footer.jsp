@@ -7,7 +7,7 @@
 			<c:if test="${allowedStatisticsModification}">
 				<p class="footer-score">Quarter</p>
 				
-				<div class="footer-score">
+				<div id="quarters-holder" class="footer-score">
 					<span class="quarter-selection-item" data-quarter="1">1st </span>
 					<span class="quarter-selection-item" data-quarter="2">2nd </span>
 					<span class="quarter-selection-item" data-quarter="3">3rd </span>

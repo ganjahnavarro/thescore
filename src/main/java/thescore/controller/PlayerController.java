@@ -70,6 +70,8 @@ public class PlayerController {
 			@RequestParam CommonsMultipartFile fileUpload) {
 		if (fileUpload != null && fileUpload.getOriginalFilename() != null
     			&& !fileUpload.getOriginalFilename().isEmpty()) {
+			
+			
 			player.setImageFileName(fileUpload.getOriginalFilename());
 			player.setImage(fileUpload.getBytes());
 		}
@@ -99,10 +101,13 @@ public class PlayerController {
     @RequestMapping(value = { "/edit-{id}-player" }, method = RequestMethod.POST)
     public String update(@Valid Player player, BindingResult result, ModelMap model, @PathVariable Integer id,
 			@RequestParam CommonsMultipartFile fileUpload) {
+    	Boolean updateImage = false;
+    	
     	if (fileUpload != null && fileUpload.getOriginalFilename() != null
     			&& !fileUpload.getOriginalFilename().isEmpty()) {
 			player.setImageFileName(fileUpload.getOriginalFilename());
 			player.setImage(fileUpload.getBytes());
+			updateImage = true;
 		}
  
         if (result.hasErrors()) {
@@ -112,7 +117,7 @@ public class PlayerController {
             return "player/dataentry";
         }
  
-        playerService.updatePlayer(player);
+        playerService.updatePlayer(player, updateImage);
         model.addAttribute("success", "Player " + player.getDisplayString()  + " updated successfully");
         return "redirect:/player/list";	
     }
@@ -129,44 +134,57 @@ public class PlayerController {
     }
     
     @RequestMapping(value = { "/view-{id}-player" }, method = RequestMethod.GET)
-    public String view(@PathVariable Integer id, ModelMap model) {
+    public String view(@PathVariable Integer id, ModelMap model,
+    		@RequestParam(required = false) Boolean allLeague,
+    		@RequestParam(required = false) Boolean allMatch) {
         Player player = playerService.findById(id);
-		model.addAttribute("player", player);
 
+		Integer leagueCount = allLeague != null && allLeague ? null : 5;
+		Integer matchCount = allMatch != null && allMatch ? null : 5;
+		
+		Map<Match, List<PerformanceComputation>> matchRecords = generatePerMatchRecords(player, matchCount);
+		Map<League, List<PerformanceComputation>> leagueRecords = generateLeagueRecords(player, leagueCount);
+		
+		allLeague = (allLeague == null || allLeague == false) && leagueRecords.size() <= 5 ? true : false;
+       	allMatch = (allMatch == null || allMatch == false) && leagueRecords.size() <= 5 ? true : false;
+		
+		model.addAttribute("player", player);
 		model.addAttribute("overAllRecords", playerPerformanceService.findOverallPerformanceComputations(player.getId()));
-        model.addAttribute("perLeagueRecords", generateLeagueRecords(player));
-        model.addAttribute("perMatchRecords", generatePerMatchRecords(player));
+        model.addAttribute("perLeagueRecords", leagueRecords);
+        model.addAttribute("perMatchRecords", matchRecords);
+        model.addAttribute("allLeague", allLeague);
+        model.addAttribute("allMatch", allMatch);
         
         return "player/info";
     }
-
-	private Map<Match, List<PerformanceComputation>> generatePerMatchRecords(Player player) {
+    
+	private Map<Match, List<PerformanceComputation>> generatePerMatchRecords(Player player, Integer maxResult) {
 		Map<Match, List<PerformanceComputation>> matchRecords = new LinkedHashMap<Match, List<PerformanceComputation>>();
         List<PerformanceComputation> perMatchPerformanceComputations = playerPerformanceService.findPerMatchPerformanceComputations(player.getId());
         
         for(PerformanceComputation computation : perMatchPerformanceComputations){
         	if(matchRecords.get(computation.getMatch()) != null){
         		matchRecords.get(computation.getMatch()).add(computation);
-        	} else {
-        		List<PerformanceComputation> computations = new ArrayList<PerformanceComputation>();
-        		computations.add(computation);
-        		matchRecords.put(computation.getMatch(), computations);
+        	} else if(maxResult == null || matchRecords.size() < 5){
+    			List<PerformanceComputation> computations = new ArrayList<PerformanceComputation>();
+    			computations.add(computation);
+    			matchRecords.put(computation.getMatch(), computations);
         	}
         }
 		return matchRecords;
 	}
 
-	private Map<League, List<PerformanceComputation>> generateLeagueRecords(Player player) {
+	private Map<League, List<PerformanceComputation>> generateLeagueRecords(Player player, Integer maxResult) {
 		Map<League, List<PerformanceComputation>> leagueRecords = new LinkedHashMap<League, List<PerformanceComputation>>();
         List<PerformanceComputation> perLeaguePerformanceComputations = playerPerformanceService.findPerLeaguePerformanceComputations(player.getId());
         
         for(PerformanceComputation computation : perLeaguePerformanceComputations){
         	if(leagueRecords.get(computation.getLeague()) != null){
         		leagueRecords.get(computation.getLeague()).add(computation);
-        	} else {
-        		List<PerformanceComputation> computations = new ArrayList<PerformanceComputation>();
-        		computations.add(computation);
-        		leagueRecords.put(computation.getLeague(), computations);
+        	} else if(maxResult == null || leagueRecords.size() < 5){
+    			List<PerformanceComputation> computations = new ArrayList<PerformanceComputation>();
+    			computations.add(computation);
+    			leagueRecords.put(computation.getLeague(), computations);
         	}
         }
 		return leagueRecords;
