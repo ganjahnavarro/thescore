@@ -1,6 +1,7 @@
 package thescore.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,14 +21,17 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import thescore.Utility;
 import thescore.enums.Gender;
 import thescore.model.Newsfeed;
+import thescore.model.Notification;
 import thescore.model.User;
 import thescore.service.ForumService;
 import thescore.service.NewsfeedService;
+import thescore.service.NotificationService;
 import thescore.service.UserService;
 
 @Controller
@@ -37,6 +41,7 @@ public class ApplicationController {
 	private @Autowired UserService userService;
 	private @Autowired ForumService forumService;
 	private @Autowired NewsfeedService newsfeedService;
+	private @Autowired NotificationService notificationService;
 	
 	@RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
 	public String home(ModelMap model) {
@@ -106,6 +111,20 @@ public class ApplicationController {
 		userService.saveUser(user);
 		model.addAttribute("infoMessage", "User " + user.getDisplayString() + " registered successfully");
 		return "app/login";
+	}
+	
+	@RequestMapping(value = { "/notification", "/notification/list" }, method = RequestMethod.GET)
+	public String notificationList(ModelMap model) {
+		List<Notification> notifications = notificationService.findAllNotifications();
+		model.addAttribute("notifications", notifications);
+		return "app/notification";
+	}
+	
+	@RequestMapping(value = "/notification/viewed", method = RequestMethod.GET)
+	public @ResponseBody String notificationViewed(ModelMap model) {
+		User user = userService.findByUserName(Utility.getSecurityPrincipal());
+		notificationService.updateUnseenNotifications(user);
+		return null;
 	}
 	
 	@RequestMapping(value = "/slider/image", method = RequestMethod.GET)

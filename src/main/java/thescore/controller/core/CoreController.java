@@ -41,8 +41,6 @@ public class CoreController {
 	
 	@RequestMapping(value = "/play-{id}-match", method = RequestMethod.GET)
 	public String openMatch(@PathVariable Integer id, ModelMap model) {
-		System.out.println(id);
-		
 		Map<Integer, TeamPerformance> teamPerformances = null;
 		Match match = matchService.findById(id);
 		
@@ -79,7 +77,11 @@ public class CoreController {
 		List<Player> allPlayers = new ArrayList<Player>(listA);
 		allPlayers.addAll(listB);
 		
-		List<Player> startingPlayers = matchService.findStartingPlayers(match.getId());
+		List<Player> activePlayers = matchService.findStartingPlayers(match.getId());
+		
+		if(activePlayers == null || activePlayers.isEmpty()){
+			activePlayers = matchService.findActivePlayers(match.getId());
+		}
 		
 		List<Integer> existingPlayerPKs = playerPerformanceService.findPlayerPerformancePlayerPKs(match.getId());
 		
@@ -91,7 +93,7 @@ public class CoreController {
 				playerPerformanceService.savePerformance(performance);
 			}
 			
-			if(startingPlayers.contains(player)){
+			if(activePlayers.contains(player)){
 				if(player.getTeam().getId().equals(match.getTeamA().getId())){
 					teamAPlayers.add(player);
 				} else {

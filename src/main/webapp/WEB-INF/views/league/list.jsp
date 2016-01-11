@@ -72,12 +72,11 @@
 							</c:if>
 							
 							<c:if test="${league.lockedDate != null && league.endDate == null}">
-								<button type="button" class="btn btn-default league-end-button" title="End league"
-									aria-label="End" data-toggle="modal" data-target="#leagueEndModal"
-									value="${league.id}" data-leagueid="${league.id}"
-									data-action="<c:url value='/league/end-${league.id}-league' />">
-									<span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
-								</button>
+								<a href="<c:url value='/league/on-league-end-${league.id}' />">
+									<button type="button" class="btn btn-default" aria-label="End League">
+										<span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
+									</button>
+								</a>
 							</c:if>
 						</td>
 					</sec:authorize>
@@ -85,67 +84,5 @@
 			</c:forEach>
 		</table>
 	</div>
-	
-	<!-- Champion Selection Modal -->
-	<div id="leagueEndModal" class="modal fade" tabindex="-1" role="dialog">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-body">
-					<p id="modal-title" class="modal-title modal-margin-bottom">Are you sure you want to end this league?</p>
-					
-					<form action="/update-this" method="GET">
-						<div class="form-group col-sm-12">
-							<label for="championSelect" class="control-label">Champion</label>
-							<select id="championSelect" class="form-control" required="required" name="championPK">
-							</select>
-						</div>
-						
-						<div class="form-group col-sm-12">
-							<button type="submit" class="btn btn-danger">Confirm</button>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-						</div>
-					</form>
-					<div class="clearfix"></div>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<script>
-		$('#leagueEndModal').on('show.bs.modal', function(event) {
-			var button = $(event.relatedTarget);
-			var action = button.data('action');
-			var modal = $(this);
-			modal.find('form').attr("action", action);
-		})
-	</script>
-	
-	<script>
-		$(".league-end-button").click(function() {
-			console.log($(this).data('leagueid'));
-			console.log($(this).val());
-			
-			$.ajax({
-				url : '/thescore/league/on-league-end',
-				data: {
-		            leagueId : $(this).data('leagueid')
-		        },
-				success : function(data) {
-					$("#championSelect").empty();
-					
-					try {
-						var jsonArray = jQuery.parseJSON(data);
-						
-						for(i in jsonArray){
-							$("#championSelect").append($("<option></option>").attr("value", jsonArray[i].key).text(jsonArray[i].value));
-						}
-					} catch (e) {
-						console.log('This doesn\'t look like a valid JSON: ', data);
-						return;
-					}
-				}
-			});
-		}).change();
-	</script>
 	
 </t:template>

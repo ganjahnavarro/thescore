@@ -9,8 +9,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import thescore.model.Match;
+import thescore.model.MatchActivePlayer;
 import thescore.model.MatchCommittee;
-import thescore.model.MatchPlayer;
+import thescore.model.MatchStartingPlayer;
 import thescore.model.Player;
 import thescore.model.PlayerPerformance;
 
@@ -78,15 +79,15 @@ public class MatchRepository extends AbstractRepository<Integer, Match> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<MatchPlayer> findAllMatchPlayers(Integer matchId) {
-		Criteria criteria = getSession().createCriteria(MatchPlayer.class);
+	public List<MatchStartingPlayer> findAllMatchPlayers(Integer matchId) {
+		Criteria criteria = getSession().createCriteria(MatchStartingPlayer.class);
 		criteria.add(Restrictions.eq("match.id", matchId));
-		return (List<MatchPlayer>) criteria.list();
+		return (List<MatchStartingPlayer>) criteria.list();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<Player> findStartingPlayers(Integer matchId) {
-		return getSession().createQuery("select o.player from " + MatchPlayer.ENTITY_NAME
+		return getSession().createQuery("select o.player from " + MatchStartingPlayer.ENTITY_NAME
 				+ " o where o.match.id = :matchId")
 				.setParameter("matchId", matchId)
 				.list();
@@ -98,6 +99,14 @@ public class MatchRepository extends AbstractRepository<Integer, Match> {
 				+ " o where o.teamA.id = :teamId or o.teamB.id = :teamId"
 				+ " order by o.time desc")
 				.setParameter("teamId", teamId)
+				.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Player> findActivePlayers(Integer matchId) {
+		return getSession().createQuery("select o.player from " + MatchActivePlayer.ENTITY_NAME
+				+ " o where o.match.id = :matchId")
+				.setParameter("matchId", matchId)
 				.list();
 	}
 	

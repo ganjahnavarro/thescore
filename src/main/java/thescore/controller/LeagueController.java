@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import thescore.Utility;
 import thescore.editor.TeamEditor;
 import thescore.model.League;
+import thescore.model.LeagueMythicalPlayer;
 import thescore.model.LeagueTeam;
 import thescore.model.Match;
 import thescore.model.Player;
@@ -36,6 +37,7 @@ import thescore.model.computation.PerformanceComputation;
 import thescore.service.LeagueService;
 import thescore.service.MatchService;
 import thescore.service.PlayerPerformanceService;
+import thescore.service.PlayerService;
 import thescore.service.TeamService;
 
 @Controller
@@ -45,6 +47,7 @@ public class LeagueController {
 	private @Autowired LeagueService leagueService;
 	private @Autowired TeamService teamService;
 	private @Autowired MatchService matchService;
+	private @Autowired PlayerService playerService;
 	private @Autowired PlayerPerformanceService playerPerformanceService;
 	
 	private @Autowired TeamEditor teamEditor;
@@ -133,36 +136,12 @@ public class LeagueController {
     
     @RequestMapping(value = { "/view-{id}-league" }, method = RequestMethod.GET)
     public String view(@PathVariable Integer id, ModelMap model) {
-        League league = leagueService.findById(id);
-        model.addAttribute("league", league);
-        model.addAttribute("teamWinLoseRecords", teamService.findTeamLoseRecordsByLeague(league.getId()));
-        
-        List<PerformanceComputation> computations = playerPerformanceService.findLeaguePlayerPerformanceComputations(league.getId());
-        List<String> actions = Arrays.asList("FG", "3FG", "FT", "STL", "BLK", "AST", "DEF", "OFF", "TO", "PF");
-        
-        Map<Player, Map<String, Integer>> playerRecords = new LinkedHashMap<Player, Map<String, Integer>>(); 
-        
-//      TODO
-        for(String action : actions){
-        	for(PerformanceComputation computation : computations){
-        		if(computation.getAction().equalsIgnoreCase(action)){
-        			if(playerRecords.get(computation.getPlayer()) != null){
-        				playerRecords.get(computation.getPlayer()).put(action, computation.getTotal());
-                	} else {
-            			Map<String, Integer> actionRecords = new LinkedHashMap<String, Integer>();
-            			actionRecords.put(action, computation.getTotal());
-            			playerRecords.put(computation.getPlayer(), actionRecords);
-                	}
-        		}
-        	}
-        }
-        
-        model.addAttribute("playerRecords", playerRecords);
-        model.addAttribute("actions", actions);
-        
-        return "league/info";
+		League league = leagueService.findById(id);
+		model.addAttribute("onLeagueEnd", false);
+		addLeagueInfoAttributes(model, league);
+		return "league/info";
     }
-    
+
     @RequestMapping(value = { "/lock-{id}-league" }, method = RequestMethod.GET)
 	public String lock(@PathVariable Integer id, ModelMap model) {
 		League league = leagueService.findById(id);
@@ -181,27 +160,24 @@ public class LeagueController {
 		return "league/list";
 	}
     
-    @RequestMapping(value = "/on-league-end", method = RequestMethod.GET)
-	public @ResponseBody String beforeLeagueEnd(@RequestParam("leagueId") Integer leagueId) {
-		List<SimpleEntry<Integer, String>> list = new ArrayList<SimpleEntry<Integer, String>>();;
+    @RequestMapping(value = "/on-league-end-{id}", method = RequestMethod.GET)
+	public String beforeLeagueEnd(@PathVariable Integer id, ModelMap model) {
+    	League league = leagueService.findById(id);
+		List<Team> teams = new ArrayList<Team>();;
 		
-		if(leagueId != null){
-			for(LeagueTeam leagueTeam : leagueService.findAllLeagueTeams(leagueId)){
-				list.add(new SimpleEntry<Integer, String>(leagueTeam.getTeam().getId(), leagueTeam.getTeam().getDisplayString()));
-			}
-			
-			try {
-				return mapper.writeValueAsString(list);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		for(LeagueTeam leagueTeam : leagueService.findAllLeagueTeams(id)){
+			teams.add(leagueTeam.getTeam());
 		}
-		return null;
+		model.addAttribute("teams", teams);
+		model.addAttribute("onLeagueEnd", true);
+		addLeagueInfoAttributes(model, league);
+		return "league/info";
 	}
     
 	@RequestMapping(value = { "/end-{id}-league" }, method = RequestMethod.GET)
 	public String end(@PathVariable Integer id, ModelMap model,
-			@RequestParam(required = false) String championPK) {
+			@RequestParam(required = false) String championPK,
+			@RequestParam(required = false) String[] mythicalFivePKs) {
 		Team champion = teamService.findById(Integer.valueOf(championPK));
 		League league = leagueService.findById(id);
 		
@@ -213,6 +189,51 @@ public class LeagueController {
 		model.addAttribute("leagues", leagues);
 		model.addAttribute("infoMessage", "League " + league.getDisplayString() + " has concluded.");
 		return "redirect:/league/list";
+	}
+	
+	@RequestMapping(value = "/on-player-add", method = RequestMethod.GET)
+	public @ResponseBody String onPlayerAdd(@RequestParam("leagueId") Integer leagueId,
+			@RequestParam("playerId") Integer playerId) {
+		List<Player> players = leagueService.findMythicalFive(leagueId);
+		
+		if(players != null && players.size() >= 5){
+			return null;
+		}
+
+		Boolean found = false;
+		
+		for(Player player : players){
+			if(player.getId().equals(playerId)){
+				found = true;
+				break;
+			}
+		}
+		
+		if(!found){
+			LeagueMythicalPlayer mythPlayer = new LeagueMythicalPlayer();
+			League league = leagueService.findById(leagueId);
+			Player player = playerService.findById(playerId);
+			
+			mythPlayer.setLeague(league);
+			mythPlayer.setPlayer(player);
+			leagueService.saveMythicalPlayer(mythPlayer);
+			
+			players.add(player);
+		}
+		
+		List<SimpleEntry<Integer, String>> list = new ArrayList<SimpleEntry<Integer, String>>();;
+		
+		for(Player player : players){
+			list.add(new SimpleEntry<Integer, String>(player.getId(), player.getDisplayString()));
+		}
+		
+		try {
+			return mapper.writeValueAsString(list);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	@RequestMapping(value = { "/generate-{id}-league" }, method = RequestMethod.GET)
@@ -244,6 +265,33 @@ public class LeagueController {
 				matchService.saveMatch(match);
 			}
 		}
+	}
+	
+	private void addLeagueInfoAttributes(ModelMap model, League league) {
+		model.addAttribute("league", league);
+        model.addAttribute("teamWinLoseRecords", teamService.findTeamLoseRecordsByLeague(league.getId()));
+        
+        List<PerformanceComputation> computations = playerPerformanceService.findLeaguePlayerPerformanceComputations(league.getId());
+        List<String> actions = Arrays.asList("FG", "3FG", "FT", "STL", "BLK", "AST", "DEF", "OFF", "TO", "PF");
+        
+        Map<Player, Map<String, Integer>> playerRecords = new LinkedHashMap<Player, Map<String, Integer>>(); 
+        
+        for(String action : actions){
+        	for(PerformanceComputation computation : computations){
+        		if(computation.getAction().equalsIgnoreCase(action)){
+        			if(playerRecords.get(computation.getPlayer()) != null){
+        				playerRecords.get(computation.getPlayer()).put(action, computation.getTotal());
+                	} else {
+            			Map<String, Integer> actionRecords = new LinkedHashMap<String, Integer>();
+            			actionRecords.put(action, computation.getTotal());
+            			playerRecords.put(computation.getPlayer(), actionRecords);
+                	}
+        		}
+        	}
+        }
+        model.addAttribute("mythicalFive", leagueService.findMythicalFive(league.getId()));
+        model.addAttribute("playerRecords", playerRecords);
+        model.addAttribute("actions", actions);
 	}
     
     @InitBinder

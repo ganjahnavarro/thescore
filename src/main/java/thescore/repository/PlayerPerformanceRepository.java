@@ -239,10 +239,11 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 	private void insertPerformanceComputation(Integer playerId, Integer teamId, Integer leagueId,
 			String sessionId, String fromEntityName, String action,
 			Boolean perLeague, Boolean perMatch) {
+		
 		String sqlQuery = "insert into " + PerformanceComputation.ENTITY_NAME
 				+ (playerId != null ? " (playerId," : "")
 				+ (teamId != null ? " (teamId," : "")
-				+ (leagueId != null ? " (leagueId," : "")
+				+ (leagueId != null ? " (playerId, leagueId," : "")
 				
 				+ (perLeague ? " leagueId," : "")
 				+ (perMatch ? " matchId," : "")
@@ -251,7 +252,7 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 				+ " select"
 				+ (playerId != null ? " :playerId," : "")
 				+ (teamId != null ? " :teamId," : "")
-				+ (leagueId != null ? " :leagueId," : "")
+				+ (leagueId != null ? " p.id, :leagueId," : "")
 				
 				+ (perLeague ? " m.leagueId," : "")
 				+ (perMatch ? " pf.matchId," : "")
@@ -270,8 +271,10 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 				+ " where pf.playerId = p.id"
 				+ (playerId != null ? " and pf.playerId = :playerId" : "")
 				+ (teamId != null ? " and p.teamId = :teamId" : "")
-				+ (leagueId != null ? " and m.leagueId = :leagueId" : "")
+				+ (leagueId != null ? " and m.leagueId = :leagueId group by m.leagueId, p.id" : "")
+				
 				+ (perLeague ? " group by m.leagueId" : "")
+				
 				+ (perMatch ? " group by pf.matchId" : "")
 				+ " order by t.name, p.lastName";
 		

@@ -1,5 +1,6 @@
 <%@ tag description="Template Tag" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!doctype html>
 <html>
@@ -32,13 +33,33 @@
 				<ul class="nav navbar-nav navbar-right">
 					<c:choose>
 						<c:when test="${not empty userName}">
-							<li>
-								<a href="#">
-									<span class="glyphicon glyphicon-globe"></span>
-									<span class="notification-count">3</span>
-								</a>
-							</li>
-						
+							<c:if test="${not empty notifications}">
+								<li class="dropdown">
+									<a id="notification-trigger" href="#" class="dropdown-toggle"
+										data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+										<span class="glyphicon glyphicon-globe"></span>
+										<span class="notification-count">${fn:length(notifications)}</span>
+									</a>
+									<ul class="dropdown-menu">
+										<c:forEach items="${notifications}" var="notification">
+											<li>
+												<a class="notification-list-item" href="<c:url value='${notification.url}'/>">
+													${notification.message}
+												</a>
+											</li>
+										</c:forEach>
+									</ul>
+								</li>
+							</c:if>
+							
+							<c:if test="${empty notifications}">
+								<li>
+									<a href="<c:url value='/notification/list'/>">
+										<span class="glyphicon glyphicon-globe"></span>
+									</a>
+								</li>
+							</c:if>
+							
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 									<c:out value="${userName}"/>
@@ -116,6 +137,12 @@
 			
 			modal.find('#actionButton').attr("href", action);
 		})
+		
+		$("#notification-trigger").click(function() {
+			$.ajax({
+				url : '/thescore/notification/viewed'
+			});
+		});
 	</script>
 </body>
 </html>

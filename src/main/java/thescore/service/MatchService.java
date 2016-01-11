@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import thescore.model.Match;
 import thescore.model.MatchCommittee;
-import thescore.model.MatchPlayer;
+import thescore.model.MatchStartingPlayer;
 import thescore.model.Player;
 import thescore.repository.MatchRepository;
 import thescore.repository.PlayerRepository;
@@ -95,7 +95,7 @@ public class MatchService {
 	}
     
     private void updateMatchPlayers(Match match, String[] teamAPlayerPKs, String[] teamBPlayerPKs) {
-		List<MatchPlayer> matchPlayers = findAllMatchPlayers(match.getId());
+		List<MatchStartingPlayer> matchPlayers = findAllMatchPlayers(match.getId());
     	
 		List<Integer> newPlayerPKs = new ArrayList<Integer>();
 		List<Integer> existingPlayerPKs = new ArrayList<Integer>();
@@ -113,9 +113,9 @@ public class MatchService {
 		}
 		
 		if(matchPlayers != null){
-			for(MatchPlayer matchPlayer : matchPlayers){
+			for(MatchStartingPlayer matchPlayer : matchPlayers){
 				if(newPlayerPKs.contains(matchPlayer.getPlayer().getId()) == false){
-					matchRepository.deleteRecordById(MatchPlayer.ENTITY_NAME, matchPlayer.getId());
+					matchRepository.deleteRecordById(MatchStartingPlayer.ENTITY_NAME, matchPlayer.getId());
 				}
 				
 				existingPlayerPKs.add(matchPlayer.getPlayer().getId());
@@ -124,7 +124,7 @@ public class MatchService {
 		
 		for(Integer newPlayerPK : newPlayerPKs){
 			if(existingPlayerPKs.contains(newPlayerPK) == false){
-				MatchPlayer matchPlayer = new MatchPlayer();
+				MatchStartingPlayer matchPlayer = new MatchStartingPlayer();
 				matchPlayer.setMatch(match);
 				matchPlayer.setPlayer(playerRepository.findById(newPlayerPK));
 				matchRepository.persist(matchPlayer);
@@ -136,7 +136,7 @@ public class MatchService {
 		return matchRepository.findAllMatchCommittees(matchId);
 	}
     
-    public List<MatchPlayer> findAllMatchPlayers(Integer matchId) {
+    public List<MatchStartingPlayer> findAllMatchPlayers(Integer matchId) {
 		return matchRepository.findAllMatchPlayers(matchId);
 	}
     
@@ -155,5 +155,9 @@ public class MatchService {
     public List<Match> findAllMatches(Criterion... criterions) {
         return matchRepository.findAllMatches(criterions);
     }
+    
+    public List<Player> findActivePlayers(Integer matchId) {
+		return matchRepository.findActivePlayers(matchId);
+	}
  
 }

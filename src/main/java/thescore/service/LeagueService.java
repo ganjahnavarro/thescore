@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import thescore.enums.UserType;
 import thescore.model.League;
+import thescore.model.LeagueMythicalPlayer;
 import thescore.model.LeagueTeam;
+import thescore.model.Player;
 import thescore.model.User;
 import thescore.repository.LeagueRepository;
 import thescore.repository.TeamRepository;
@@ -31,6 +33,10 @@ public class LeagueService {
      
     public League findById(int id) {
         return leagueRepository.findById(id);
+    }
+    
+    public void saveMythicalPlayer(LeagueMythicalPlayer mythicalPlayer){
+    	leagueRepository.persist(mythicalPlayer);
     }
  
 	public void saveLeague(League league, String[] teamPKs) {
@@ -124,6 +130,10 @@ public class LeagueService {
 	
 	public List<LeagueTeam> findAllLeagueTeams(Integer leagueId) {
 		return leagueRepository.findAllLeagueTeams(leagueId);
+	}
+	
+	public List<Player> findMythicalFive(Integer leagueId) {
+		return leagueRepository.findMythicalFive(leagueId);
 	}
  
 }

@@ -8,7 +8,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import thescore.model.League;
+import thescore.model.LeagueMythicalPlayer;
 import thescore.model.LeagueTeam;
+import thescore.model.Player;
 
 @Repository
 public class LeagueRepository extends AbstractRepository<Integer, League> {
@@ -30,6 +32,15 @@ public class LeagueRepository extends AbstractRepository<Integer, League> {
 		Criteria criteria = createEntityCriteria();
 		criteria.addOrder(Order.asc("name"));
 		return (List<League>) criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Player> findMythicalFive(Integer leagueId) {
+		return getSession().createQuery("select o.player from " + LeagueMythicalPlayer.ENTITY_NAME
+				+ " o where o.league.id = :leagueId")
+				.setParameter("leagueId", leagueId)
+				.setMaxResults(5)
+				.list();
 	}
 	
 	@SuppressWarnings("unchecked")

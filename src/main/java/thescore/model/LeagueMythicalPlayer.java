@@ -11,14 +11,14 @@ import javax.validation.constraints.NotNull;
 
 import thescore.interfaces.IRecord;
 
-@Entity(name = MatchPlayer.ENTITY_NAME)
-public class MatchPlayer implements IRecord{
+@Entity(name = LeagueMythicalPlayer.ENTITY_NAME)
+public class LeagueMythicalPlayer implements IRecord {
 
-	public static final String ENTITY_NAME = "tbl_basta_match_player";
-	private static final long serialVersionUID = -5018833159948847380L;
-
+	public static final String ENTITY_NAME = "tbl_basta_league_mythical_player";
+	private static final long serialVersionUID = 7765477919936910703L;
+	
 	private Integer id;
-	private Match match;
+	private League league;
 	private Player player;
 	
 	@Id
@@ -31,18 +31,18 @@ public class MatchPlayer implements IRecord{
 	@Transient
 	@Override
 	public String getDisplayString() {
-		return null;
+		return player.getDisplayString();
 	}
 
 	@NotNull
-	@ManyToOne(targetEntity = Match.class)
-	@JoinColumn(name = "matchId")
-	public Match getMatch() {
-		return match;
+	@ManyToOne(targetEntity = League.class)
+	@JoinColumn(name = "leagueId")
+	public League getLeague() {
+		return league;
 	}
 
-	public void setMatch(Match match) {
-		this.match = match;
+	public void setLeague(League league) {
+		this.league = league;
 	}
 
 	@NotNull

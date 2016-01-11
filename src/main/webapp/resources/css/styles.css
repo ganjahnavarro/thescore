@@ -213,3 +213,16 @@ input.has-error {
     margin-bottom: 20px;
 }
 
+li>a.notification-list-item {
+	padding-top: 5px;
+    padding-bottom: 5px;
+    max-width: 400px;
+    word-wrap: break-word;
+    white-space: pre;
+}
+
+.btn.btn-default.add-player-to-mythical-five{
+	background-color: #5cb85c;
+    color: white;
+    border: none;
+}

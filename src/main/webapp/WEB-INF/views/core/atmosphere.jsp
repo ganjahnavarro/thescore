@@ -82,6 +82,14 @@
 					var imagePlayerIdHolder = draggedImg.data('playerid');
 					draggedImg.data('playerid', droppedImg.data('playerid'));
 					droppedImg.data('playerid', imagePlayerIdHolder);
+					
+					console.log('.');
+					console.log('..');
+					console.log('...');
+					console.log('sub socket: ' + subSocket);
+					console.log('...');
+					console.log('..');
+					console.log('.');
 				}
 			});
 			
