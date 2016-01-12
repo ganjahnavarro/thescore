@@ -51,11 +51,19 @@ public class ForumRepository extends AbstractRepository<Integer, Topic> {
 	}
 	
 	public ForumFilter findDefaultForumFilter(){
-		return (ForumFilter) getSession()
+		ForumFilter filter = (ForumFilter) getSession()
 				.createCriteria(ForumFilter.class)
 				.addOrder(Order.asc("id"))
 				.setMaxResults(1)
 				.uniqueResult();
+		
+		if(filter == null){
+			filter = new ForumFilter();
+			filter.setValue("");
+			persist(filter);
+		}
+		
+		return filter;
 	}
 	
 	public Boolean isCommentValueValid(String value){

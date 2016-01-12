@@ -70,8 +70,10 @@ public class UserController {
 			@RequestParam CommonsMultipartFile fileUpload, @RequestParam String passwordConfirmation) {
 		if(user.getPassword().equals(passwordConfirmation) == false){
 			model.addAttribute("errorMessage", "Password doesn't match");
-			model.addAttribute("genders", Gender.values());
 			model.addAttribute("actionParam", "/user/new?");
+			model.addAttribute("edit", false);
+			model.addAttribute("title", user.getType().getDisplayString());
+			model.addAttribute("genders", Gender.values());
 			return "user/dataentry";
 		}
 		
@@ -101,6 +103,7 @@ public class UserController {
 		model.addAttribute("title", user.getType().getDisplayString());
 		model.addAttribute("actionParam", "/user/edit-" + id + "-user?");
 		model.addAttribute("edit", true);
+		model.addAttribute("passwordConfirmation", user.getPassword());
 		return "user/dataentry";
     }
      

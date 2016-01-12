@@ -91,19 +91,17 @@
 				cssErrorClass="form-control has-error" />
 		</div>
 		
-		<c:if test="${edit == false}">
-			<div class="form-group col-md-4">
-				<label for="password" class="control-label">Password *</label>
-				<form:input path="password" id="password" cssClass="form-control"
-					cssErrorClass="form-control has-error" type="password" />
-			</div>
-			
-			<div class="form-group col-md-4">
-				<label for="passwordConfirmation" class="control-label">Password Confirmation *</label>
-				<input id="passwordConfirmation" class="form-control"
-					type="password" name="passwordConfirmation" />
-			</div>
-		</c:if>
+		<div class="form-group col-md-4">
+			<label for="password" class="control-label">Password *</label>
+			<form:input path="password" id="password" cssClass="form-control"
+				cssErrorClass="form-control has-error" type="password" />
+		</div>
+		
+		<div class="form-group col-md-4">
+			<label for="passwordConfirmation" class="control-label">Password Confirmation *</label>
+			<input id="passwordConfirmation" class="form-control"
+				type="password" name="passwordConfirmation" value="${passwordConfirmation}"/>
+		</div>
 		
 		<div class="form-group col-sm-12">
 			<button type="submit" class="btn btn-primary">Save</button>

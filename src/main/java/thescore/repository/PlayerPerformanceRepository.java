@@ -257,11 +257,11 @@ public class PlayerPerformanceRepository extends AbstractRepository<Integer, IRe
 				+ (perLeague ? " m.leagueId," : "")
 				+ (perMatch ? " pf.matchId," : "")
 				+ " :action, :sessionId,"
-				+ " cast(count(distinct o.performanceId) as int),"
+				+ " cast(count(distinct o.performanceId) as unsigned),"
 				
 				+ " coalesce(max(subq.mx), 0), "
 				
-				+ " cast(count(o.id) as int) from " + Player.ENTITY_NAME + " p, " + Team.ENTITY_NAME + " t," + PlayerPerformance.ENTITY_NAME + " pf "
+				+ " cast(count(o.id) as unsigned) from " + Player.ENTITY_NAME + " p, " + Team.ENTITY_NAME + " t," + PlayerPerformance.ENTITY_NAME + " pf "
 				+ " left join " + fromEntityName + " o on o.performanceId = pf.id"
 				+ (perLeague || leagueId != null ? " left join " +  Match.ENTITY_NAME + " m on pf.matchId = m.id" : "")
 				
