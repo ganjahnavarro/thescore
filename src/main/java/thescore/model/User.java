@@ -45,6 +45,8 @@ public class User implements IRecord{
 	private byte[] image;
 	private String imageFileName;
 	
+	private Boolean includedOnMatch = false;
+	
 	@Id
 	@Override
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -176,6 +178,15 @@ public class User implements IRecord{
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	@Transient
+	public Boolean getIncludedOnMatch() {
+		return includedOnMatch;
+	}
+
+	public void setIncludedOnMatch(Boolean includedOnMatch) {
+		this.includedOnMatch = includedOnMatch;
 	}
 
 }

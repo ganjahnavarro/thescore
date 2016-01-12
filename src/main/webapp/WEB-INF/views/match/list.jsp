@@ -17,7 +17,7 @@
 	</div>
 
 	<ul class="nav nav-tabs">
-		<li class="active"><a data-toggle="tab" href="#live">Live</a></li>
+		<li class="active"><a data-toggle="tab" href="#live"><span class="label label-danger">LIVE</span></a></li>
 		<li><a data-toggle="tab" href="#unplayed">Unplayed</a></li>
 		<li><a data-toggle="tab" href="#finished">Finished</a></li>
 	</ul>
@@ -41,7 +41,6 @@
 							<td><fmt:formatDate pattern="MM/dd/yyyy HH:mm" value="${match.time}" /></td>
 							<td>
 								<span>${match.matchUp} </span>
-								<span class="label label-danger">live</span>
 							</td>
 							<td>${match.referee}</td>
 							

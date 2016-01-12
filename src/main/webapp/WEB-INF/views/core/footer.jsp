@@ -13,6 +13,12 @@
 					<span class="quarter-selection-item" data-quarter="3">3rd </span>
 					<span class="quarter-selection-item" data-quarter="4">4th </span>
 					
+					<c:forEach items="${teamPerformanceA.quarterScores}" var="entry" varStatus="loop">
+						<c:if test="${loop.index} > 4">
+							<span class="quarter-selection-item" data-quarter="${loop.index}">OT${loop.index - 4}</span>
+						</c:if>
+					</c:forEach>
+					
 					<a id="add-quarter">
 						<button type="button" class="close" aria-label="Close"><span aria-hidden="true">+</span></button>
 					</a>
@@ -28,6 +34,8 @@
 					<c:forEach items="${teamPerformanceA.quarterScores}" var="entry">
 						<span id="qtr-${entry.key}-a">${entry.value}</span>
 					</c:forEach>
+					
+					<span id="qtr-score-a" class="hidden"></span>
 				</div>
 			</div>
 			
@@ -38,6 +46,8 @@
 					<c:forEach items="${teamPerformanceB.quarterScores}" var="entry">
 						<span id="qtr-${entry.key}-b">${entry.value}</span>
 					</c:forEach>
+					
+					<span id="qtr-score-b" class="hidden"></span>
 				</div>
 			</div>
 		</div>

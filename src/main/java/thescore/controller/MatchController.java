@@ -34,8 +34,10 @@ import thescore.enums.UserType;
 import thescore.model.League;
 import thescore.model.LeagueTeam;
 import thescore.model.Match;
+import thescore.model.MatchCommittee;
 import thescore.model.Player;
 import thescore.model.Team;
+import thescore.model.User;
 import thescore.service.LeagueService;
 import thescore.service.MatchService;
 import thescore.service.PlayerPerformanceService;
@@ -90,7 +92,7 @@ public class MatchController {
 		Match match = new Match();
 		model.addAttribute("match", match);
 		model.addAttribute("edit", false);
-		addMatchDataEntryAttribute(model);
+		addMatchDataEntryAttribute(model, null);
 		return "match/dataentry";
 	}
 
@@ -100,7 +102,7 @@ public class MatchController {
 			@RequestParam(required = false) String[] teamAPlayers,
 			@RequestParam(required = false) String[] teamBPlayers) {
 		if(isMatchValid(match, result, model, teamAPlayers, teamBPlayers) == false){
-			addMatchDataEntryAttribute(model);
+			addMatchDataEntryAttribute(model, null);
 			return "match/dataentry";
 		}
 		matchService.saveMatch(match, committees, teamAPlayers, teamBPlayers);
@@ -113,7 +115,7 @@ public class MatchController {
         Match match = matchService.findById(id);
         model.addAttribute("match", match);
         model.addAttribute("edit", true);
-        addMatchDataEntryAttribute(model);
+        addMatchDataEntryAttribute(model, id);
         return "match/dataentry";
     }
      
@@ -123,7 +125,7 @@ public class MatchController {
 			@RequestParam(required = false) String[] teamAPlayers,
 			@RequestParam(required = false) String[] teamBPlayers) {
 		if(isMatchValid(match, result, model, teamAPlayers, teamBPlayers) == false){
-			addMatchDataEntryAttribute(model);
+			addMatchDataEntryAttribute(model, match.getId());
 			return "match/dataentry";
 		}
 		matchService.updateMatch(match, committees, teamAPlayers, teamBPlayers);
@@ -131,9 +133,26 @@ public class MatchController {
         return "redirect:/match/list";	
     }
     
-	private void addMatchDataEntryAttribute(ModelMap model) {
+	private void addMatchDataEntryAttribute(ModelMap model, Integer matchId) {
 		model.addAttribute("leagues", leagueService.findAllLeagues());
-		model.addAttribute("committees", userService.findAllUsers(UserType.COMMITTEE));
+		
+		List<User> committees = userService.findAllUsers(UserType.COMMITTEE);
+		
+		if(matchId != null){
+			List<Integer> matchCommitteePKs = new ArrayList<Integer>();
+			List<MatchCommittee> matchCommittees = matchService.findAllMatchCommittees(matchId);
+			
+			for(MatchCommittee matchCommittee : matchCommittees){
+				matchCommitteePKs.add(matchCommittee.getId());
+			}
+			
+			for(User user : committees){
+				if(matchCommitteePKs.contains(user.getId())){
+					user.setIncludedOnMatch(true);
+				}
+			}
+		}
+		model.addAttribute("committees", committees);
 	}
     
     private Boolean isMatchValid(Match match, BindingResult result, ModelMap model,

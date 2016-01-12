@@ -209,8 +209,8 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 			Map<Integer, TeamPerformance> teamPerformanceMap = statisticsMap.get(matchId);
 			TeamPerformance teamPerformance = teamPerformanceMap.get(teamId);
 			
-			Integer quarter = data.getQuarter();
-			if(quarter > 4 && teamPerformance.getQuarterScores().get(quarter) == null){
+			Integer quarter = data.getQuarter() != null ? data.getQuarter() : null;
+			if(quarter != null && quarter > 4 && teamPerformance.getQuarterScores().get(quarter) == null){
 				teamPerformance.getQuarterScores().put(quarter, 0);
 			}
 			

@@ -88,7 +88,6 @@ public class MatchService {
 				if(newCommitteePKs.contains(matchCommittee.getCommittee().getId()) == false){
 					matchRepository.deleteRecordById(MatchCommittee.ENTITY_NAME, matchCommittee.getId());
 				}
-				
 				existingCommitteePKs.add(matchCommittee.getCommittee().getId());
 			}
 		}
@@ -123,6 +122,8 @@ public class MatchService {
 		
 		if(matchPlayers != null){
 			for(MatchStartingPlayer matchPlayer : matchPlayers){
+				System.out.println("mp " + matchPlayer.getPlayer().getDisplayString());
+				
 				if(newPlayerPKs.contains(matchPlayer.getPlayer().getId()) == false){
 					matchRepository.deleteRecordById(MatchStartingPlayer.ENTITY_NAME, matchPlayer.getId());
 				}

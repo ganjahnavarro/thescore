@@ -11,8 +11,8 @@
 	</div>
 	
 	<div class="list-group">
-		<c:forEach items="${list-notifications}" var="notification">
-			<a href="<c:url value='${notification.url}'/>" class="list-group-item">${notification.message}</a>
+		<c:forEach items="${ntfcs}" var="ntfc">
+			<a href="<c:url value='${ntfc.url}'/>" class="list-group-item">${ntfc.message}</a>
 		</c:forEach>
 	</div>
 

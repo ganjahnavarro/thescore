@@ -88,7 +88,14 @@
 			<label for="committees" class="control-label">Committees</label>
 			<select id="committees" multiple="multiple" class="form-control" size="${fn:length(committees)}" name="committees">
 				<c:forEach items="${committees}" var="committee">
-					<option value="${committee.id}">${committee.displayString}</option>
+					<c:choose>
+						<c:when test="${committee.includedOnMatch}">
+							<option selected="selected" value="${committee.id}">${committee.displayString}</option>
+						</c:when>
+						<c:otherwise>
+							<option value="${committee.id}">${committee.displayString}</option>
+						</c:otherwise>
+					</c:choose>
 				</c:forEach>
 			</select>
 		</div>
@@ -114,13 +121,13 @@
 					try {
 						var jsonArray = jQuery.parseJSON(data);
 						
-						for(i in jsonArray){
-							$("#teamASelect").append($("<option></option>").attr("value", jsonArray[i].key).text(jsonArray[i].value));
-							$("#teamBSelect").append($("<option></option>").attr("value", jsonArray[i].key).text(jsonArray[i].value));
+						for(i in jsonArray.teams){
+							$("#teamASelect").append($("<option></option>").attr("value", jsonArray.teams[i].key).text(jsonArray.teams[i].value));
+							$("#teamBSelect").append($("<option></option>").attr("value", jsonArray.teams[i].key).text(jsonArray.teams[i].value));
 						}
 						
-						$("#teamASelect").prop("selectedIndex", 0).trigger('change');
-						$("#teamBSelect").prop("selectedIndex", 1).trigger('change');
+						$("#teamASelect").val(jsonArray.teamA.id).trigger('change');
+						$("#teamBSelect").val(jsonArray.teamB.id).trigger('change');
 					} catch (e) {
 						console.log('This doesn\'t look like a valid JSON: ', data);
 						return;
@@ -133,7 +140,8 @@
 			$.ajax({
 				url : '/thescore/match/on-team-change',
 				data: {
-		            teamId : $(this).val() 
+		            teamId : $(this).val(),
+		            matchId : $('#id').val()
 		        },
 				success : function(data) {
 					$("#teamAPlayers").empty();
@@ -141,11 +149,19 @@
 					try {
 						var jsonArray = jQuery.parseJSON(data);
 						
-						for(i in jsonArray){
-							$("#teamAPlayers").append($("<option></option>").attr("value", jsonArray[i].key).text(jsonArray[i].value));
+						console.log(jsonArray.players)
+						console.log(jsonArray.startingPlayerPKs)
+						
+						for(i in jsonArray.players){
+							var optn = $("<option></option>").attr("value", jsonArray.players[i].key).text(jsonArray.players[i].value);
+							
+							if($.inArray(jsonArray.players[i].key, jsonArray.startingPlayerPKs) != -1){
+								optn.attr("selected", "selected");
+							}
+							$("#teamAPlayers").append(optn);
 						}
 						
-						$("#teamAPlayers").attr('size', jsonArray.length);
+						$("#teamAPlayers").attr('size', jsonArray.players.length);
 					} catch (e) {
 						console.log('This doesn\'t look like a valid JSON: ', data);
 						return;
@@ -158,7 +174,8 @@
 			$.ajax({
 				url : '/thescore/match/on-team-change',
 				data: {
-		            teamId : $(this).val() 
+		            teamId : $(this).val(),
+		            matchId : $('#id').val()
 		        },
 				success : function(data) {
 					$("#teamBPlayers").empty();
@@ -166,11 +183,19 @@
 					try {
 						var jsonArray = jQuery.parseJSON(data);
 						
-						for(i in jsonArray){
-							$("#teamBPlayers").append($("<option></option>").attr("value", jsonArray[i].key).text(jsonArray[i].value));
+						console.log(jsonArray.players)
+						console.log(jsonArray.startingPlayerPKs)
+						
+						for(i in jsonArray.players){
+							var optn = $("<option></option>").attr("value", jsonArray.players[i].key).text(jsonArray.players[i].value);
+							
+							if($.inArray(jsonArray.players[i].key, jsonArray.startingPlayerPKs) != -1){
+								optn.attr("selected", "selected");
+							}
+							$("#teamBPlayers").append(optn);
 						}
 						
-						$("#teamBPlayers").attr('size', jsonArray.length);
+						$("#teamBPlayers").attr('size', jsonArray.players.length);
 					} catch (e) {
 						console.log('This doesn\'t look like a valid JSON: ', data);
 						return;

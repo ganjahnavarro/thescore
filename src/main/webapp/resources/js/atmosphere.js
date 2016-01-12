@@ -82,7 +82,15 @@ $(function() {
 				$('#timeout-' + keys[i]).html('Timeout/s: ' + reply.performances[i].timeout);
 				
 				Object.keys(reply.performances[i].quarterScores).forEach(function(key,index) {
-					$('#qtr-' + key + '-' + keys[i]).html(reply.performances[i].quarterScores[key]);
+					var quarterElement = $('#qtr-' + key + '-' + keys[i]);
+					
+					if (quarterElement.length) {
+						quarterElement.html(reply.performances[i].quarterScores[key]);
+					} else {
+						$('#qtr-score-a').before('<span id="qtr-' + key + '-a">0</span>');
+						$('#qtr-score-b').before('<span id="qtr-' + key + '-b">0</span>');
+						$('#qtr-' + key + '-' + keys[i]).html(reply.performances[i].quarterScores[key]);
+					}
 				});
 			}
 		}

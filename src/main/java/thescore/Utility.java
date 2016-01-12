@@ -128,6 +128,8 @@ public final class Utility implements ApplicationContextAware{
 	
 	@SuppressWarnings("unchecked")
 	public static Map<Integer, TeamPerformance> generateTeamPerformances(PlayerPerformanceService playerPerformanceService, Match match) {
+		Integer maxQuarter = 4;
+		
 		Map<Integer, Integer> quarterScoresA = createInitilizedQuarterScores();
 		Map<Integer, Integer> quarterScoresB = createInitilizedQuarterScores();
 		
@@ -156,6 +158,7 @@ public final class Utility implements ApplicationContextAware{
 				Integer quarter = fg.getQuarter();
 				if(quarter > 4 && quarterScores.get(quarter) == null){
 					quarterScores.put(fg.getQuarter(), 0);
+					maxQuarter = maxQuarter > quarter ? maxQuarter : quarter;
 				}
 				
 				Integer previousValue = quarterScores.get(quarter);
@@ -178,6 +181,7 @@ public final class Utility implements ApplicationContextAware{
 				Integer quarter = threefg.getQuarter();
 				if(quarter > 4 && quarterScores.get(quarter) == null){
 					quarterScores.put(quarter, 0);
+					maxQuarter = maxQuarter > quarter ? maxQuarter : quarter;
 				}
 				
 				Integer previousValue = quarterScores.get(quarter);
@@ -199,6 +203,7 @@ public final class Utility implements ApplicationContextAware{
 				Integer quarter = ft.getQuarter();
 				if(quarter > 4 && quarterScores.get(quarter) == null){
 					quarterScores.put(quarter, 0);
+					maxQuarter = maxQuarter > quarter ? maxQuarter : quarter;
 				}
 				
 				Integer previousValue = quarterScores.get(quarter);
@@ -247,9 +252,27 @@ public final class Utility implements ApplicationContextAware{
 			TeamPerformance teamPerformance = foul.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
 			teamPerformance.setFoul(teamPerformance.getFoul() + 1);
 		}
+		
+		Map<Integer, Integer> quarterScoresASorted = new LinkedHashMap<Integer, Integer>();
+		for(int i = 1; i <= maxQuarter; i++){
+			if(quarterScoresA.get(i) != null){
+				quarterScoresASorted.put(i, quarterScoresA.get(i));
+			} else {
+				quarterScoresASorted.put(i, 0);
+			}
+		}
+		
+		Map<Integer, Integer> quarterScoresBSorted = new LinkedHashMap<Integer, Integer>();
+		for(int i = 1; i <= maxQuarter; i++){
+			if(quarterScoresB.get(i) != null){
+				quarterScoresBSorted.put(i, quarterScoresB.get(i));
+			} else {
+				quarterScoresBSorted.put(i, 0);
+			}
+		}
 
-		teamPerformanceA.setQuarterScores(quarterScoresA);
-		teamPerformanceB.setQuarterScores(quarterScoresB);
+		teamPerformanceA.setQuarterScores(quarterScoresASorted);
+		teamPerformanceB.setQuarterScores(quarterScoresBSorted);
 		
 		teamPerformanceA.updateScore();
 		teamPerformanceB.updateScore();

@@ -116,8 +116,7 @@ public class ApplicationController {
 	@RequestMapping(value = { "/notification", "/notification/list" }, method = RequestMethod.GET)
 	public String notificationList(ModelMap model) {
 		List<Notification> notifications = notificationService.findAllNotifications();
-		System.out.println(notifications.size());
-		model.addAttribute("list-notifications", notifications);
+		model.addAttribute("ntfcs", notifications);
 		return "app/notification";
 	}
 	
