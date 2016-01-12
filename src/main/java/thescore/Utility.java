@@ -128,6 +128,9 @@ public final class Utility implements ApplicationContextAware{
 	
 	@SuppressWarnings("unchecked")
 	public static Map<Integer, TeamPerformance> generateTeamPerformances(PlayerPerformanceService playerPerformanceService, Match match) {
+		Map<Integer, Integer> quarterScoresA = createInitilizedQuarterScores();
+		Map<Integer, Integer> quarterScoresB = createInitilizedQuarterScores();
+		
 		Integer id = match.getId();
 		Integer teamAId = match.getTeamA().getId();
 		Integer teamBId = match.getTeamB().getId();
@@ -141,35 +144,65 @@ public final class Utility implements ApplicationContextAware{
 		
 		List<FieldGoal> fgs = (List) playerPerformanceService.findPerformanceRecords(id, FieldGoal.ENTITY_NAME);
 		for (FieldGoal fg : fgs) {
-			TeamPerformance teamPerformance = fg.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
+			Boolean isFromA = fg.getPerformance().getPlayer().getTeam().getId() == teamAId;
+			TeamPerformance teamPerformance = isFromA ? teamPerformanceA : teamPerformanceB;
+			Map<Integer, Integer> quarterScores = isFromA ? quarterScoresA : quarterScoresB;
 			
 			teamPerformance.setFga(teamPerformance.getFga() + 1);
 
 			if (fg.getMissed() == false) {
 				teamPerformance.setFg(teamPerformance.getFg() + 1);
+				
+				Integer quarter = fg.getQuarter();
+				if(quarter > 4 && quarterScores.get(quarter) == null){
+					quarterScores.put(fg.getQuarter(), 0);
+				}
+				
+				Integer previousValue = quarterScores.get(quarter);
+				quarterScores.put(quarter, previousValue + 2);
 			}
 		}
 
 		List<ThreePointFieldGoal> threefgs = (List) playerPerformanceService.findPerformanceRecords(id,
 				ThreePointFieldGoal.ENTITY_NAME);
 		for (ThreePointFieldGoal threefg : threefgs) {
-			TeamPerformance teamPerformance = threefg.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
+			Boolean isFromA = threefg.getPerformance().getPlayer().getTeam().getId() == teamAId;
+			TeamPerformance teamPerformance = isFromA ? teamPerformanceA : teamPerformanceB;
+			Map<Integer, Integer> quarterScores = isFromA ? quarterScoresA : quarterScoresB;
 			
 			teamPerformance.setThreefga(teamPerformance.getThreefga() + 1);
 
 			if (threefg.getMissed() == false) {
 				teamPerformance.setThreefg(teamPerformance.getThreefg() + 1);
+				
+				Integer quarter = threefg.getQuarter();
+				if(quarter > 4 && quarterScores.get(quarter) == null){
+					quarterScores.put(quarter, 0);
+				}
+				
+				Integer previousValue = quarterScores.get(quarter);
+				quarterScores.put(quarter, previousValue + 1);
 			}
 		}
 
 		List<FreeThrow> fts = (List) playerPerformanceService.findPerformanceRecords(id, FreeThrow.ENTITY_NAME);
 		for (FreeThrow ft : fts) {
-			TeamPerformance teamPerformance = ft.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
+			Boolean isFromA = ft.getPerformance().getPlayer().getTeam().getId() == teamAId;
+			TeamPerformance teamPerformance = isFromA ? teamPerformanceA : teamPerformanceB;
+			Map<Integer, Integer> quarterScores = isFromA ? quarterScoresA : quarterScoresB;
 			
 			teamPerformance.setFta(teamPerformance.getFta() + 1);
 
 			if (ft.getMissed() == false) {
 				teamPerformance.setFt(teamPerformance.getFt() + 1);
+				
+				Integer quarter = ft.getQuarter();
+				if(quarter > 4 && quarterScores.get(quarter) == null){
+					quarterScores.put(quarter, 0);
+				}
+				
+				Integer previousValue = quarterScores.get(quarter);
+				quarterScores.put(quarter, previousValue + 1);
 			}
 		}
 
@@ -214,6 +247,9 @@ public final class Utility implements ApplicationContextAware{
 			TeamPerformance teamPerformance = foul.getPerformance().getPlayer().getTeam().getId() == teamAId ? teamPerformanceA : teamPerformanceB;
 			teamPerformance.setFoul(teamPerformance.getFoul() + 1);
 		}
+
+		teamPerformanceA.setQuarterScores(quarterScoresA);
+		teamPerformanceB.setQuarterScores(quarterScoresB);
 		
 		teamPerformanceA.updateScore();
 		teamPerformanceB.updateScore();
@@ -221,6 +257,15 @@ public final class Utility implements ApplicationContextAware{
 		teamPerformances.put(teamAId, teamPerformanceA);
 		teamPerformances.put(teamBId, teamPerformanceB);
 		return teamPerformances;
+	}
+	
+	private static Map<Integer, Integer> createInitilizedQuarterScores(){
+		Map<Integer, Integer> quarterScores = new ConcurrentHashMap<Integer, Integer>();
+		quarterScores.put(1, 0);
+		quarterScores.put(2, 0);
+		quarterScores.put(3, 0);
+		quarterScores.put(4, 0);
+		return quarterScores;
 	}
 	
 }

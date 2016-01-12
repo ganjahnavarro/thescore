@@ -104,7 +104,8 @@
 			$.ajax({
 				url : '/thescore/match/on-league-change',
 				data: {
-		            leagueId : $(this).val() 
+		            leagueId : $(this).val(),
+		            matchId : $('#id').val()
 		        },
 				success : function(data) {
 					$("#teamASelect").empty();
@@ -130,7 +131,7 @@
 	
 		$("#teamASelect").change(function() {
 			$.ajax({
-				url : '/thescore/match/on-team-a-change',
+				url : '/thescore/match/on-team-change',
 				data: {
 		            teamId : $(this).val() 
 		        },
@@ -155,7 +156,7 @@
 	
 		$("#teamBSelect").change(function() {
 			$.ajax({
-				url : '/thescore/match/on-team-b-change',
+				url : '/thescore/match/on-team-change',
 				data: {
 		            teamId : $(this).val() 
 		        },

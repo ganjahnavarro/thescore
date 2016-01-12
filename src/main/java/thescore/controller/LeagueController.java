@@ -183,6 +183,13 @@ public class LeagueController {
 		List<Player> mythicalFive = leagueService.findMythicalFive(id);
 		
 		if(mythicalFive == null || mythicalFive.size() < 5){
+			List<Team> teams = new ArrayList<Team>();;
+			
+			for(LeagueTeam leagueTeam : leagueService.findAllLeagueTeams(id)){
+				teams.add(leagueTeam.getTeam());
+			}
+			model.addAttribute("teams", teams);
+			model.addAttribute("onLeagueEnd", true);
 			model.addAttribute("errorMessage", "League Mythical Five is incomplete.");
 			addLeagueInfoAttributes(model, league);
 			return "league/info";

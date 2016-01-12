@@ -62,7 +62,7 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 						ResponseData responseData = new ResponseData();
 						responseData.setActionData(data);
 						responseData.setType("SUBSTITUTION");
-						broadCastMessage = mapper.writeValueAsString(data);
+						broadCastMessage = mapper.writeValueAsString(responseData);
 					} else {
 						if(data.getSubtract()){
 							teamId = deletePerformanceAndGetTeamId(data);
@@ -209,15 +209,17 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 			Map<Integer, TeamPerformance> teamPerformanceMap = statisticsMap.get(matchId);
 			TeamPerformance teamPerformance = teamPerformanceMap.get(teamId);
 			
-//			TODO Query Scores
-			teamPerformance.setQuarterScores(new ArrayList<Integer>());
-			for(int i = 0; i < 4; i ++){
-				teamPerformance.getQuarterScores().add(50 + i);
+			Integer quarter = data.getQuarter();
+			if(quarter > 4 && teamPerformance.getQuarterScores().get(quarter) == null){
+				teamPerformance.getQuarterScores().put(quarter, 0);
 			}
 			
 			if(action.equals("FG")){
 				teamPerformance.setFg(teamPerformance.getFg() + value);
 				teamPerformance.setFga(teamPerformance.getFga() + value);
+				
+				Integer previousValue = teamPerformance.getQuarterScores().get(quarter);
+				teamPerformance.getQuarterScores().put(quarter, previousValue + (2 * value));
 			}
 			
 			if(action.equals("FGA")){
@@ -229,6 +231,9 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 				teamPerformance.setThreefga(teamPerformance.getThreefga() + value);
 				teamPerformance.setFg(teamPerformance.getFg() + value);
 				teamPerformance.setFga(teamPerformance.getFga() + value);
+				
+				Integer previousValue = teamPerformance.getQuarterScores().get(quarter);
+				teamPerformance.getQuarterScores().put(quarter, previousValue + (3 * value));
 			}
 			
 			if(action.equals("3FGA")){
@@ -239,6 +244,9 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 			if(action.equals("FT")){
 				teamPerformance.setFt(teamPerformance.getFt() + value);
 				teamPerformance.setFta(teamPerformance.getFta() + value);
+				
+				Integer previousValue = teamPerformance.getQuarterScores().get(quarter);
+				teamPerformance.getQuarterScores().put(quarter, previousValue + (1 * value));
 			}
 			
 			if(action.equals("FTA")){

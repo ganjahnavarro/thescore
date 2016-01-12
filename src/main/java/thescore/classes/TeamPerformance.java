@@ -1,8 +1,8 @@
 package thescore.classes;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
@@ -32,7 +32,7 @@ public class TeamPerformance {
 	
 	private Integer timeout = 0;
 	
-	private List<Integer> quarterScores = new ArrayList<Integer>();
+	private Map<Integer, Integer> quarterScores = new ConcurrentHashMap<Integer, Integer>();
 
 	public Integer getFg() {
 		return fg;
@@ -176,11 +176,11 @@ public class TeamPerformance {
 		return NumberFormat.getNumberInstance().format(average);
 	}
 
-	public List<Integer> getQuarterScores() {
+	public Map<Integer, Integer> getQuarterScores() {
 		return quarterScores;
 	}
 
-	public void setQuarterScores(List<Integer> quarterScores) {
+	public void setQuarterScores(Map<Integer, Integer> quarterScores) {
 		this.quarterScores = quarterScores;
 	}
 

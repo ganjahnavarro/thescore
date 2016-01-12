@@ -40,25 +40,29 @@ $(function() {
 		}
 		
 		if(reply.type == 'SUBSTITUTION'){
-			var draggedImg = $('#player-' + reply.actionData.fromPlayerId).find('img');
-			var droppedImg = $('#player-' + reply.actionData.toPlayerId).find('img');
+			var fromNode = $('#player-' + reply.actionData.fromPlayerId);
+			var toNode = $('#player-' + reply.actionData.toPlayerId);
+			
+			var draggedImg = fromNode.find('img');
+			var droppedImg = toNode.find('img');
 			
 			var srcHolder = draggedImg.attr('src');
 			draggedImg.attr('src', droppedImg.attr('src'));
 			droppedImg.attr('src', srcHolder);
 			
-			var playerIdHolder = $('#player-' + reply.actionData.fromPlayerId).data('playerid');
-			$('#player-' + reply.actionData.fromPlayerId).data('playerid', $('#player-' + reply.actionData.toPlayerId).data('playerid'));
-			$('#player-' + reply.actionData.toPlayerId).data('playerid', playerIdHolder);
+			fromNode.attr('data-playerid', reply.actionData.toPlayerId);
+			toNode.attr('data-playerid', reply.actionData.fromPlayerId);
 			
-			var imagePlayerIdHolder = draggedImg.data('playerid');
-			draggedImg.data('playerid', droppedImg.data('playerid'));
-			droppedImg.data('playerid', imagePlayerIdHolder);
+			draggedImg.attr('data-playerid', reply.actionData.toPlayerId);
+			droppedImg.attr('data-playerid', reply.actionData.fromPlayerId);
 			
 			var draggedNumber = $('#player-' + reply.actionData.fromPlayerId).find('span').html();
 			var droppedNumber = $('#player-' + reply.actionData.toPlayerId).find('span').html();
-			$('#player-' + reply.actionData.fromPlayerId).find('span').html(droppedNumber);
-			$('#player-' + reply.actionData.toPlayerId).find('span').html(draggedNumber);
+			fromNode.find('span').html(droppedNumber);
+			toNode.find('span').html(draggedNumber);
+			
+			fromNode.attr('id', 'player-' + reply.actionData.toPlayerId);
+			toNode.attr('id', 'player-' + reply.actionData.fromPlayerId);
 		} else {
 			var keys = ["", "a", "b"];
 			
@@ -77,9 +81,9 @@ $(function() {
 				$('#score-' + keys[i]).html(reply.performances[i].score);
 				$('#timeout-' + keys[i]).html('Timeout/s: ' + reply.performances[i].timeout);
 				
-				for (var j = 0; j < reply.performances[i].quarterScores.length; j++) {
-					$('#qrt-' + (j + 1) + '-' + keys[i]).html(reply.performances[i].quarterScores[j]);
-				}
+				Object.keys(reply.performances[i].quarterScores).forEach(function(key,index) {
+					$('#qtr-' + key + '-' + keys[i]).html(reply.performances[i].quarterScores[key]);
+				});
 			}
 		}
 	};
@@ -199,25 +203,19 @@ $(function() {
 	$('.droppable-b').droppable({
 		accept : ".draggable-b",
 		drop : function(event, ui) {
-			var draggedImg = ui.draggable.find('img');
-			var droppedImg = $(this).find('img');
-
-			var srcHolder = draggedImg.attr('src');
-			draggedImg.attr('src', droppedImg.attr('src'));
-			droppedImg.attr('src', srcHolder);
-
-			var playerIdHolder = ui.draggable.data('playerid');
-			ui.draggable.data('playerid', $(this).data('playerid'));
-			$(this).data('playerid', playerIdHolder);
+			var matchId = $('#matchId').html();
 			
-			var imagePlayerIdHolder = draggedImg.data('playerid');
-			draggedImg.data('playerid', droppedImg.data('playerid'));
-			droppedImg.data('playerid', imagePlayerIdHolder);
+			var fromPlayerId = ui.draggable.data('playerid');
+			var toPlayerId = $(this).data('playerid');
 			
-			var draggedNumber = ui.draggable.find('span').html();
-			var droppedNumber = $(this).find('span').html();
-			ui.draggable.find('span').html(droppedNumber);
-			$(this).find('span').html(draggedNumber);
+			if(fromPlayerId != null && toPlayerId != null){
+				subSocket.push(jQuery.stringifyJSON({
+					matchId : matchId,
+					action : 'SUBSTITUTION',
+					fromPlayerId : fromPlayerId,
+					toPlayerId : toPlayerId,
+				}));
+			}
 		}
 	});
 

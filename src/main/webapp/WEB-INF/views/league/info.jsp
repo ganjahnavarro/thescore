@@ -8,6 +8,7 @@
 	<div class="app-header">
 		<h2>${league.displayString}</h2>
 		<a type="button" class="btn btn-default" href="<c:url value='/league/list' />">League List</a>
+		<p id="leagueId" class="hidden"><c:out value="${league.id}"/></p>
 		<div class="clr"></div>
 	</div>
 	
@@ -76,6 +77,18 @@
 									<tr>
 										<td>Mythical Five</td>
 									</tr>
+									
+									<c:forEach items="${mythicalFive}" var="player">
+										<tr>
+											<td>
+												<button type="button" class="btn btn-default btn-xs remove-player-to-mythical-five"
+													data-playerid="${player.id}">
+													<span class="glyphicon glyphicon-minus" aria-hidden="true" data-playerid="${player.id}"></span>
+												</button>
+												${player.displayString}
+											</td>
+										</tr> 
+									</c:forEach>
 								</thead>
 								<tbody>
 								</tbody>
@@ -104,6 +117,9 @@
 						</a>
 					</div>
 					
+					<br/>
+					
+					<label class="control-label">Mythical Five</label>
 					<c:forEach items="${mythicalFive}" var="player">
 						<div class="substitution-item">
 							<a href="<c:url value='/player/view-${player.id}-player' />">
@@ -177,10 +193,8 @@
 							<tr>
 								<td>
 									<c:if test="${onLeagueEnd == true}">
-										<button type="button" class="btn btn-default btn-xs add-player-to-mythical-five"
-											data-playerid="${entry.key.id}" data-leagueid="${league.id}">
-											<span class="glyphicon glyphicon-plus" aria-hidden="true"
-												data-playerid="${entry.key.id}" data-leagueid="${league.id}"></span>
+										<button type="button" class="btn btn-default btn-xs add-player-to-mythical-five" data-playerid="${entry.key.id}">
+											<span class="glyphicon glyphicon-plus" aria-hidden="true" data-playerid="${entry.key.id}"></span>
 										</button>
 									</c:if>
 								
@@ -216,7 +230,7 @@
 				$.ajax({
 					url : '/thescore/league/on-player-add',
 					data: {
-						leagueId : $(this).data('leagueid'),
+						leagueId : $('#leagueId').html(),
 			            playerId : $(this).data('playerid')
 			        },
 					success : function(data) {
@@ -225,19 +239,15 @@
 						try {
 							var jsonArray = jQuery.parseJSON(data);
 							
-							var leagueId = $(this).data('leagueid'); 
+							var leagueId = $('#leagueId').html(); 
 							
 							for(i in jsonArray){
 								var rowContents = '<tr><td>';
-								rowContents += '<button type="button" class="btn btn-default btn-xs remove-player-to-mythical-five" ';
-								rowContents += 'data-playerid="' + jsonArray[i].key + '" data-leagueid="' + leagueId + '"> ';
-								rowContents += '<span class="glyphicon glyphicon-plus" aria-hidden="true" ';
-								rowContents += 'data-playerid="' + jsonArray[i].key + '" data-leagueid="' + leagueId + '"></span></button> ';
+								rowContents += '<button type="button" class="btn btn-default btn-xs remove-player-to-mythical-five" data-playerid="' + jsonArray[i].key + '"> ';
+								rowContents += '<span class="glyphicon glyphicon-minus" aria-hidden="true" data-playerid="' + jsonArray[i].key + '"></span>';
+								rowContents += '</button> ';
 								rowContents += jsonArray[i].value;
 								rowContents += '</td></tr> ';
-								
-								console.log(rowContents);
-								
 								$('#mythicalFiveSelect > tbody:last-child').append(rowContents);
 							}
 						} catch (e) {
@@ -252,7 +262,7 @@
 				$.ajax({
 					url : '/thescore/league/on-player-remove',
 					data: {
-						leagueId : $(this).data('leagueid'),
+						leagueId : $('#leagueId').html(),
 			            playerId : $(this).data('playerid')
 			        },
 					success : function(data) {
@@ -260,20 +270,15 @@
 						
 						try {
 							var jsonArray = jQuery.parseJSON(data);
-							
-							var leagueId = $(this).data('leagueid'); 
+							var leagueId = $('#leagueId').html(); 
 							
 							for(i in jsonArray){
 								var rowContents = '<tr><td>';
-								rowContents += '<button type="button" class="btn btn-default btn-xs remove-player-to-myth1al-five" ';
-								rowContents += 'data-playerid="' + jsonArray[i].key + '" data-leagueid="' + leagueId + '"> ';
-								rowContents += '<span class="glyphicon glyphicon-plus" aria-hidden="true" ';
-								rowContents += 'data-playerid="' + jsonArray[i].key + '" data-leagueid="' + leagueId + '"></span></button> ';
+								rowContents += '<button type="button" class="btn btn-default btn-xs remove-player-to-mythical-five" data-playerid="' + jsonArray[i].key + '"> ';
+								rowContents += '<span class="glyphicon glyphicon-minus" aria-hidden="true" data-playerid="' + jsonArray[i].key + '"></span>';
+								rowContents += '</button> ';
 								rowContents += jsonArray[i].value;
 								rowContents += '</td></tr> ';
-								
-								console.log(rowContents);
-								
 								$('#mythicalFiveSelect > tbody:last-child').append(rowContents);
 							}
 						} catch (e) {

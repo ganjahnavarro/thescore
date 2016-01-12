@@ -5,6 +5,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletException;
 import javax.validation.Valid;
@@ -198,52 +199,62 @@ public class MatchController {
 	}
     
 	@RequestMapping(value = "/on-league-change", method = RequestMethod.GET)
-	public @ResponseBody String onLeagueChange(@RequestParam("leagueId") Integer leagueId) {
+	public @ResponseBody String onLeagueChange(@RequestParam(name = "matchId", required = false) Integer matchId,
+			@RequestParam("leagueId") Integer leagueId) {
+		Map<String, Object> json = new ConcurrentHashMap<String, Object>();
+		
 		List<SimpleEntry<Integer, String>> list = new ArrayList<SimpleEntry<Integer, String>>();;
 		
 		if(leagueId != null){
 			for(LeagueTeam leagueTeam : leagueService.findAllLeagueTeams(Integer.valueOf(leagueId))){
 				list.add(new SimpleEntry<Integer, String>(leagueTeam.getTeam().getId(), leagueTeam.getTeam().getName()));
 			}
+			json.put("teams", list);
 		}
 		
 		try {
-			return mapper.writeValueAsString(list);
+			if(matchId != null){
+				Match match = matchService.findById(matchId);
+				
+				Team teamA = match.getTeamA();
+				teamA.setImage(null);
+				
+				Team teamB = match.getTeamB();
+				teamB.setImage(null);
+				
+				json.put("teamA", teamA);
+				json.put("teamB", teamB);
+			}
+			
+			return mapper.writeValueAsString(json);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	@RequestMapping(value = "/on-team-a-change", method = RequestMethod.GET)
-	public @ResponseBody String onTeamAChange(@RequestParam("teamId") Integer teamId) {
-		List<SimpleEntry<Integer, String>> list = new ArrayList<SimpleEntry<Integer, String>>();;
+	@RequestMapping(value = "/on-team-change", method = RequestMethod.GET)
+	public @ResponseBody String onTeamAChange(@RequestParam(name = "matchId", required = false) Integer matchId,
+			@RequestParam("teamId") Integer teamId) {
+		Map<String, Object> json = new ConcurrentHashMap<String, Object>();
+		List<SimpleEntry<Integer, String>> list = new ArrayList<SimpleEntry<Integer, String>>();
 		
 		if(teamId != null){
 			for(Player player : playerService.findPlayersByTeamId(Integer.valueOf(teamId))){
 				list.add(new SimpleEntry<Integer, String>(player.getId(), player.getDisplayString()));
 			}
+			json.put("players", list);
+			
+			List<Integer> startingPlayerPKs = new ArrayList<Integer>();
+			List<Player> startingPlayers = matchService.findStartingPlayers(matchId);
+			
+			for(Player player : startingPlayers){
+				startingPlayerPKs.add(player.getId());
+			}
+			json.put("startingPlayerPKs", startingPlayerPKs);
 			
 			try {
-				return mapper.writeValueAsString(list);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
-	
-	@RequestMapping(value = "/on-team-b-change", method = RequestMethod.GET)
-	public @ResponseBody String onTeamBChange(@RequestParam("teamId") Integer teamId) {
-		List<SimpleEntry<Integer, String>> list = new ArrayList<SimpleEntry<Integer, String>>();;
-		
-		if(teamId != null){
-			for(Player player : playerService.findPlayersByTeamId(Integer.valueOf(teamId))){
-				list.add(new SimpleEntry<Integer, String>(player.getId(), player.getDisplayString()));
-			}
-			
-			try {
-				return mapper.writeValueAsString(list);
+				return mapper.writeValueAsString(json);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
