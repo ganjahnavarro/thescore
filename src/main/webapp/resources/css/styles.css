@@ -241,3 +241,20 @@ li>a.notification-list-item {
 	margin-right: 5px !important;
 	margin-bottom: 5px !important;
 }
+
+.carousel-caption a {
+    font-size: 1.3rem;
+}
+
+.carousel-caption a:hover {
+    text-decoration: none;
+}
+
+.feed-title {
+	color: dodgerblue !important;
+	font-weight: bolder;
+}
+
+.newsfeed-body {
+    word-break: break-word;
+}

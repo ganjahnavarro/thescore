@@ -27,13 +27,15 @@
 					</c:otherwise>
 				</c:choose>
 				<div class="carousel-caption">
-					<a href="<c:url value='/newsfeed/view-${newsfeed.id}-newsfeed' />">
+					<a class="feed-title" href="<c:url value='/newsfeed/view-${newsfeed.id}-newsfeed' />">
 						${newsfeed.title}
 					</a>
 					
-					<a class="carousel-description" href="<c:url value='/newsfeed/view-${newsfeed.id}-newsfeed' />">
-						${newsfeed.description}
-					</a>
+					<div>
+						<a class="carousel-description" href="<c:url value='/newsfeed/view-${newsfeed.id}-newsfeed' />">
+							${newsfeed.description}
+						</a>
+					</div>
 				</div>
 			</div>
 		</c:forEach>

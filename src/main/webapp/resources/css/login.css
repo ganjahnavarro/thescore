@@ -7,7 +7,7 @@ html {
 }
 
 .login-panel.center {
-    height: 320px;
+    height: 430px;
     padding: 30px;
 
     position: absolute;
@@ -49,4 +49,8 @@ html {
     color: white;
     background-color: rgba(51, 153, 255, 0.4);
     border-color: none;
+}
+
+#login-logo {
+	width: 420px;
 }

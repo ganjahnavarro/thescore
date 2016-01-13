@@ -14,7 +14,7 @@
 <body>
 	<div class="container">
 		<form action="<c:url value='/login' />" method="post" class="login-panel center col-md-4 col-lg-3">
-			<h1>Basketball Statistics Application</h1>
+			<img id="login-logo" src="<c:url value="/resources/images/basta-logo-black.jpg" />"/>
 			<div class="form-group">
 				<input id="username" type="text" class="form-control"
 					name="userName" placeholder="Username">
