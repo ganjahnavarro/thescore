@@ -46,6 +46,12 @@
 				</tr>
 				
 				<tr>
+					<td class="info-label">Total Score</td>
+					<td id="score-a"><c:out value="${teamPerformanceA.score}"/></td>
+					<td id="score-b"><c:out value="${teamPerformanceB.score}"/></td>
+				</tr>
+				
+				<tr>
 					<td class="info-label">Field Goals</td>
 					<td id="fg-a"><c:out value="${teamPerformanceA.fg}"/> / <c:out value="${teamPerformanceA.fga}"/></td>
 					<td id="fg-b"><c:out value="${teamPerformanceB.fg}"/> / <c:out value="${teamPerformanceB.fga}"/></td>
