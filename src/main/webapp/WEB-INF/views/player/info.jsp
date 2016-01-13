@@ -15,7 +15,7 @@
 	<div class="well">
 		<div class="form-group col-md-3 col-lg-2">
 			<label class="control-label">Image</label>
-			<div class="profileImage">
+			<div class="info-player-image">
 				<c:choose>
 					<c:when test="${not empty player.image}">
 						<img src="<c:url value='/player/image?id=${player.id}'/>"/>
