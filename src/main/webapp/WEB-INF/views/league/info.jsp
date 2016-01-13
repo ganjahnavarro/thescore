@@ -119,9 +119,12 @@
 					
 					<br/>
 					
-					<label class="control-label">Mythical Five</label>
+					<div>
+						<label class="control-label">Mythical Five</label>
+					</div>
+					
 					<c:forEach items="${mythicalFive}" var="player">
-						<div class="substitution-item">
+						<div class="myth-five-info">
 							<a href="<c:url value='/player/view-${player.id}-player' />">
 								<c:choose>
 									<c:when test="${player.image != null}">

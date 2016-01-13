@@ -234,3 +234,10 @@ li>a.notification-list-item {
     border: none;
     margin-right: 5px;
 }
+
+.myth-five-info {
+	width: 60px !important;
+	height: 80px !important;
+	margin-right: 5px !important;
+	margin-bottom: 5px !important;
+}

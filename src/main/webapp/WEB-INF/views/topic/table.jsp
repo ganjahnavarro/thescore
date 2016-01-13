@@ -37,21 +37,31 @@
 				</c:if>
 					
 				<td>
-					<c:if test="${viewOnly == false}">
-						<c:if test="${topic.entryBy == userName}">
-							<button type="button" class="btn btn-default pull-right" aria-label="Delete"
-								data-toggle="modal" data-target="#defaultModal"
-								data-action="<c:url value='/topic/delete-${topic.id}-topic' />">
-								<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-							</button>
-						
-							<a href="<c:url value='/topic/edit-${topic.id}-topic' />">
-								<button type="button" class="btn btn-default pull-right" aria-label="Edit">
-									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+					<sec:authorize access="hasRole('HEAD_COMMITTEE')">
+						<button type="button" class="btn btn-default pull-right" aria-label="Delete"
+							data-toggle="modal" data-target="#defaultModal"
+							data-action="<c:url value='/topic/delete-${topic.id}-topic' />">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+						</button>
+					</sec:authorize>
+					
+					<sec:authorize access="!hasRole('HEAD_COMMITTEE')">
+						<c:if test="${viewOnly == false}">
+							<c:if test="${topic.entryBy == userName}">
+								<button type="button" class="btn btn-default pull-right" aria-label="Delete"
+									data-toggle="modal" data-target="#defaultModal"
+									data-action="<c:url value='/topic/delete-${topic.id}-topic' />">
+									<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 								</button>
-							</a>
+							
+								<a href="<c:url value='/topic/edit-${topic.id}-topic' />">
+									<button type="button" class="btn btn-default pull-right" aria-label="Edit">
+										<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+									</button>
+								</a>
+							</c:if>
 						</c:if>
-					</c:if>
+					</sec:authorize>
 				
 					<a href="<c:url value='/topic/view-${topic.id}-topic' />">
 						<button type="button" class="btn btn-default pull-right" aria-label="View">

@@ -24,6 +24,16 @@ public class LeagueRepository extends AbstractRepository<Integer, League> {
 	}
 	
 	public void deleteRecordById(Integer id) {
+		getSession().createQuery("delete from " + LeagueMythicalPlayer.ENTITY_NAME
+				+ " o where o.league.id = :leagueId")
+				.setParameter("leagueId", id)
+				.executeUpdate();
+		
+		getSession().createQuery("delete from " + LeagueTeam.ENTITY_NAME
+				+ " o where o.league.id = :leagueId")
+				.setParameter("leagueId", id)
+				.executeUpdate();
+		
 		deleteRecordById(League.ENTITY_NAME, id);
 	}
 

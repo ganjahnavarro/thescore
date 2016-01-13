@@ -29,57 +29,55 @@
 				<a class="navbar-brand" href="<c:url value='/home' />">Basketball Statistics Application</a>
 			</div>
 			
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav navbar-right">
-					<c:choose>
-						<c:when test="${not empty userName}">
-							<c:if test="${not empty notifications}">
-								<li class="dropdown">
-									<a id="notification-trigger" href="#" class="dropdown-toggle"
-										data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-										<span class="glyphicon glyphicon-globe"></span>
-										<span class="notification-count">${fn:length(notifications)}</span>
-									</a>
-									<ul class="dropdown-menu">
-										<c:forEach items="${notifications}" var="notification">
-											<li>
-												<a class="notification-list-item" href="<c:url value='${notification.url}'/>">${notification.message}</a>
-											</li>
-										</c:forEach>
-										
-										<li>
-											<a href="<c:url value='/notification/list'/>">View All</a>
-										</li>
-									</ul>
-								</li>
-							</c:if>
-							
-							<c:if test="${empty notifications}">
-								<li>
-									<a href="<c:url value='/notification/list'/>">
-										<span class="glyphicon glyphicon-globe"></span>
-									</a>
-								</li>
-							</c:if>
-							
+			<ul class="nav navbar-nav navbar-right">
+				<c:choose>
+					<c:when test="${not empty userName}">
+						<c:if test="${not empty notifications}">
 							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-									<c:out value="${userName}"/>
-									<span class="caret"></span>
+								<a id="notification-trigger" href="#" class="dropdown-toggle"
+									data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+									<span class="unseen-notification-information glyphicon glyphicon-globe"></span>
+									<span class="unseen-notification-information notification-count">${fn:length(notifications)}</span>
 								</a>
 								<ul class="dropdown-menu">
-									<li><a href="<c:url value='/logout' />">Logout</a></li>
+									<c:forEach items="${notifications}" var="notification">
+										<li>
+											<a class="notification-list-item" href="<c:url value='${notification.url}'/>">${notification.message}</a>
+										</li>
+									</c:forEach>
+									
+									<li>
+										<a href="<c:url value='/notification/list'/>">View All</a>
+									</li>
 								</ul>
 							</li>
-						</c:when>
+						</c:if>
 						
-						<c:otherwise>
-							<li><a href="<c:url value='/register'/>"><strong>Register</strong></a></li>
-							<li><a href="<c:url value='/login' />">Login</a></li>
-						</c:otherwise>
-					</c:choose>
-				</ul>
-			</div>
+						<c:if test="${empty notifications}">
+							<li>
+								<a href="<c:url value='/notification/list'/>">
+									<span class="glyphicon glyphicon-globe"></span>
+								</a>
+							</li>
+						</c:if>
+						
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+								<c:out value="${userName}"/>
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href="<c:url value='/logout' />">Logout</a></li>
+							</ul>
+						</li>
+					</c:when>
+					
+					<c:otherwise>
+						<li><a href="<c:url value='/register'/>"><strong>Register</strong></a></li>
+						<li><a href="<c:url value='/login' />">Login</a></li>
+					</c:otherwise>
+				</c:choose>
+			</ul>
 		</div>
 	</nav>
 
@@ -141,6 +139,10 @@
 		})
 		
 		$("#notification-trigger").click(function() {
+			if($('.unseen-notification-information').length){
+				$('.unseen-notification-information').hide();
+			}
+			
 			$.ajax({
 				url : '/thescore/notification/viewed'
 			});

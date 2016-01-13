@@ -1,5 +1,7 @@
 package thescore.reports;
 
+import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +28,8 @@ public class MatchResultPDFBuilder extends AbstractPDFView {
 	@Override
 	protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Format format = new DecimalFormat("#,##0.00");
+		
 		Map<Integer, TeamPerformance> teamPerformances = (Map<Integer, TeamPerformance>) model.get("teamPerformances");
 		Match match = (Match) model.get("match");
 		
@@ -57,6 +61,10 @@ public class MatchResultPDFBuilder extends AbstractPDFView {
         defaultCell.setPhrase(new Phrase(match.getTeamB().getDisplayString(), font));
         table.addCell(defaultCell);
         
+        table = addCell(table, teamPerformanceA.getScore());
+        table = addCell(table, "Total Score");
+        table = addCell(table, teamPerformanceB.getScore());
+        
         table = addCell(table, match.getTeamATimeout());
         table = addCell(table, "Timeouts");
         table = addCell(table, match.getTeamBTimeout());
@@ -65,25 +73,25 @@ public class MatchResultPDFBuilder extends AbstractPDFView {
         table = addCell(table, "Field Goals");
         table = addCell(table, teamPerformanceB.getFg() + " / " + teamPerformanceB.getFga());
         
-        table = addCell(table, teamPerformanceA.getFgPercent());
+        table = addCell(table, format.format(Double.valueOf(teamPerformanceA.getFgPercent())) + " %");
         table = addCell(table, "Field Goal %");
-        table = addCell(table, teamPerformanceB.getFgPercent());
+        table = addCell(table, format.format(Double.valueOf(teamPerformanceB.getFgPercent())) + " %");
         
         table = addCell(table, teamPerformanceA.getThreefg() + " / " + teamPerformanceA.getThreefga());
         table = addCell(table, "3 Pointers");
         table = addCell(table, teamPerformanceB.getThreefg() + " / " + teamPerformanceB.getThreefga());
         
-        table = addCell(table, teamPerformanceA.getThreeFgPercent());
+        table = addCell(table, format.format(Double.valueOf(teamPerformanceA.getThreeFgPercent())) + " %");
         table = addCell(table, "3 Pointer %");
-        table = addCell(table, teamPerformanceB.getThreeFgPercent());
+        table = addCell(table, format.format(Double.valueOf(teamPerformanceB.getThreeFgPercent())) + " %");
         
         table = addCell(table, teamPerformanceA.getFt() + " / " + teamPerformanceA.getFta());
         table = addCell(table, "Free Throws");
         table = addCell(table, teamPerformanceB.getFt() + " / " + teamPerformanceB.getFta());
         
-        table = addCell(table, teamPerformanceA.getFtPercent());
+        table = addCell(table, format.format(Double.valueOf(teamPerformanceA.getFtPercent())) + " %");
         table = addCell(table, "Free Throw %");
-        table = addCell(table, teamPerformanceB.getFtPercent());
+        table = addCell(table, format.format(Double.valueOf(teamPerformanceB.getFtPercent())) + " %");
         
         table = addCell(table, teamPerformanceA.getAst());
         table = addCell(table, "Assists");

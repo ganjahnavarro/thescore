@@ -31,6 +31,21 @@ public class MatchRepository extends AbstractRepository<Integer, Match> {
 	}
 
 	public void deleteRecordById(Integer id) {
+		getSession().createQuery("delete from " + MatchStartingPlayer.ENTITY_NAME
+				+ " o where o.match.id = :matchId")
+				.setParameter("matchId", id)
+				.executeUpdate();
+		
+		getSession().createQuery("delete from " + MatchCommittee.ENTITY_NAME
+				+ " o where o.match.id = :matchId")
+				.setParameter("matchId", id)
+				.executeUpdate();
+		
+		getSession().createQuery("delete from " + MatchActivePlayer.ENTITY_NAME
+				+ " o where o.match.id = :matchId")
+				.setParameter("matchId", id)
+				.executeUpdate();
+		
 		deleteRecordById(Match.ENTITY_NAME, id);
 	}
 
