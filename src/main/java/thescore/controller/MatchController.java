@@ -12,6 +12,7 @@ import javax.validation.Valid;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
@@ -61,6 +62,11 @@ public class MatchController {
 	
 	@RequestMapping(value = { "/", "/list" }, method = RequestMethod.GET)
 	public String list(ModelMap model) {
+		addListAttributes(model);
+		return "match/list";
+	}
+
+	private void addListAttributes(ModelMap model) {
 		model.addAttribute("liveMatches", matchService
 				.findAllMatches(Restrictions.isNotNull("actualStart"),
 						Restrictions.isNull("actualEnd")));
@@ -84,7 +90,6 @@ public class MatchController {
 		
 		model.addAttribute("finishedMatches", matchService
 				.findAllMatches(Restrictions.isNotNull("actualEnd")));
-		return "match/list";
 	}
 	
 	@RequestMapping(value = { "/new" }, method = RequestMethod.GET)
@@ -177,8 +182,14 @@ public class MatchController {
 	}
  
     @RequestMapping(value = { "/delete-{id}-match" }, method = RequestMethod.GET)
-    public String delete(@PathVariable Integer id) {
-        matchService.deleteMatchById(id);
+    public String delete(@PathVariable Integer id, ModelMap model) {
+    	try {
+    		matchService.deleteMatchById(id);
+    	} catch (ConstraintViolationException e){
+    		model.addAttribute("errorMessage", "This record can't be deleted because it is referenced by other records.");
+    		addListAttributes(model);
+    		return "match/list";
+    	}
         return "redirect:/match/list";
     }
     

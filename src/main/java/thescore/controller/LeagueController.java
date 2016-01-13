@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
@@ -131,8 +132,15 @@ public class LeagueController {
     }
  
     @RequestMapping(value = { "/delete-{id}-league" }, method = RequestMethod.GET)
-    public String delete(@PathVariable Integer id) {
-        leagueService.deleteLeagueById(id);
+    public String delete(@PathVariable Integer id, ModelMap model) {
+    	try {
+    		leagueService.deleteLeagueById(id);
+    	} catch (ConstraintViolationException e){
+    		model.addAttribute("errorMessage", "This record can't be deleted because it is referenced by other records.");
+    		List<League> leagues = leagueService.findAllLeagues();
+    		model.addAttribute("leagues", leagues);
+    		return "league/list";
+    	}
         return "redirect:/league/list";
     }
     

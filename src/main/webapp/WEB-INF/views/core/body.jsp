@@ -4,102 +4,106 @@
 <div class="container-fluid">
 	<!-- Substitution Players -->
 	<div class="col-md-6">
-		<div class="col-sm-12">
-			<div class="player-selection well">
-				<c:forEach items="${teamABench}" var="player">
-					<div id="player-${player.id}" class="substitution-item draggable-a droppable-a bench-player" data-playerid="${player.id}">
-						<c:choose>
-							<c:when test="${player.image != null}">
-								<img class="substitution-img" data-playerid="${player.id}"
-									src="<c:url value='/player/image?id=${player.id}'/>"/>
-							</c:when>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="player-selection well">
+					<c:forEach items="${teamABench}" var="player">
+						<div id="player-${player.id}" class="substitution-item draggable-a droppable-a bench-player" data-playerid="${player.id}">
+							<c:choose>
+								<c:when test="${player.image != null}">
+									<img class="substitution-img" data-playerid="${player.id}"
+										src="<c:url value='/player/image?id=${player.id}'/>"/>
+								</c:when>
+								
+								<c:otherwise>
+									<img class="substitution-img" data-playerid="${player.id}"
+										src="<c:url value="/resources/images/person-dummy.png" />"/>
+								</c:otherwise>
+							</c:choose>
 							
-							<c:otherwise>
-								<img class="substitution-img" data-playerid="${player.id}"
-									src="<c:url value="/resources/images/person-dummy.png" />"/>
-							</c:otherwise>
-						</c:choose>
-						
-						<div class="player-detail">
-							<span>${player.number}</span>
-						</div>
-					</div>	
-				</c:forEach>
+							<div class="player-detail">
+								<span>${player.number}</span>
+							</div>
+						</div>	
+					</c:forEach>
+				</div>
 			</div>
-		</div>
 		
-		<div class="col-sm-12">
-			<div class="player-selection well">
-				<c:forEach items="${teamBBench}" var="player">
-					<div id="player-${player.id}" class="substitution-item draggable-b droppable-b bench-player" data-playerid="${player.id}">
-						<c:choose>
-							<c:when test="${player.image != null}">
-								<img class="substitution-img" data-playerid="${player.id}"
-									src="<c:url value='/player/image?id=${player.id}'/>"/>
-							</c:when>
+			<div class="col-sm-12">
+				<div class="player-selection well">
+					<c:forEach items="${teamAPlayers}" var="player">
+						<div id="player-${player.id}" class="player-selection-item draggable-a droppable-a active-player" data-playerid="${player.id}">
+							<c:choose>
+								<c:when test="${player.image != null}">
+									<img class="player-selection-img" data-playerid="${player.id}"
+										src="<c:url value='/player/image?id=${player.id}'/>"/>
+								</c:when>
+								
+								<c:otherwise>
+									<img class="player-selection-img" data-playerid="${player.id}"
+										src="<c:url value="/resources/images/person-dummy.png" />"/>
+								</c:otherwise>
+							</c:choose>
 							
-							<c:otherwise>
-								<img class="substitution-img" data-playerid="${player.id}"
-									src="<c:url value="/resources/images/person-dummy.png" />"/>
-							</c:otherwise>
-						</c:choose>
-						
-						<div class="player-detail">
-							<span>${player.number}</span>
+							<div class="player-detail">
+								<span>${player.number}</span>
+							</div>
 						</div>
-					</div>
-				</c:forEach>
+					</c:forEach>
+				</div>
 			</div>
 		</div>
 	</div>
 
-	<!-- Active Players -->
+	<!-- Team B -->
 	<div class="col-md-6">
-		<div class="col-sm-12">
-			<div class="player-selection well">
-				<c:forEach items="${teamAPlayers}" var="player">
-					<div id="player-${player.id}" class="player-selection-item draggable-a droppable-a active-player" data-playerid="${player.id}">
-						<c:choose>
-							<c:when test="${player.image != null}">
-								<img class="player-selection-img" data-playerid="${player.id}"
-									src="<c:url value='/player/image?id=${player.id}'/>"/>
-							</c:when>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="player-selection well">
+					<c:forEach items="${teamBBench}" var="player">
+						<div id="player-${player.id}" class="substitution-item draggable-b droppable-b bench-player" data-playerid="${player.id}">
+							<c:choose>
+								<c:when test="${player.image != null}">
+									<img class="substitution-img" data-playerid="${player.id}"
+										src="<c:url value='/player/image?id=${player.id}'/>"/>
+								</c:when>
+								
+								<c:otherwise>
+									<img class="substitution-img" data-playerid="${player.id}"
+										src="<c:url value="/resources/images/person-dummy.png" />"/>
+								</c:otherwise>
+							</c:choose>
 							
-							<c:otherwise>
-								<img class="player-selection-img" data-playerid="${player.id}"
-									src="<c:url value="/resources/images/person-dummy.png" />"/>
-							</c:otherwise>
-						</c:choose>
-						
-						<div class="player-detail">
-							<span>${player.number}</span>
+							<div class="player-detail">
+								<span>${player.number}</span>
+							</div>
 						</div>
-					</div>
-				</c:forEach>
+					</c:forEach>
+				</div>
 			</div>
-		</div>
-		
-		<div class="col-sm-12">
-			<div class="player-selection well">
-				<c:forEach items="${teamBPlayers}" var="player">
-					<div id="player-${player.id}" class="player-selection-item draggable-b droppable-b active-player" data-playerid="${player.id}">
-						<c:choose>
-							<c:when test="${player.image != null}">
-								<img class="player-selection-img" data-playerid="${player.id}"
-									src="<c:url value='/player/image?id=${player.id}'/>"/>
-							</c:when>
+			
+			<div class="col-sm-12">
+				<div class="player-selection well">
+					<c:forEach items="${teamBPlayers}" var="player">
+						<div id="player-${player.id}" class="player-selection-item draggable-b droppable-b active-player" data-playerid="${player.id}">
+							<c:choose>
+								<c:when test="${player.image != null}">
+									<img class="player-selection-img" data-playerid="${player.id}"
+										src="<c:url value='/player/image?id=${player.id}'/>"/>
+								</c:when>
+								
+								<c:otherwise>
+									<img class="player-selection-img" data-playerid="${player.id}"
+										src="<c:url value="/resources/images/person-dummy.png" />"/>
+								</c:otherwise>
+							</c:choose>
 							
-							<c:otherwise>
-								<img class="player-selection-img" data-playerid="${player.id}"
-									src="<c:url value="/resources/images/person-dummy.png" />"/>
-							</c:otherwise>
-						</c:choose>
-						
-						<div class="player-detail">
-							<span>${player.number}</span>
+							<div class="player-detail">
+								<span>${player.number}</span>
+							</div>
 						</div>
-					</div>
-				</c:forEach>
+					</c:forEach>
+				</div>
 			</div>
 		</div>
 	</div>

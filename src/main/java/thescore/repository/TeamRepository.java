@@ -12,6 +12,7 @@ import thescore.model.LeagueTeam;
 import thescore.model.Match;
 import thescore.model.Player;
 import thescore.model.Team;
+import thescore.model.computation.PerformanceComputation;
 
 @Repository
 public class TeamRepository extends AbstractRepository<Integer, Team> {
@@ -25,6 +26,11 @@ public class TeamRepository extends AbstractRepository<Integer, Team> {
 	}
 
 	public void deleteRecordById(Integer id) {
+		getSession().createQuery("delete from " + PerformanceComputation.ENTITY_NAME
+				+ " o where o.team.id = :teamId")
+				.setParameter("teamId", id)
+				.executeUpdate();
+		
 		deleteRecordById(Team.ENTITY_NAME, id);
 	}
 

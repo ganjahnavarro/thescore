@@ -50,8 +50,14 @@ $(function() {
 			draggedImg.attr('src', droppedImg.attr('src'));
 			droppedImg.attr('src', srcHolder);
 			
+			fromNode.data('playerid', reply.actionData.toPlayerId);
+			toNode.data('playerid', reply.actionData.fromPlayerId);
+			
 			fromNode.attr('data-playerid', reply.actionData.toPlayerId);
 			toNode.attr('data-playerid', reply.actionData.fromPlayerId);
+			
+			draggedImg.data('playerid', reply.actionData.toPlayerId);
+			droppedImg.data('playerid', reply.actionData.fromPlayerId);
 			
 			draggedImg.attr('data-playerid', reply.actionData.toPlayerId);
 			droppedImg.attr('data-playerid', reply.actionData.fromPlayerId);
@@ -182,7 +188,7 @@ $(function() {
 	var allowedStatEdit = $('#allowedStatisticsModification').html();
 	console.log('allowedStatEdit: ' + allowedStatEdit);
 	
-	if(allowedStatEdit){
+	if(allowedStatEdit == 'true'){
 		$('.draggable-a').draggable({
 			revert : true,
 			stack : ".draggable-a"

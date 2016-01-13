@@ -18,6 +18,7 @@ import thescore.model.MatchCommittee;
 import thescore.model.MatchStartingPlayer;
 import thescore.model.Player;
 import thescore.model.PlayerPerformance;
+import thescore.model.computation.PerformanceComputation;
 
 @Repository
 public class MatchRepository extends AbstractRepository<Integer, Match> {
@@ -42,6 +43,11 @@ public class MatchRepository extends AbstractRepository<Integer, Match> {
 				.executeUpdate();
 		
 		getSession().createQuery("delete from " + MatchActivePlayer.ENTITY_NAME
+				+ " o where o.match.id = :matchId")
+				.setParameter("matchId", id)
+				.executeUpdate();
+		
+		getSession().createQuery("delete from " + PerformanceComputation.ENTITY_NAME
 				+ " o where o.match.id = :matchId")
 				.setParameter("matchId", id)
 				.executeUpdate();

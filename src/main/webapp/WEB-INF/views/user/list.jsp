@@ -53,7 +53,7 @@
 					
 					<sec:authorize access="hasRole('HEAD_COMMITTEE')">
 						<td>
-							<a href="<c:url value='/user/edit-${user.id}-user' />">
+							<a href="<c:url value='/user/edit-${user.id}-user?isCommitteesView=${isCommitteesView}' />">
 								<button type="button" class="btn btn-default" aria-label="Edit">
 									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 								</button>

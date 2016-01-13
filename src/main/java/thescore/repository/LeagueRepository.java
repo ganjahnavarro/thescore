@@ -11,6 +11,7 @@ import thescore.model.League;
 import thescore.model.LeagueMythicalPlayer;
 import thescore.model.LeagueTeam;
 import thescore.model.Player;
+import thescore.model.computation.PerformanceComputation;
 
 @Repository
 public class LeagueRepository extends AbstractRepository<Integer, League> {
@@ -30,6 +31,11 @@ public class LeagueRepository extends AbstractRepository<Integer, League> {
 				.executeUpdate();
 		
 		getSession().createQuery("delete from " + LeagueTeam.ENTITY_NAME
+				+ " o where o.league.id = :leagueId")
+				.setParameter("leagueId", id)
+				.executeUpdate();
+		
+		getSession().createQuery("delete from " + PerformanceComputation.ENTITY_NAME
 				+ " o where o.league.id = :leagueId")
 				.setParameter("leagueId", id)
 				.executeUpdate();

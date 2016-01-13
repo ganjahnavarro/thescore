@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
@@ -115,8 +116,15 @@ public class TeamController {
     }
  
     @RequestMapping(value = { "/delete-{id}-team" }, method = RequestMethod.GET)
-    public String delete(@PathVariable Integer id) {
-        teamService.deleteTeamById(id);
+    public String delete(@PathVariable Integer id, ModelMap model) {
+    	try{
+    		teamService.deleteTeamById(id);
+    	} catch (ConstraintViolationException e){
+    		model.addAttribute("errorMessage", "This record can't be deleted because it is referenced by other records.");
+    		List<Team> teams = teamService.findAllTeams();
+    		model.addAttribute("teams", teams);
+    		return "team/list";
+    	}
         return "redirect:/team/list";
     }
     

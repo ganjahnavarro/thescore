@@ -50,10 +50,6 @@ public class UserController {
 		
 		if(isCommitteesView){
 			user.setType(UserType.COMMITTEE);
-			
-			if(Utility.getCurrentUserAccess() >= UserType.ADMIN.ordinal()){
-				model.addAttribute("types", Arrays.asList(UserType.COMMITTEE, UserType.HEAD_COMMITTEE));
-			}
 		}
 		
 		model.addAttribute("user", user);
@@ -62,6 +58,7 @@ public class UserController {
 		model.addAttribute("edit", false);
 		model.addAttribute("title", user.getType().getDisplayString());
 		model.addAttribute("genders", Gender.values());
+		model.addAttribute("types", Arrays.asList(UserType.COMMITTEE, UserType.HEAD_COMMITTEE));
 		return "user/dataentry";
 	}
 	
@@ -74,6 +71,11 @@ public class UserController {
 			model.addAttribute("edit", false);
 			model.addAttribute("title", user.getType().getDisplayString());
 			model.addAttribute("genders", Gender.values());
+			model.addAttribute("types", Arrays.asList(UserType.COMMITTEE, UserType.HEAD_COMMITTEE));
+			
+//			TODO
+//			model.addAttribute("isCommitteesView", isCommitteesView);
+			
 			return "user/dataentry";
 		}
 		
@@ -87,6 +89,9 @@ public class UserController {
 			Utility.parseErrors(result, model);
 			model.addAttribute("genders", Gender.values());
 			model.addAttribute("actionParam", "/user/new?");
+			model.addAttribute("edit", false);
+			model.addAttribute("title", user.getType().getDisplayString());
+			model.addAttribute("types", Arrays.asList(UserType.COMMITTEE, UserType.HEAD_COMMITTEE));
 			return "user/dataentry";
 		}
 
@@ -97,13 +102,16 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = { "/edit-{id}-user" }, method = RequestMethod.GET)
-    public String edit(@PathVariable Integer id, ModelMap model) {
+    public String edit(@PathVariable Integer id, ModelMap model, @RequestParam("isCommitteesView") Boolean isCommitteesView) {
 		User user = service.findById(id);
 		model.addAttribute("user", user);
-		model.addAttribute("title", user.getType().getDisplayString());
+		model.addAttribute("isCommitteesView", isCommitteesView);
 		model.addAttribute("actionParam", "/user/edit-" + id + "-user?");
 		model.addAttribute("edit", true);
+		model.addAttribute("title", user.getType().getDisplayString());
+		model.addAttribute("genders", Gender.values());
 		model.addAttribute("passwordConfirmation", user.getPassword());
+		model.addAttribute("types", Arrays.asList(UserType.COMMITTEE, UserType.HEAD_COMMITTEE));
 		return "user/dataentry";
     }
      
@@ -115,6 +123,14 @@ public class UserController {
 		if (user.getPassword().equals(passwordConfirmation) == false) {
 			model.addAttribute("errorMessage", "Password doesn't match");
 			model.addAttribute("actionParam", "/user/edit-" + id + "-user?");
+			model.addAttribute("edit", true);
+			model.addAttribute("title", user.getType().getDisplayString());
+			model.addAttribute("genders", Gender.values());
+			model.addAttribute("types", Arrays.asList(UserType.COMMITTEE, UserType.HEAD_COMMITTEE));
+			
+//			TODO
+//			model.addAttribute("isCommitteesView", isCommitteesView);
+			
 			return "user/dataentry";
 		}
 
@@ -128,6 +144,10 @@ public class UserController {
 		if (result.hasErrors()) {
 			Utility.parseErrors(result, model);
 			model.addAttribute("actionParam", "/user/edit-" + id + "-user?");
+			model.addAttribute("edit", true);
+			model.addAttribute("title", user.getType().getDisplayString());
+			model.addAttribute("genders", Gender.values());
+			model.addAttribute("types", Arrays.asList(UserType.COMMITTEE, UserType.HEAD_COMMITTEE));
 			return "user/dataentry";
 		}
 

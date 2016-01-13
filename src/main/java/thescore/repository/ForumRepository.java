@@ -32,6 +32,11 @@ public class ForumRepository extends AbstractRepository<Integer, Topic> {
 	}
 
 	public void deleteRecordById(Integer id) {
+		getSession().createQuery("delete from " + Comment.ENTITY_NAME
+				+ " o where o.topic.id = :topicId")
+				.setParameter("topicId", id)
+				.executeUpdate();
+		
 		deleteRecordById(Topic.ENTITY_NAME, id);
 	}
 

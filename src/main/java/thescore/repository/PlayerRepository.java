@@ -8,6 +8,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import thescore.model.Player;
+import thescore.model.computation.PerformanceComputation;
 
 @Repository
 public class PlayerRepository extends AbstractRepository<Integer, Player> {
@@ -21,6 +22,11 @@ public class PlayerRepository extends AbstractRepository<Integer, Player> {
 	}
 
 	public void deleteRecordById(Integer id) {
+		getSession().createQuery("delete from " + PerformanceComputation.ENTITY_NAME
+				+ " o where o.player.id = :playerId")
+				.setParameter("playerId", id)
+				.executeUpdate();
+		
 		deleteRecordById(Player.ENTITY_NAME, id);
 	}
 

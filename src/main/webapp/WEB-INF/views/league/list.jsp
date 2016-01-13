@@ -73,7 +73,7 @@
 							
 							<c:if test="${league.lockedDate != null && league.endDate == null}">
 								<a href="<c:url value='/league/on-league-end-${league.id}' />">
-									<button type="button" class="btn btn-default" aria-label="End League">
+									<button type="button" class="btn btn-default" aria-label="End League" title="End League">
 										<span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
 									</button>
 								</a>
