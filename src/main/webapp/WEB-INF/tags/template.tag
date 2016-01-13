@@ -139,10 +139,6 @@
 		})
 		
 		$("#notification-trigger").click(function() {
-			if($('.unseen-notification-information').length){
-				$('.unseen-notification-information').hide();
-			}
-			
 			$.ajax({
 				url : '/thescore/notification/viewed'
 			});

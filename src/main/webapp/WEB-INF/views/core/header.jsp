@@ -67,4 +67,5 @@
 	</div>
 	
 	<p id="matchId" class="hidden"><c:out value="${match.id}"/></p>
+	<p id="allowedStatisticsModification" class="hidden"><c:out value="${allowedStatisticsModification}"/></p>
 </nav>

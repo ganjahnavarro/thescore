@@ -179,52 +179,57 @@ $(function() {
 		}
 	});
 	
-	$('.draggable-a').draggable({
-		revert : true,
-		stack : ".draggable-a"
-	});
+	var allowedStatEdit = $('#allowedStatisticsModification').html();
+	console.log('allowedStatEdit: ' + allowedStatEdit);
 	
-	$('.droppable-a').droppable({
-		accept : ".draggable-a",
-		drop : function(event, ui) {
-			var matchId = $('#matchId').html();
-			
-			var fromPlayerId = ui.draggable.data('playerid');
-			var toPlayerId = $(this).data('playerid');
-			
-			if(fromPlayerId != null && toPlayerId != null){
-				subSocket.push(jQuery.stringifyJSON({
-					matchId : matchId,
-					action : 'SUBSTITUTION',
-					fromPlayerId : fromPlayerId,
-					toPlayerId : toPlayerId,
-				}));
+	if(allowedStatEdit){
+		$('.draggable-a').draggable({
+			revert : true,
+			stack : ".draggable-a"
+		});
+		
+		$('.droppable-a').droppable({
+			accept : ".draggable-a",
+			drop : function(event, ui) {
+				var matchId = $('#matchId').html();
+				
+				var fromPlayerId = ui.draggable.data('playerid');
+				var toPlayerId = $(this).data('playerid');
+				
+				if(fromPlayerId != null && toPlayerId != null){
+					subSocket.push(jQuery.stringifyJSON({
+						matchId : matchId,
+						action : 'SUBSTITUTION',
+						fromPlayerId : fromPlayerId,
+						toPlayerId : toPlayerId,
+					}));
+				}
 			}
-		}
-	});
-	
-	$('.draggable-b').draggable({
-		revert : true,
-		stack : ".draggable-b"
-	});
-	
-	$('.droppable-b').droppable({
-		accept : ".draggable-b",
-		drop : function(event, ui) {
-			var matchId = $('#matchId').html();
-			
-			var fromPlayerId = ui.draggable.data('playerid');
-			var toPlayerId = $(this).data('playerid');
-			
-			if(fromPlayerId != null && toPlayerId != null){
-				subSocket.push(jQuery.stringifyJSON({
-					matchId : matchId,
-					action : 'SUBSTITUTION',
-					fromPlayerId : fromPlayerId,
-					toPlayerId : toPlayerId,
-				}));
+		});
+		
+		$('.draggable-b').draggable({
+			revert : true,
+			stack : ".draggable-b"
+		});
+		
+		$('.droppable-b').droppable({
+			accept : ".draggable-b",
+			drop : function(event, ui) {
+				var matchId = $('#matchId').html();
+				
+				var fromPlayerId = ui.draggable.data('playerid');
+				var toPlayerId = $(this).data('playerid');
+				
+				if(fromPlayerId != null && toPlayerId != null){
+					subSocket.push(jQuery.stringifyJSON({
+						matchId : matchId,
+						action : 'SUBSTITUTION',
+						fromPlayerId : fromPlayerId,
+						toPlayerId : toPlayerId,
+					}));
+				}
 			}
-		}
-	});
+		});
+	}
 
 });

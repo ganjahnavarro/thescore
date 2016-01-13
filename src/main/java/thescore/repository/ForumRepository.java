@@ -69,15 +69,18 @@ public class ForumRepository extends AbstractRepository<Integer, Topic> {
 	public Boolean isCommentValueValid(String value){
 		ForumFilter filter = findDefaultForumFilter();
 		
-		List<String> invalidWords = Arrays.asList(filter.getValue().split(","));
-		
-		System.out.println(invalidWords);
-		
-		for(String invalidWord : invalidWords){
-			if(value.contains(invalidWord.trim())){
-				return false;
+		if(filter.getValue() != null && !filter.getValue().isEmpty()){
+			List<String> invalidWords = Arrays.asList(filter.getValue().split(","));
+			
+			if(invalidWords != null && !invalidWords.isEmpty()){
+				for(String invalidWord : invalidWords){
+					if(value.contains(invalidWord.trim())){
+						return false;
+					}
+				}
 			}
 		}
+		
 		return true;
 	}
 	

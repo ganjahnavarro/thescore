@@ -105,7 +105,14 @@
 		
 		<div class="form-group col-sm-12">
 			<button type="submit" class="btn btn-primary">Save</button>
-			<a type="button" class="btn btn-default" href="<c:url value='/user/list' />">Cancel</a>
+			
+			<c:if test="${isCommitteesView == false}">
+				<a type="button" class="btn btn-default" href="<c:url value='/user/' />">Cancel</a>
+			</c:if>
+			
+			<c:if test="${isCommitteesView}">
+				<a type="button" class="btn btn-default" href="<c:url value='/user/committees' />">Cancel</a>
+			</c:if>
 		</div>
 	</form:form>
 
