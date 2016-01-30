@@ -19,6 +19,7 @@ public class PlayerPerformanceService {
 	private @Autowired PlayerPerformanceRepository repository;
 	
 	public void savePerformance(IRecord performance) {
+		System.out.println(performance.getClass().getName());
         repository.savePerformance(performance);
     }
  

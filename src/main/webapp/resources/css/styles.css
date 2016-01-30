@@ -235,11 +235,12 @@ li>a.notification-list-item {
     margin-right: 5px;
 }
 
-.myth-five-info {
+.myth-five-info, .myth-five-info img {
 	width: 60px !important;
 	height: 80px !important;
 	margin-right: 5px !important;
 	margin-bottom: 5px !important;
+	float: left;
 }
 
 .carousel-caption a {

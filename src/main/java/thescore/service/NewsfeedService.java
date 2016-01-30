@@ -83,7 +83,7 @@ public class NewsfeedService {
 		notification.setUrl("/match/view-" + match.getId() + "-match");
 		
 		String loserTeamName = match.getWinner().equals(match.getTeamA()) ?
-				match.getTeamA().getDisplayString() : match.getTeamB().getDisplayString();
+				match.getTeamB().getDisplayString() : match.getTeamA().getDisplayString();
 		
 		notification.setMessage(match.getWinner().getDisplayString() + " wins against "
 				+ loserTeamName + (match.getDefaultWin() ? " by default" : "")

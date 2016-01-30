@@ -109,7 +109,7 @@
 	<script>
 		$("#leagueSelect").change(function() {
 			$.ajax({
-				url : '/thescore/match/on-league-change',
+				url : '/match/on-league-change',
 				data: {
 		            leagueId : $(this).val(),
 		            matchId : $('#id').val()
@@ -138,7 +138,7 @@
 	
 		$("#teamASelect").change(function() {
 			$.ajax({
-				url : '/thescore/match/on-team-change',
+				url : '/match/on-team-change',
 				data: {
 		            teamId : $(this).val(),
 		            matchId : $('#id').val()
@@ -172,7 +172,7 @@
 	
 		$("#teamBSelect").change(function() {
 			$.ajax({
-				url : '/thescore/match/on-team-change',
+				url : '/match/on-team-change',
 				data: {
 		            teamId : $(this).val(),
 		            matchId : $('#id').val()

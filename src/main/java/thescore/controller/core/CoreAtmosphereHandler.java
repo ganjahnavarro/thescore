@@ -24,6 +24,8 @@ import thescore.model.Match;
 import thescore.model.MatchActivePlayer;
 import thescore.model.Player;
 import thescore.model.PlayerPerformance;
+import thescore.model.performance.FieldGoal;
+import thescore.model.performance.ThreePointFieldGoal;
 import thescore.service.MatchService;
 import thescore.service.PlayerPerformanceService;
 import thescore.service.PlayerService;
@@ -192,6 +194,15 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 			
 			performanceService.savePerformance(record);
 			teamId = performance.getPlayer().getTeam().getId();
+			
+			//TODO Hardcode
+			if(record instanceof ThreePointFieldGoal){
+				FieldGoal fieldGoal = new FieldGoal();
+				fieldGoal.setPerformance(performance);
+				fieldGoal.setQuarter(data.getQuarter());
+				fieldGoal.setMissed(data.getMissed());
+				performanceService.savePerformance(fieldGoal);
+			}
 		}
 		
 		return teamId;

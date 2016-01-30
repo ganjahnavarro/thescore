@@ -36,11 +36,23 @@ public class HibernateConfiguration {
      
     @Bean
     public DataSource dataSource() {
+//    	String host = System.getenv("OPENSHIFT_MYSQL_DB_HOST");
+//    	String port = System.getenv("OPENSHIFT_MYSQL_DB_PORT");
+//    	String username = System.getenv("OPENSHIFT_MYSQL_DB_USERNAME");
+//    	String password = System.getenv("OPENSHIFT_MYSQL_DB_PASSWORD");
+    	
+    	String host = "localhost";
+    	String port = "3306";
+    	String username = "root";
+    	String password = "";
+    	
+    	String database = "thescore";
+    	
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-        dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-        dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
+        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
         return dataSource;
     }
      

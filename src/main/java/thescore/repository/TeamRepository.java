@@ -72,11 +72,13 @@ public class TeamRepository extends AbstractRepository<Integer, Team> {
 		
 		for(Team team : teams){
 			Object[] winLose = (Object[]) getSession().createQuery("select"
-					+ " sum(case when o.winner = :team then 1 else 0 end),"
-					+ " sum(case when o.winner = :team then 0 else 1 end)"
+					+ " sum(case when o.winner.id = :teamId then 1 else 0 end),"
+					+ " sum(case when o.winner.id = :teamId then 0 else 1 end)"
 					+ " from " + Match.ENTITY_NAME
-					+ " o where o.winner is not null and (o.teamA = :team or o.teamB = :team)")
-					.setParameter("team", team)
+					+ " o where o.winner is not null and (o.teamA.id = :teamId or o.teamB.id = :teamId)"
+					+ " and o.league.id = :leagueId")
+					.setParameter("leagueId", leagueId)
+					.setParameter("teamId", team.getId())
 					.uniqueResult();
 			
 			long win = winLose[0] != null ? (long) winLose[0] : 0;

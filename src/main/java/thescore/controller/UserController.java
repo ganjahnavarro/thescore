@@ -65,17 +65,17 @@ public class UserController {
 	@RequestMapping(value = { "/new" }, method = RequestMethod.POST)
 	public String save(@Valid User user, BindingResult result, ModelMap model,
 			@RequestParam CommonsMultipartFile fileUpload, @RequestParam String passwordConfirmation) {
+		System.out.println("Saving user: " + user.getUserName());
+		
+		if(service.findByUserName(user.getUserName()) != null){
+			model.addAttribute("errorMessage", "Username already exists.");
+			readdSaveAttributes(model, user);
+			return "user/dataentry";
+		}
+		
 		if(user.getPassword().equals(passwordConfirmation) == false){
 			model.addAttribute("errorMessage", "Password doesn't match");
-			model.addAttribute("actionParam", "/user/new?");
-			model.addAttribute("edit", false);
-			model.addAttribute("title", user.getType().getDisplayString());
-			model.addAttribute("genders", Gender.values());
-			model.addAttribute("types", Arrays.asList(UserType.COMMITTEE, UserType.HEAD_COMMITTEE));
-			
-//			TODO
-//			model.addAttribute("isCommitteesView", isCommitteesView);
-			
+			readdSaveAttributes(model, user);
 			return "user/dataentry";
 		}
 		
@@ -87,11 +87,7 @@ public class UserController {
 
 		if (result.hasErrors()) {
 			Utility.parseErrors(result, model);
-			model.addAttribute("genders", Gender.values());
-			model.addAttribute("actionParam", "/user/new?");
-			model.addAttribute("edit", false);
-			model.addAttribute("title", user.getType().getDisplayString());
-			model.addAttribute("types", Arrays.asList(UserType.COMMITTEE, UserType.HEAD_COMMITTEE));
+			readdSaveAttributes(model, user);
 			return "user/dataentry";
 		}
 
@@ -99,6 +95,14 @@ public class UserController {
 		model.addAttribute("infoMessage", "User " + user.getDisplayString() + " registered successfully");
 		String redirect = "redirect:" + (user.getType().isDefaultUser() ? "/user/list" : "/user/committees");
 		return redirect;
+	}
+	
+	private void readdSaveAttributes(ModelMap model, User user){
+		model.addAttribute("actionParam", "/user/new?");
+		model.addAttribute("edit", false);
+		model.addAttribute("title", user.getType().getDisplayString());
+		model.addAttribute("genders", Gender.values());
+		model.addAttribute("types", Arrays.asList(UserType.COMMITTEE, UserType.HEAD_COMMITTEE));
 	}
 	
 	@RequestMapping(value = { "/edit-{id}-user" }, method = RequestMethod.GET)
@@ -120,6 +124,22 @@ public class UserController {
             @RequestParam CommonsMultipartFile fileUpload, @RequestParam String passwordConfirmation) {
     	Boolean updateImage = false;
     	
+    	System.out.println("Saving user: " + user.getUserName());
+    	
+    	User existingUser = service.findByUserName(user.getUserName());
+    	
+    	System.out.println("Existing user: " + user.getUserName() + ". " + existingUser.getId() + ". " + id);
+    	
+    	if(existingUser != null && existingUser.getId().equals(id) == false){
+			model.addAttribute("errorMessage", "Username already exists.");
+			model.addAttribute("actionParam", "/user/new?");
+			model.addAttribute("edit", false);
+			model.addAttribute("title", user.getType().getDisplayString());
+			model.addAttribute("genders", Gender.values());
+			model.addAttribute("types", Arrays.asList(UserType.COMMITTEE, UserType.HEAD_COMMITTEE));
+			return "user/dataentry";
+		}
+    	
 		if (user.getPassword().equals(passwordConfirmation) == false) {
 			model.addAttribute("errorMessage", "Password doesn't match");
 			model.addAttribute("actionParam", "/user/edit-" + id + "-user?");
@@ -127,10 +147,6 @@ public class UserController {
 			model.addAttribute("title", user.getType().getDisplayString());
 			model.addAttribute("genders", Gender.values());
 			model.addAttribute("types", Arrays.asList(UserType.COMMITTEE, UserType.HEAD_COMMITTEE));
-			
-//			TODO
-//			model.addAttribute("isCommitteesView", isCommitteesView);
-			
 			return "user/dataentry";
 		}
 

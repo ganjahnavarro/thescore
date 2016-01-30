@@ -3,11 +3,11 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:template>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.5.0/fullcalendar.min.css">
-
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.5.0/fullcalendar.min.js"></script>
+	<link rel="stylesheet" href="<c:url value="/resources/css/fullcalendar.min.css" />">
 	
+	<script src="<c:url value="/resources/plugins/moment.min.js" />"></script>
+	<script src="<c:url value="/resources/plugins/fullcalendar.min.js" />"></script>
+
 	<script>
 		$(document).ready(function() {
 			var calendar = $('#calendar'); 

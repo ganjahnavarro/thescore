@@ -5,9 +5,5 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <t:template>
-	<div style="position: relative; height: 80vh;">
-		<div class="launcher-content">
-			<h4 style="text-align: center;">404! See logs for details.</h4>
-		</div>
-	</div>
+	<p class="help-block" style="word-break: break-word;">${exceptionMessage}</p>
 </t:template>

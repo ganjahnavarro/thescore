@@ -231,7 +231,7 @@
 			
 			$('body').on('click', '.add-player-to-mythical-five', function(){
 				$.ajax({
-					url : '/thescore/league/on-player-add',
+					url : '/league/on-player-add',
 					data: {
 						leagueId : $('#leagueId').html(),
 			            playerId : $(this).data('playerid')
@@ -263,7 +263,7 @@
 			
 			$('body').on('click', '.remove-player-to-mythical-five', function(){
 				$.ajax({
-					url : '/thescore/league/on-player-remove',
+					url : '/league/on-player-remove',
 					data: {
 						leagueId : $('#leagueId').html(),
 			            playerId : $(this).data('playerid')

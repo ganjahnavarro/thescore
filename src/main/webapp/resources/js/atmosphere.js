@@ -8,7 +8,7 @@ $(function() {
 	var socket = $.atmosphere;
 
 	var request = {
-		url : '/thescore/core/atmosphere',
+		url : '/core/atmosphere',
 		contentType : "application/json",
 		logLevel : 'debug',
 		transport : 'websocket',

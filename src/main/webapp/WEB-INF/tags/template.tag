@@ -8,18 +8,16 @@
 	<title>Basketball Statistics System</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.min.css">
-	
+	<link rel="stylesheet" href="<c:url value="/resources/plugins/bootstrap.min.css" />">
+	<link rel="stylesheet" href="<c:url value="/resources/plugins/jquery-ui.css" />">
+	<link rel="stylesheet" href="<c:url value="/resources/plugins/jquery-ui-timepicker-addon.min.css" />">
 	<link rel="stylesheet" href="<c:url value="/resources/css/styles.css" />">
 	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js"></script>
-	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.25.0/js/jquery.tablesorter.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.min.js"></script>
+	<script src="<c:url value="/resources/plugins/jquery.min.js" />"></script>
+	<script src="<c:url value="/resources/plugins/bootstrap.min.js" />"></script>
+	<script src="<c:url value="/resources/plugins/jquery-ui.js" />"></script>
+	<script src="<c:url value="/resources/plugins/jquery.tablesorter.min.js" />"></script>
+	<script src="<c:url value="/resources/plugins/jquery-ui-timepicker-addon.min.js" />"></script>
 </head>
 <body>
 	<!-- Navigation -->
@@ -140,7 +138,7 @@
 		
 		$("#notification-trigger").click(function() {
 			$.ajax({
-				url : '/thescore/notification/viewed'
+				url : '/notification/viewed'
 			});
 		});
 	</script>

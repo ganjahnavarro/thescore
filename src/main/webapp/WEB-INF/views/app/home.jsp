@@ -101,21 +101,23 @@
 					<div class="col-xs-6 col-sm-4">
 						<div class="thumbnail">
 							<div class="launcher-content">
-								<a href="<c:url value='/user/' />">
-									<img src="<c:url value="/resources/images/user.png" />" alt="Newsfeed">
+								<a href="<c:url value='/user/committees' />">
+									<img src="<c:url value="/resources/images/committee.png" />" alt="Committees">
 								</a>
-								<p class="launcher-label">Users</p>
+								<p class="launcher-label">Committees</p>
 							</div>
 						</div>
 					</div>
-					
+				</sec:authorize>
+				
+				<sec:authorize access="hasRole('ADMIN')">
 					<div class="col-xs-6 col-sm-4">
 						<div class="thumbnail">
 							<div class="launcher-content">
-								<a href="<c:url value='/user/committees' />">
-									<img src="<c:url value="/resources/images/committee.png" />" alt="Newsfeed">
+								<a href="<c:url value='/user/' />">
+									<img src="<c:url value="/resources/images/user.png" />" alt="Users">
 								</a>
-								<p class="launcher-label">Committees</p>
+								<p class="launcher-label">Users</p>
 							</div>
 						</div>
 					</div>
