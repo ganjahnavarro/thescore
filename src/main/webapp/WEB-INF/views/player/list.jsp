@@ -8,7 +8,7 @@
 	<div class="app-header">
 		<h2>Players</h2>
 		
-		<sec:authorize access="hasRole('COMMITTEE')">
+		<sec:authorize access="hasRole('ADMIN')">
 			<a type="button" class="btn btn-default" href="<c:url value='/player/new' />">Add Player</a>
 		</sec:authorize>
 		
@@ -29,7 +29,7 @@
 				<td>Position</td>
 				<td style="width: 50px"></td>
 				
-				<sec:authorize access="hasRole('COMMITTEE')">
+				<sec:authorize access="hasRole('ADMIN')">
 					<td style="width: 100px"></td>
 				</sec:authorize>
 			</tr>
@@ -62,7 +62,7 @@
 						</a>
 					</td>
 					
-					<sec:authorize access="hasRole('COMMITTEE')">
+					<sec:authorize access="hasRole('ADMIN')">
 						<td>
 							<a href="<c:url value='/player/edit-${player.id}-player' />">
 								<button type="button" class="btn btn-default" aria-label="Edit">

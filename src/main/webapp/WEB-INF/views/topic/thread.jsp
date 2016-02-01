@@ -59,18 +59,20 @@
 			</div>
 		</c:forEach>
 		
-		<form:form method="POST" modelAttribute="comment" cssClass="row">
-			<form:input type="hidden" path="id" id="id" />
-	
-			<div class="form-group col-lg-6">
-				<form:textarea path="value" id="comment-text-area" cssClass="form-control"
-					cssErrorClass="form-control has-error" placeholder="Write your comment here.."/>
-			</div>
-			
-			<div class="form-group col-sm-12">
-				<button type="submit" class="btn btn-primary">Add</button>
-			</div>
-		</form:form>
+		<sec:authorize access="hasRole('DEFAULT')">
+			<form:form method="POST" modelAttribute="comment" cssClass="row">
+				<form:input type="hidden" path="id" id="id" />
+		
+				<div class="form-group col-lg-6">
+					<form:textarea path="value" id="comment-text-area" cssClass="form-control"
+						cssErrorClass="form-control has-error" placeholder="Write your comment here.."/>
+				</div>
+				
+				<div class="form-group col-sm-12">
+					<button type="submit" class="btn btn-primary">Add</button>
+				</div>
+			</form:form>
+		</sec:authorize>
 	</div>
 	
 </t:template>

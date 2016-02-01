@@ -3,7 +3,7 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:template>
-	<link rel="stylesheet" href="<c:url value="/resources/css/fullcalendar.min.css" />">
+    <link rel="stylesheet" href="<c:url value="/resources/plugins/fullcalendar.min.css" />">
 	
 	<script src="<c:url value="/resources/plugins/moment.min.js" />"></script>
 	<script src="<c:url value="/resources/plugins/fullcalendar.min.js" />"></script>

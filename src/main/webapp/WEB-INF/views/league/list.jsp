@@ -8,7 +8,7 @@
 	<div class="app-header">
 		<h2>Leagues</h2>
 		
-		<sec:authorize access="hasRole('COMMITTEE')">
+		<sec:authorize access="hasRole('ADMIN')">
             <a type="button" class="btn btn-default" href="<c:url value='/league/new' />">Add League</a>
         </sec:authorize>
 		
@@ -22,7 +22,7 @@
 				<td>Description</td>
 				<td style="width: 50px"></td>
 				
-				<sec:authorize access="hasRole('COMMITTEE')">
+				<sec:authorize access="hasRole('ADMIN')">
 					<td style="width: 150px"></td>
 				</sec:authorize>
 			</tr>
@@ -39,7 +39,7 @@
 						</a>
 					</td>
 					
-					<sec:authorize access="hasRole('COMMITTEE')">
+					<sec:authorize access="hasRole('ADMIN')">
 						<td>
 							<c:if test="${league.lockedDate == null}">
 								<a href="<c:url value='/league/edit-${league.id}-league' />">

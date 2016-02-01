@@ -9,7 +9,7 @@
 	<div class="app-header">
 		<h2>Teams</h2>
 		
-		<sec:authorize access="hasRole('COMMITTEE')">
+		<sec:authorize access="hasRole('ADMIN')">
 			<a type="button" class="btn btn-default" href="<c:url value='/team/new' />">Add Team</a>
 		</sec:authorize>
 		
@@ -25,7 +25,7 @@
 				<td>Coach</td>
 				<td style="width: 50px"></td>
 				
-				<sec:authorize access="hasRole('COMMITTEE')">
+				<sec:authorize access="hasRole('ADMIN')">
 					<td style="width: 100px"></td>
 				</sec:authorize>
 			</tr>
@@ -53,7 +53,7 @@
 						</a>
 					</td>
 					
-					<sec:authorize access="hasRole('COMMITTEE')">
+					<sec:authorize access="hasRole('ADMIN')">
 						<td>
 							<a href="<c:url value='/team/edit-${team.id}-team' />">
 								<button type="button" class="btn btn-default" aria-label="Edit">
