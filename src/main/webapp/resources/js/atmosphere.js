@@ -69,6 +69,9 @@ $(function() {
 			
 			fromNode.attr('id', 'player-' + reply.actionData.toPlayerId);
 			toNode.attr('id', 'player-' + reply.actionData.fromPlayerId);
+		} else if (reply.type == 'QUARTER_CHANGE'){
+			console.log(reply);
+			$('#current-quarter').html(reply.actionData.quarterString);
 		} else {
 			var keys = ["", "a", "b"];
 			
@@ -93,7 +96,7 @@ $(function() {
 				$('#timeout-' + team).html('Timeout/s: ' + reply.performances[i].timeout);
 				
 				Object.keys(reply.performances[i].quarterScores).forEach(function(key,index) {
-					var quarterElement = $('#qtr-' + key + '-' + keys[i]);
+					var quarterElement = $('#qtr-' + key + '-' + team);
 					
 					if (quarterElement.length) {
 						quarterElement.html(reply.performances[i].quarterScores[key]);
@@ -147,6 +150,7 @@ $(function() {
 	});
 	
 	$('#quarter-selection-panel').on('click', '.quarter-selection-item', function(event) {
+		var matchId = $('#matchId').html();
 		var target = $(event.target);
 		var selectedQuarterParam = target.data('quarter');
 		selectedQuarter = selectedQuarterParam;
@@ -154,7 +158,11 @@ $(function() {
 		$('.quarter-selection-item').css("color", "slategray");
 		target.css("color", "dodgerblue");
 		
-		$('#current-quarter').html(target.html());
+		subSocket.push(jQuery.stringifyJSON({
+			matchId : matchId,
+			action : 'QUARTER_CHANGE',
+			quarterString : target.html()
+		}));
 	});
 	
 	$('.action-item').click(function(event) {

@@ -65,6 +65,14 @@ public class CoreAtmosphereHandler implements AtmosphereHandler {
 						responseData.setActionData(data);
 						responseData.setType("SUBSTITUTION");
 						broadCastMessage = mapper.writeValueAsString(responseData);
+					} else if(data.getAction().equals("QUARTER_CHANGE")){
+						
+						System.out.println("Quarter change.");
+						
+						ResponseData responseData = new ResponseData();
+						responseData.setActionData(data);
+						responseData.setType("QUARTER_CHANGE");
+						broadCastMessage = mapper.writeValueAsString(responseData);
 					} else {
 						if(data.getSubtract()){
 							teamId = deletePerformanceAndGetTeamId(data);

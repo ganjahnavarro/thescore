@@ -18,6 +18,8 @@ public class ActionData {
 	private Integer fromPlayerId;
 	private Integer toPlayerId;
 	
+	private String quarterString;
+	
 	public Integer getPlayerId() {
 		return playerId;
 	}
@@ -88,6 +90,14 @@ public class ActionData {
 
 	public void setToPlayerId(Integer toPlayerId) {
 		this.toPlayerId = toPlayerId;
+	}
+	
+	public String getQuarterString() {
+		return quarterString;
+	}
+
+	public void setQuarterString(String quarterString) {
+		this.quarterString = quarterString;
 	}
 
 }
