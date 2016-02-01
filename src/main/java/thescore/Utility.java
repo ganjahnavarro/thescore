@@ -130,8 +130,8 @@ public final class Utility implements ApplicationContextAware{
 	public static Map<Integer, TeamPerformance> generateTeamPerformances(PlayerPerformanceService playerPerformanceService, Match match) {
 		Integer maxQuarter = 4;
 		
-		Map<Integer, Integer> quarterScoresA = createInitilizedQuarterScores();
-		Map<Integer, Integer> quarterScoresB = createInitilizedQuarterScores();
+		Map<Integer, Integer> quarterScoresA = createInitializedQuarterScores();
+		Map<Integer, Integer> quarterScoresB = createInitializedQuarterScores();
 		
 		Integer id = match.getId();
 		Integer teamAId = match.getTeamA().getId();
@@ -140,6 +140,9 @@ public final class Utility implements ApplicationContextAware{
 		Map<Integer, TeamPerformance> teamPerformances = new LinkedHashMap<Integer, TeamPerformance>();
 		TeamPerformance teamPerformanceA = new TeamPerformance();
 		TeamPerformance teamPerformanceB = new TeamPerformance();
+		
+		teamPerformanceA.setTeamA(true);
+		teamPerformanceB.setTeamA(false);
 		
 		teamPerformanceA.setTimeout(match.getTeamATimeout());
 		teamPerformanceB.setTimeout(match.getTeamBTimeout());
@@ -282,7 +285,7 @@ public final class Utility implements ApplicationContextAware{
 		return teamPerformances;
 	}
 	
-	private static Map<Integer, Integer> createInitilizedQuarterScores(){
+	private static Map<Integer, Integer> createInitializedQuarterScores(){
 		Map<Integer, Integer> quarterScores = new ConcurrentHashMap<Integer, Integer>();
 		quarterScores.put(1, 0);
 		quarterScores.put(2, 0);

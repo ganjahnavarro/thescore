@@ -73,19 +73,24 @@ $(function() {
 			var keys = ["", "a", "b"];
 			
 			for(i in reply.performances){
-				$('#fg-' + keys[i]).html(reply.performances[i].fg + " / " + reply.performances[i].fga);
-				$('#threefg-' + keys[i]).html(reply.performances[i].threefg + " / " + reply.performances[i].threefga);
-				$('#ft-' + keys[i]).html(reply.performances[i].ft + " / " + reply.performances[i].fta);
-				$('#ast-' + keys[i]).html(reply.performances[i].ast);
-				$('#stl-' + keys[i]).html(reply.performances[i].stl);
-				$('#blk-' + keys[i]).html(reply.performances[i].blk);
-				$('#def-' + keys[i]).html(reply.performances[i].def);
-				$('#off-' + keys[i]).html(reply.performances[i].off);
-				$('#to-' + keys[i]).html(reply.performances[i].to);
-				$('#foul-' + keys[i]).html(reply.performances[i].foul);
+				var isTeamA = reply.performances[i].teamA;
+				console.log("is team a: " + isTeamA);
 				
-				$('#score-' + keys[i]).html(reply.performances[i].score);
-				$('#timeout-' + keys[i]).html('Timeout/s: ' + reply.performances[i].timeout);
+				var team = isTeamA ? "a" : "b";
+				
+				$('#fg-' + team).html(reply.performances[i].fg + " / " + reply.performances[i].fga);
+				$('#threefg-' + team).html(reply.performances[i].threefg + " / " + reply.performances[i].threefga);
+				$('#ft-' + team).html(reply.performances[i].ft + " / " + reply.performances[i].fta);
+				$('#ast-' + team).html(reply.performances[i].ast);
+				$('#stl-' + team).html(reply.performances[i].stl);
+				$('#blk-' + team).html(reply.performances[i].blk);
+				$('#def-' + team).html(reply.performances[i].def);
+				$('#off-' + team).html(reply.performances[i].off);
+				$('#to-' + team).html(reply.performances[i].to);
+				$('#foul-' + team).html(reply.performances[i].foul);
+				
+				$('#score-' + team).html(reply.performances[i].score);
+				$('#timeout-' + team).html('Timeout/s: ' + reply.performances[i].timeout);
 				
 				Object.keys(reply.performances[i].quarterScores).forEach(function(key,index) {
 					var quarterElement = $('#qtr-' + key + '-' + keys[i]);
@@ -95,7 +100,7 @@ $(function() {
 					} else {
 						$('#qtr-score-a').before('<span id="qtr-' + key + '-a">0</span>');
 						$('#qtr-score-b').before('<span id="qtr-' + key + '-b">0</span>');
-						$('#qtr-' + key + '-' + keys[i]).html(reply.performances[i].quarterScores[key]);
+						$('#qtr-' + key + '-' + team).html(reply.performances[i].quarterScores[key]);
 					}
 				});
 			}

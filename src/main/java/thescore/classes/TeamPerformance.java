@@ -9,6 +9,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TeamPerformance {
 
+	private Boolean teamA = true;
 	private Integer score = 0;
 	
 	private Integer fg = 0;
@@ -182,6 +183,14 @@ public class TeamPerformance {
 
 	public void setQuarterScores(Map<Integer, Integer> quarterScores) {
 		this.quarterScores = quarterScores;
+	}
+	
+	public Boolean getTeamA() {
+		return teamA;
+	}
+
+	public void setTeamA(Boolean teamA) {
+		this.teamA = teamA;
 	}
 
 }
